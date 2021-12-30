@@ -1,6 +1,6 @@
 mod apartment;
 
-use crate::result::{_AddResult, _GetResult, _RemoveResult};
+use crate::result::{_AddDataError, _RemoveDataError};
 use apartment::_Apartment;
 
 pub struct _House {
@@ -8,15 +8,16 @@ pub struct _House {
     pub apartments: Vec<_Apartment>,
 }
 impl _House {
-    fn _get_apartments(&self) -> &_GetResult {
+    fn _get_apartments(&self) -> Option<&Vec<&_Apartment>> {
         todo!()
     }
-    fn _add_apartment(&self, _apartment: _Apartment) -> &_AddResult {
+    fn _add_apartment(&self, _apartment: _Apartment) -> Result<&_Apartment, _AddDataError> {
         todo!()
     }
-    fn _remove_apartment(&self, _apartment_name: String) -> _RemoveResult {
+    fn _remove_apartment(&self, _apartment_name: String) -> Result<String, _RemoveDataError> {
         todo!()
     }
+
     fn _create_report(&self) -> String {
         todo!()
     }

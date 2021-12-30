@@ -1,5 +1,5 @@
 mod device;
-use crate::result::{_AddResult, _GetResult, _RemoveResult};
+use crate::result::{_AddDataError, _GetDataError, _RemoveDataError};
 use device::_Device;
 
 pub struct _Apartment {
@@ -8,16 +8,16 @@ pub struct _Apartment {
 }
 
 impl _Apartment {
-    fn _add_device(&self, _device: _Device) -> &_AddResult {
+    fn _add_device(&self, _device: _Device) -> Result<&_Device, _AddDataError> {
         todo!()
     }
-    fn _remove_device(&self, _device_name: String) -> _RemoveResult {
+    fn _remove_device(&self, _device_name: String) -> Result<String, _RemoveDataError> {
         todo!()
     }
-    fn _list_devices(&self) {
+    fn _list_devices(&self) -> Option<&Vec<&_Device>> {
         todo!()
     }
-    fn _get_device_by_name(&self, _device: _Device) -> &_GetResult {
+    fn _get_device_by_name(&self, _device: _Device) -> Result<&_Device, _GetDataError> {
         todo!()
     }
 }

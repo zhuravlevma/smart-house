@@ -1,3 +1,11 @@
-pub struct _AddResult {}
-pub struct _GetResult {}
-pub struct _RemoveResult {}
+pub enum _GetDataError {
+    NotFound,
+}
+
+pub enum _AddDataError {
+    UniqueConstraint,
+}
+
+pub enum _RemoveDataError {
+    NotFound,
+}
