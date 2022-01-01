@@ -1,12 +1,12 @@
-use super::_TypeDevice;
+use super::TypeDevice;
 
-pub struct _Thermometer {
-    name: String,
-    t_device: _TypeDevice,
-    description: String,
+pub struct Thermometer {
+    pub name: String,
+    pub t_device: TypeDevice,
+    pub description: String,
 }
 
-impl _Thermometer {
+impl Thermometer {
     fn _get_temperature(&self) -> f32 {
         todo!()
     }

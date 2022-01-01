@@ -1,20 +1,20 @@
-mod apartment;
+pub mod apartment;
 
-use crate::result::{_AddDataError, _RemoveDataError};
-use apartment::_Apartment;
+use crate::result::{AddDataError, RemoveDataError};
+use apartment::Apartment;
 
-pub struct _House {
+pub struct House {
     pub name: String,
-    pub apartments: Vec<_Apartment>,
+    pub apartments: Vec<Apartment>,
 }
-impl _House {
-    fn _get_apartments(&self) -> Option<&Vec<&_Apartment>> {
+impl House {
+    fn _get_apartments(&self) -> Option<&Vec<&Apartment>> {
         todo!()
     }
-    fn _add_apartment(&self, _apartment: _Apartment) -> Result<&_Apartment, _AddDataError> {
+    fn _add_apartment(&self, _apartment: Apartment) -> Result<&Apartment, AddDataError> {
         todo!()
     }
-    fn _remove_apartment(&self, _apartment_name: String) -> Result<String, _RemoveDataError> {
+    fn _remove_apartment(&self, _apartment_name: String) -> Result<String, RemoveDataError> {
         todo!()
     }
 

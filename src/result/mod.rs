@@ -1,11 +1,11 @@
-pub enum _GetDataError {
+pub enum GetDataError {
     NotFound,
 }
 
-pub enum _AddDataError {
+pub enum AddDataError {
     UniqueConstraint,
 }
 
-pub enum _RemoveDataError {
+pub enum RemoveDataError {
     NotFound,
 }

@@ -1,12 +1,12 @@
-use super::_TypeDevice;
+use super::TypeDevice;
 
-pub struct _Rosette {
-    name: String,
-    t_device: _TypeDevice,
-    description: String,
+pub struct Rosette {
+    pub name: String,
+    pub t_device: TypeDevice,
+    pub description: String,
 }
 
-impl _Rosette {
+impl Rosette {
     fn _on(&self) -> bool {
         todo!()
     }

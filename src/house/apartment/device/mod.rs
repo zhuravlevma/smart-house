@@ -1,15 +1,15 @@
-mod rosette;
-mod thermometer;
+pub mod rosette;
+pub mod thermometer;
 
-use rosette::_Rosette;
-use thermometer::_Thermometer;
+use rosette::Rosette;
+use thermometer::Thermometer;
 
-pub enum _TypeDevice {
+pub enum TypeDevice {
     Thermometer,
     Rosette,
 }
 
-pub enum _Device {
-    Rosette(_Rosette),
-    Thermometer(_Thermometer),
+pub enum Device {
+    Rosette(Rosette),
+    Thermometer(Thermometer),
 }

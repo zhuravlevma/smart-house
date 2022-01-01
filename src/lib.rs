@@ -1,2 +1,2 @@
-mod house;
-mod result;
+pub mod house;
+pub mod result;
