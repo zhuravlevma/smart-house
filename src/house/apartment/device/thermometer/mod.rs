@@ -4,11 +4,12 @@ pub struct Thermometer {
     pub name: String,
     pub t_device: TypeDevice,
     pub description: String,
+    pub temperature: f32,
 }
 
 impl Thermometer {
     fn _get_temperature(&self) -> f32 {
-        todo!()
+        self.temperature
     }
 }
 

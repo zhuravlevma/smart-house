@@ -21,7 +21,10 @@ impl House {
         let length = self.apartments.len();
         Ok(&self.apartments[length - 1])
     }
-    pub fn remove_apartment(&mut self, apartment_name: String) -> Result<Apartment, RemoveDataError> {
+    pub fn remove_apartment(
+        &mut self,
+        apartment_name: String,
+    ) -> Result<Apartment, RemoveDataError> {
         for (pos, apartment) in self.apartments.iter().enumerate() {
             if apartment.name.eq(&apartment_name) {
                 return Ok(self.apartments.remove(pos));

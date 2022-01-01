@@ -8,12 +8,14 @@ fn main() {
         name: "Rosette1".to_string(),
         t_device: TypeDevice::Thermometer,
         description: "It is Rosette1. It's small but very powerful".to_string(),
+        power: 0,
     };
 
     let thermometer1 = Thermometer {
         name: "Thermometer1".to_string(),
         t_device: TypeDevice::Thermometer,
         description: "It is Thermometer1. It's simple".to_string(),
+        temperature: 24.4,
     };
 
     let mut apartment1 = Apartment {

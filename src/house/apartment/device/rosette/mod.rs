@@ -4,19 +4,22 @@ pub struct Rosette {
     pub name: String,
     pub t_device: TypeDevice,
     pub description: String,
+    pub power: u32,
 }
 
 impl Rosette {
-    fn _on(&self) -> bool {
-        todo!()
+    fn _on(&mut self) -> bool {
+        self.power = 220;
+        true
     }
 
-    fn _off(&self) -> bool {
-        todo!()
+    fn _off(&mut self) -> bool {
+        self.power = 0;
+        false
     }
 
-    fn _current_power(&self) -> i32 {
-        todo!()
+    fn _current_power(&self) -> u32 {
+        self.power
     }
 }
 
