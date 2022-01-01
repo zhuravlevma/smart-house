@@ -8,18 +8,30 @@ pub struct House {
     pub apartments: Vec<Apartment>,
 }
 impl House {
-    fn _get_apartments(&self) -> Option<&Vec<&Apartment>> {
-        todo!()
+    pub fn get_apartments(&self) -> &Vec<Apartment> {
+        &self.apartments
     }
-    fn _add_apartment(&self, _apartment: Apartment) -> Result<&Apartment, AddDataError> {
-        todo!()
+    pub fn add_apartment(&mut self, new_apartment: Apartment) -> Result<&Apartment, AddDataError> {
+        for apartment in &self.apartments {
+            if apartment.name.eq(&new_apartment.name) {
+                return Err(AddDataError::UniqueConstraint);
+            }
+        }
+        self.apartments.push(new_apartment);
+        let length = self.apartments.len();
+        Ok(&self.apartments[length - 1])
     }
-    fn _remove_apartment(&self, _apartment_name: String) -> Result<String, RemoveDataError> {
-        todo!()
+    pub fn remove_apartment(&mut self, apartment_name: String) -> Result<Apartment, RemoveDataError> {
+        for (pos, apartment) in self.apartments.iter().enumerate() {
+            if apartment.name.eq(&apartment_name) {
+                return Ok(self.apartments.remove(pos));
+            }
+        }
+        Err(RemoveDataError::NotFound)
     }
 
     fn _create_report(&self) -> String {
-        todo!()
+        "Test report".to_string()
     }
 }
 
