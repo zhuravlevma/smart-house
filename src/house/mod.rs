@@ -46,26 +46,39 @@ mod tests {
 
     #[test]
     fn add_apartment_successful() {
-        let mut house = House { name: "House1".to_string(), apartments: vec![] };
-        let apartment = Apartment { name: "Apartment1".to_string(), devices: vec![] };
+        let mut house = House {
+            name: "House1".to_string(),
+            apartments: vec![],
+        };
+        let apartment = Apartment {
+            name: "Apartment1".to_string(),
+            devices: vec![],
+        };
 
         match house.add_apartment(apartment) {
             Ok(_) => {}
-            Err(error) => {
-                match error {
-                    AddDataError::UniqueConstraint => {
-                        panic!("AddDataError: UniqueConstraint");
-                    }
+            Err(error) => match error {
+                AddDataError::UniqueConstraint => {
+                    panic!("AddDataError: UniqueConstraint");
                 }
-            }
+            },
         }
     }
 
     #[test]
     fn add_apartment_error() {
-        let mut house = House { name: "House1".to_string(), apartments: vec![] };
-        let apartment1 = Apartment { name: "Apartment1".to_string(), devices: vec![] };
-        let apartment2 = Apartment {name: "Apartment1".to_string(), devices: vec![] };
+        let mut house = House {
+            name: "House1".to_string(),
+            apartments: vec![],
+        };
+        let apartment1 = Apartment {
+            name: "Apartment1".to_string(),
+            devices: vec![],
+        };
+        let apartment2 = Apartment {
+            name: "Apartment1".to_string(),
+            devices: vec![],
+        };
 
         match house.add_apartment(apartment1) {
             Ok(_) => {}
@@ -83,10 +96,19 @@ mod tests {
 
     #[test]
     fn remove_apartment_successful() {
-        let mut house = House { name: "House1".to_string(), apartments: vec![] };
+        let mut house = House {
+            name: "House1".to_string(),
+            apartments: vec![],
+        };
         let apartment1_name = "Apartment1".to_string();
-        let apartment1 = Apartment { name: apartment1_name.clone(), devices: vec![] };
-        let apartment2 = Apartment {name: "Apartment2".to_string(), devices: vec![] };
+        let apartment1 = Apartment {
+            name: apartment1_name.clone(),
+            devices: vec![],
+        };
+        let apartment2 = Apartment {
+            name: "Apartment2".to_string(),
+            devices: vec![],
+        };
 
         match house.add_apartment(apartment1) {
             Ok(_) => {}
@@ -103,13 +125,11 @@ mod tests {
 
         match house.remove_apartment(apartment1_name) {
             Ok(_) => {}
-            Err(error) => {
-                match error {
-                    RemoveDataError::NotFound => {
-                        panic!("RemoveError NotFound. Remove by name should get ok")
-                    }
+            Err(error) => match error {
+                RemoveDataError::NotFound => {
+                    panic!("RemoveError NotFound. Remove by name should get ok")
                 }
-            }
+            },
         };
 
         assert_eq!(house.get_apartments().len(), 1);
@@ -117,10 +137,19 @@ mod tests {
 
     #[test]
     fn remove_apartment_error() {
-        let mut house = House { name: "House1".to_string(), apartments: vec![] };
+        let mut house = House {
+            name: "House1".to_string(),
+            apartments: vec![],
+        };
         let search_name = "Apartment3".to_string();
-        let apartment1 = Apartment { name: "Apartment1".to_string(), devices: vec![] };
-        let apartment2 = Apartment {name: "Apartment2".to_string(), devices: vec![] };
+        let apartment1 = Apartment {
+            name: "Apartment1".to_string(),
+            devices: vec![],
+        };
+        let apartment2 = Apartment {
+            name: "Apartment2".to_string(),
+            devices: vec![],
+        };
 
         match house.add_apartment(apartment1) {
             Ok(_) => {}

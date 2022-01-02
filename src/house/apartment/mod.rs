@@ -64,48 +64,51 @@ impl Apartment {
 
 #[cfg(test)]
 mod tests {
+    use super::*;
     use crate::house::apartment::device::rosette::Rosette;
     use crate::house::apartment::device::thermometer::Thermometer;
     use crate::house::apartment::device::TypeDevice;
-    use super::*;
-
 
     #[test]
     fn add_device_successful() {
-        let mut apartment = Apartment { name: "Haha".to_string(), devices: vec![] };
+        let mut apartment = Apartment {
+            name: "Haha".to_string(),
+            devices: vec![],
+        };
         let rosette = Rosette {
             name: "".to_string(),
             t_device: TypeDevice::Rosette,
             description: "".to_string(),
-            power: 0
+            power: 0,
         };
 
         match apartment._add_device(Device::Rosette(rosette)) {
             Ok(_) => {}
-            Err(error) => {
-                match error {
-                    AddDataError::UniqueConstraint => {
-                        panic!("AddDataError error: UniqueConstraint")
-                    }
+            Err(error) => match error {
+                AddDataError::UniqueConstraint => {
+                    panic!("AddDataError error: UniqueConstraint")
                 }
-            }
+            },
         };
     }
 
     #[test]
     fn add_device_unique_error() {
-        let mut apartment = Apartment { name: "Haha".to_string(), devices: vec![] };
+        let mut apartment = Apartment {
+            name: "Haha".to_string(),
+            devices: vec![],
+        };
         let rosette = Rosette {
             name: "Device1".to_string(),
             t_device: TypeDevice::Rosette,
             description: "".to_string(),
-            power: 0
+            power: 0,
         };
         let thermometer = Thermometer {
             name: "Device1".to_string(),
             t_device: TypeDevice::Thermometer,
             description: "".to_string(),
-            temperature: 0.0
+            temperature: 0.0,
         };
 
         let _result1 = apartment._add_device(Device::Rosette(rosette));
@@ -119,58 +122,58 @@ mod tests {
 
     #[test]
     fn get_device_by_name_successful() {
-        let mut apartment = Apartment { name: "Haha".to_string(), devices: vec![] };
+        let mut apartment = Apartment {
+            name: "Haha".to_string(),
+            devices: vec![],
+        };
         let device_name = "Device1".to_string();
         let rosette = Rosette {
             name: device_name.clone(),
             t_device: TypeDevice::Rosette,
             description: "".to_string(),
-            power: 0
+            power: 0,
         };
 
         match apartment._add_device(Device::Rosette(rosette)) {
             Ok(_) => {}
-            Err(error) => {
-                match error {
-                    AddDataError::UniqueConstraint => {
-                        panic!("AddDataError Error UniqueConstraint")
-                    }
+            Err(error) => match error {
+                AddDataError::UniqueConstraint => {
+                    panic!("AddDataError Error UniqueConstraint")
                 }
-            }
+            },
         }
 
         match apartment.get_device_by_name(&device_name) {
             Ok(_) => {}
-            Err(error) => {
-                match error {
-                    GetDataError::NotFound => {
-                        panic!("GetDataError Error: Not Found")
-                    }
+            Err(error) => match error {
+                GetDataError::NotFound => {
+                    panic!("GetDataError Error: Not Found")
                 }
-            }
+            },
         };
     }
 
     #[test]
     fn _get_device_by_name_error() {
-        let mut apartment = Apartment { name: "Haha".to_string(), devices: vec![] };
+        let mut apartment = Apartment {
+            name: "Haha".to_string(),
+            devices: vec![],
+        };
         let device_name = "Device1".to_string();
         let rosette = Rosette {
             name: "Device2".to_string(),
             t_device: TypeDevice::Rosette,
             description: "".to_string(),
-            power: 0
+            power: 0,
         };
 
         match apartment._add_device(Device::Rosette(rosette)) {
             Ok(_) => {}
-            Err(error) => {
-                match error {
-                    AddDataError::UniqueConstraint => {
-                        panic!("AddDataError Error: UniqueConstraint")
-                    }
+            Err(error) => match error {
+                AddDataError::UniqueConstraint => {
+                    panic!("AddDataError Error: UniqueConstraint")
                 }
-            }
+            },
         };
 
         match apartment.get_device_by_name(&device_name) {
@@ -183,52 +186,49 @@ mod tests {
 
     #[test]
     fn _remove_device_successful() {
-        let mut apartment = Apartment { name: "Haha".to_string(), devices: vec![] };
+        let mut apartment = Apartment {
+            name: "Haha".to_string(),
+            devices: vec![],
+        };
         let rosette_name = "Rosette1".to_string();
         let rosette = Rosette {
             name: rosette_name.clone(),
             t_device: TypeDevice::Rosette,
             description: "".to_string(),
-            power: 0
+            power: 0,
         };
         let thermometer = Thermometer {
             name: "Thermometer1".to_string(),
             t_device: TypeDevice::Thermometer,
             description: "".to_string(),
-            temperature: 0.0
+            temperature: 0.0,
         };
 
         match apartment._add_device(Device::Rosette(rosette)) {
             Ok(_) => {}
-            Err(error) => {
-                match error {
-                    AddDataError::UniqueConstraint => {
-                        panic!("AddDataError Error: UniqueError");
-                    }
+            Err(error) => match error {
+                AddDataError::UniqueConstraint => {
+                    panic!("AddDataError Error: UniqueError");
                 }
-            }
+            },
         }
 
         match apartment._add_device(Device::Thermometer(thermometer)) {
             Ok(_) => {}
-            Err(error) => {
-                match error {
-                    AddDataError::UniqueConstraint => {
-                        panic!("AddDataError Error: UniqueError");
-                    }
+            Err(error) => match error {
+                AddDataError::UniqueConstraint => {
+                    panic!("AddDataError Error: UniqueError");
                 }
-            }
+            },
         }
 
         match apartment.remove_device(rosette_name) {
             Ok(_) => {}
-            Err(error) => {
-                match error {
-                    RemoveDataError::NotFound => {
-                        panic!("RemoveDataError Error: NotFound");
-                    }
+            Err(error) => match error {
+                RemoveDataError::NotFound => {
+                    panic!("RemoveDataError Error: NotFound");
                 }
-            }
+            },
         };
 
         assert_eq!(apartment._list_devices().len(), 1);
@@ -236,25 +236,26 @@ mod tests {
 
     #[test]
     fn _remove_device_error() {
-        let mut apartment = Apartment { name: "Haha".to_string(), devices: vec![] };
+        let mut apartment = Apartment {
+            name: "Haha".to_string(),
+            devices: vec![],
+        };
         let rosette_name = "Rosette1".to_string();
         let search_name = "Rosette2".to_string();
         let rosette = Rosette {
             name: rosette_name.clone(),
             t_device: TypeDevice::Rosette,
             description: "".to_string(),
-            power: 0
+            power: 0,
         };
 
         match apartment._add_device(Device::Rosette(rosette)) {
             Ok(_) => {}
-            Err(error) => {
-                match error {
-                    AddDataError::UniqueConstraint => {
-                        panic!("AddDataError: UniqueError");
-                    }
+            Err(error) => match error {
+                AddDataError::UniqueConstraint => {
+                    panic!("AddDataError: UniqueError");
                 }
-            }
+            },
         }
 
         match apartment.remove_device(search_name) {
