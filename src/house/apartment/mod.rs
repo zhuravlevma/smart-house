@@ -68,7 +68,7 @@ mod tests {
     fn _add_device_successful() {}
 
     #[test]
-    fn _add_device_error() {}
+    fn add_device_error() {}
 
     #[test]
     fn _get_device_by_name_successful() {}

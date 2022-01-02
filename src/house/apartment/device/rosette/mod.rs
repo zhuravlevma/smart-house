@@ -25,12 +25,48 @@ impl Rosette {
 
 #[cfg(test)]
 mod tests {
-    #[test]
-    fn rosette_on() {}
+    use crate::house::apartment::device::rosette::Rosette;
+    use crate::house::apartment::device::TypeDevice;
 
     #[test]
-    fn rosette_off() {}
+    fn rosette_on() {
+        let mut rosette = Rosette {
+            name: "Rosette1".to_string(),
+            t_device: TypeDevice::Thermometer,
+            description: "".to_string(),
+            power: 0,
+        };
+
+        rosette._on();
+
+        assert_eq!(rosette.power > 0, true)
+    }
 
     #[test]
-    fn rosette_get_current_power() {}
+    fn rosette_off() {
+        let mut rosette = Rosette {
+            name: "Rosette1".to_string(),
+            t_device: TypeDevice::Thermometer,
+            description: "".to_string(),
+            power: 0,
+        };
+
+        rosette._off();
+
+        assert_eq!(rosette.power == 0, true)
+    }
+
+    #[test]
+    fn rosette_get_current_power() {
+        let mut rosette = Rosette {
+            name: "Rosette1".to_string(),
+            t_device: TypeDevice::Thermometer,
+            description: "".to_string(),
+            power: 0,
+        };
+        rosette._off();
+        assert_eq!(rosette.power, rosette._current_power());
+        rosette._on();
+        assert_eq!(rosette.power, rosette._current_power())
+    }
 }
