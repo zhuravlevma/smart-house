@@ -40,21 +40,106 @@ impl House {
 
 #[cfg(test)]
 mod tests {
-    #[test]
-    fn add_apartment_successful() {}
+    use crate::house::apartment::Apartment;
+    use crate::house::House;
+    use crate::result::{AddDataError, RemoveDataError};
 
     #[test]
-    fn add_apartment_error() {}
+    fn add_apartment_successful() {
+        let mut house = House { name: "House1".to_string(), apartments: vec![] };
+        let apartment = Apartment { name: "Apartment1".to_string(), devices: vec![] };
+
+        match house.add_apartment(apartment) {
+            Ok(_) => {}
+            Err(error) => {
+                match error {
+                    AddDataError::UniqueConstraint => {
+                        panic!("AddDataError: UniqueConstraint");
+                    }
+                }
+            }
+        }
+    }
 
     #[test]
-    fn get_apartment_successful() {}
+    fn add_apartment_error() {
+        let mut house = House { name: "House1".to_string(), apartments: vec![] };
+        let apartment1 = Apartment { name: "Apartment1".to_string(), devices: vec![] };
+        let apartment2 = Apartment {name: "Apartment1".to_string(), devices: vec![] };
+
+        match house.add_apartment(apartment1) {
+            Ok(_) => {}
+            Err(_) => {
+                panic!("unknown error");
+            }
+        };
+        match house.add_apartment(apartment2) {
+            Ok(_) => {
+                panic!("Add apartment should get error")
+            }
+            Err(_) => {}
+        };
+    }
 
     #[test]
-    fn get_apartment_error() {}
+    fn remove_apartment_successful() {
+        let mut house = House { name: "House1".to_string(), apartments: vec![] };
+        let apartment1_name = "Apartment1".to_string();
+        let apartment1 = Apartment { name: apartment1_name.clone(), devices: vec![] };
+        let apartment2 = Apartment {name: "Apartment2".to_string(), devices: vec![] };
+
+        match house.add_apartment(apartment1) {
+            Ok(_) => {}
+            Err(_) => {
+                panic!("unknown error");
+            }
+        };
+        match house.add_apartment(apartment2) {
+            Ok(_) => {}
+            Err(_) => {
+                panic!("unknown error");
+            }
+        };
+
+        match house.remove_apartment(apartment1_name) {
+            Ok(_) => {}
+            Err(error) => {
+                match error {
+                    RemoveDataError::NotFound => {
+                        panic!("RemoveError NotFound. Remove by name should get ok")
+                    }
+                }
+            }
+        };
+
+        assert_eq!(house.get_apartments().len(), 1);
+    }
 
     #[test]
-    fn _remove_apartment_successful() {}
+    fn remove_apartment_error() {
+        let mut house = House { name: "House1".to_string(), apartments: vec![] };
+        let search_name = "Apartment3".to_string();
+        let apartment1 = Apartment { name: "Apartment1".to_string(), devices: vec![] };
+        let apartment2 = Apartment {name: "Apartment2".to_string(), devices: vec![] };
 
-    #[test]
-    fn _remove_apartment_error() {}
+        match house.add_apartment(apartment1) {
+            Ok(_) => {}
+            Err(_) => {
+                panic!("unknown error");
+            }
+        };
+        match house.add_apartment(apartment2) {
+            Ok(_) => {}
+            Err(_) => {
+                panic!("unknown error");
+            }
+        };
+
+        match house.remove_apartment(search_name) {
+            Ok(_) => {
+                panic!("Remove by name should get error")
+            }
+            Err(_) => {}
+        };
+    }
 }
