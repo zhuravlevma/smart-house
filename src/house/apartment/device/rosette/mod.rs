@@ -60,7 +60,7 @@ mod tests {
     fn rosette_get_current_power() {
         let mut rosette = Rosette {
             name: "Rosette1".to_string(),
-            t_device: TypeDevice::Thermometer,
+            t_device: TypeDevice::Rosette,
             description: "".to_string(),
             power: 0,
         };
