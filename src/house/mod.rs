@@ -59,7 +59,7 @@ mod tests {
             Ok(_) => {}
             Err(error) => match error {
                 AddDataError::UniqueConstraint => {
-                    panic!("AddDataError: UniqueConstraint");
+                    panic!("{}", AddDataError::UniqueConstraint);
                 }
             },
         }
