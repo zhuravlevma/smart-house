@@ -1,27 +1,14 @@
 use smart_house::house::apartment::device::rosette::Rosette;
 use smart_house::house::apartment::device::thermometer::Thermometer;
-use smart_house::house::apartment::device::{Device, TypeDevice};
+use smart_house::house::apartment::device::Device;
 use smart_house::house::apartment::Apartment;
 
 fn main() {
-    let rosette1 = Rosette {
-        name: "Rosette1".to_string(),
-        t_device: TypeDevice::Thermometer,
-        description: "It is Rosette1. It's small but very powerful".to_string(),
-        power: 0,
-    };
+    let rosette1 = Rosette::new("Rosette1".to_string());
 
-    let thermometer1 = Thermometer {
-        name: "Thermometer1".to_string(),
-        t_device: TypeDevice::Thermometer,
-        description: "It is Thermometer1. It's simple".to_string(),
-        temperature: 24.4,
-    };
+    let thermometer1 = Thermometer::new("Thermometer1".to_string(), 24.4);
 
-    let mut apartment1 = Apartment {
-        name: "".to_string(),
-        devices: vec![],
-    };
+    let mut apartment1 = Apartment::new("Apartment1".to_string());
 
     let result_rosette1 = apartment1._add_device(Device::Rosette(rosette1));
     match result_rosette1 {

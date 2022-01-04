@@ -4,9 +4,19 @@ use crate::result::{AddDataError, RemoveDataError};
 use apartment::Apartment;
 
 pub struct House {
-    pub name: String,
-    pub apartments: Vec<Apartment>,
+    name: String,
+    apartments: Vec<Apartment>,
 }
+
+impl House {
+    pub fn new(name: String) -> Self {
+        Self {
+            name,
+            apartments: vec![],
+        }
+    }
+}
+
 impl House {
     pub fn get_apartments(&self) -> &Vec<Apartment> {
         &self.apartments
@@ -33,8 +43,8 @@ impl House {
         Err(RemoveDataError::NotFound)
     }
 
-    fn _create_report(&self) -> String {
-        "Test report".to_string()
+    pub fn create_report(&self) -> String {
+        format!("{}, {}", "Test report".to_string(), self.name)
     }
 }
 
@@ -46,14 +56,8 @@ mod tests {
 
     #[test]
     fn add_apartment_successful() {
-        let mut house = House {
-            name: "House1".to_string(),
-            apartments: vec![],
-        };
-        let apartment = Apartment {
-            name: "Apartment1".to_string(),
-            devices: vec![],
-        };
+        let mut house = House::new("House1".to_string());
+        let apartment = Apartment::new("Apartment1".to_string());
 
         match house.add_apartment(apartment) {
             Ok(_) => {}
@@ -67,18 +71,9 @@ mod tests {
 
     #[test]
     fn add_apartment_error() {
-        let mut house = House {
-            name: "House1".to_string(),
-            apartments: vec![],
-        };
-        let apartment1 = Apartment {
-            name: "Apartment1".to_string(),
-            devices: vec![],
-        };
-        let apartment2 = Apartment {
-            name: "Apartment1".to_string(),
-            devices: vec![],
-        };
+        let mut house = House::new("House1".to_string());
+        let apartment1 = Apartment::new("Apartment1".to_string());
+        let apartment2 = Apartment::new("Apartment1".to_string());
 
         match house.add_apartment(apartment1) {
             Ok(_) => {}
@@ -96,19 +91,10 @@ mod tests {
 
     #[test]
     fn remove_apartment_successful() {
-        let mut house = House {
-            name: "House1".to_string(),
-            apartments: vec![],
-        };
+        let mut house = House::new("House1".to_string());
         let apartment1_name = "Apartment1".to_string();
-        let apartment1 = Apartment {
-            name: apartment1_name.clone(),
-            devices: vec![],
-        };
-        let apartment2 = Apartment {
-            name: "Apartment2".to_string(),
-            devices: vec![],
-        };
+        let apartment1 = Apartment::new(apartment1_name.clone());
+        let apartment2 = Apartment::new("Apartment2".to_string());
 
         match house.add_apartment(apartment1) {
             Ok(_) => {}
@@ -137,19 +123,10 @@ mod tests {
 
     #[test]
     fn remove_apartment_error() {
-        let mut house = House {
-            name: "House1".to_string(),
-            apartments: vec![],
-        };
+        let mut house = House::new("House1".to_string());
         let search_name = "Apartment3".to_string();
-        let apartment1 = Apartment {
-            name: "Apartment1".to_string(),
-            devices: vec![],
-        };
-        let apartment2 = Apartment {
-            name: "Apartment2".to_string(),
-            devices: vec![],
-        };
+        let apartment1 = Apartment::new("Apartment1".to_string());
+        let apartment2 = Apartment::new("Apartment2".to_string());
 
         match house.add_apartment(apartment1) {
             Ok(_) => {}

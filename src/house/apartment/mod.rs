@@ -4,7 +4,16 @@ use device::Device;
 
 pub struct Apartment {
     pub name: String,
-    pub devices: Vec<Device>,
+    devices: Vec<Device>,
+}
+
+impl Apartment {
+    pub fn new(name: String) -> Self {
+        Self {
+            name,
+            devices: vec![],
+        }
+    }
 }
 
 impl Apartment {
@@ -47,7 +56,6 @@ impl Apartment {
         }
         Err(GetDataError::NotFound)
     }
-
     fn check_device_eq(&self, old_device: &Device, new_name: &str) -> bool {
         match old_device {
             Device::Thermometer(old_thermometer) => {
@@ -56,7 +64,6 @@ impl Apartment {
             Device::Rosette(old_rosette) => self.name_is_eq(new_name, &old_rosette.name),
         }
     }
-
     fn name_is_eq(&self, str1: &str, str2: &str) -> bool {
         str1.eq(str2)
     }
@@ -64,24 +71,16 @@ impl Apartment {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use crate::house::apartment::device::rosette::Rosette;
     use crate::house::apartment::device::thermometer::Thermometer;
-    use crate::house::apartment::device::TypeDevice;
+    use crate::house::apartment::device::Device;
+    use crate::house::apartment::Apartment;
+    use crate::result::{AddDataError, GetDataError, RemoveDataError};
 
     #[test]
     fn add_device_successful() {
-        let mut apartment = Apartment {
-            name: "Haha".to_string(),
-            devices: vec![],
-        };
-        let rosette = Rosette {
-            name: "".to_string(),
-            t_device: TypeDevice::Rosette,
-            description: "".to_string(),
-            power: 0,
-        };
-
+        let mut apartment = Apartment::new("Haha".to_string());
+        let rosette = Rosette::new("".to_string());
         match apartment._add_device(Device::Rosette(rosette)) {
             Ok(_) => {}
             Err(error) => match error {
@@ -94,23 +93,9 @@ mod tests {
 
     #[test]
     fn add_device_unique_error() {
-        let mut apartment = Apartment {
-            name: "Haha".to_string(),
-            devices: vec![],
-        };
-        let rosette = Rosette {
-            name: "Device1".to_string(),
-            t_device: TypeDevice::Rosette,
-            description: "".to_string(),
-            power: 0,
-        };
-        let thermometer = Thermometer {
-            name: "Device1".to_string(),
-            t_device: TypeDevice::Thermometer,
-            description: "".to_string(),
-            temperature: 0.0,
-        };
-
+        let mut apartment = Apartment::new("Haha".to_string());
+        let rosette = Rosette::new("Device1".to_string());
+        let thermometer = Thermometer::new("Device1".to_string(), 0.0);
         let _result1 = apartment._add_device(Device::Rosette(rosette));
         match apartment._add_device(Device::Thermometer(thermometer)) {
             Ok(_) => {
@@ -122,18 +107,9 @@ mod tests {
 
     #[test]
     fn get_device_by_name_successful() {
-        let mut apartment = Apartment {
-            name: "Haha".to_string(),
-            devices: vec![],
-        };
+        let mut apartment = Apartment::new("Haha".to_string());
         let device_name = "Device1".to_string();
-        let rosette = Rosette {
-            name: device_name.clone(),
-            t_device: TypeDevice::Rosette,
-            description: "".to_string(),
-            power: 0,
-        };
-
+        let rosette = Rosette::new(device_name.clone());
         match apartment._add_device(Device::Rosette(rosette)) {
             Ok(_) => {}
             Err(error) => match error {
@@ -154,18 +130,10 @@ mod tests {
     }
 
     #[test]
-    fn _get_device_by_name_error() {
-        let mut apartment = Apartment {
-            name: "Haha".to_string(),
-            devices: vec![],
-        };
+    fn get_device_by_name_error() {
+        let mut apartment = Apartment::new("Haha".to_string());
         let device_name = "Device1".to_string();
-        let rosette = Rosette {
-            name: "Device2".to_string(),
-            t_device: TypeDevice::Rosette,
-            description: "".to_string(),
-            power: 0,
-        };
+        let rosette = Rosette::new("Device2".to_string());
 
         match apartment._add_device(Device::Rosette(rosette)) {
             Ok(_) => {}
@@ -185,25 +153,11 @@ mod tests {
     }
 
     #[test]
-    fn _remove_device_successful() {
-        let mut apartment = Apartment {
-            name: "Haha".to_string(),
-            devices: vec![],
-        };
+    fn remove_device_successful() {
+        let mut apartment = Apartment::new("Haha".to_string());
         let rosette_name = "Rosette1".to_string();
-        let rosette = Rosette {
-            name: rosette_name.clone(),
-            t_device: TypeDevice::Rosette,
-            description: "".to_string(),
-            power: 0,
-        };
-        let thermometer = Thermometer {
-            name: "Thermometer1".to_string(),
-            t_device: TypeDevice::Thermometer,
-            description: "".to_string(),
-            temperature: 0.0,
-        };
-
+        let rosette = Rosette::new(rosette_name.clone());
+        let thermometer = Thermometer::new("Thermometer1".to_string(), 0.0);
         match apartment._add_device(Device::Rosette(rosette)) {
             Ok(_) => {}
             Err(error) => match error {
@@ -212,7 +166,6 @@ mod tests {
                 }
             },
         }
-
         match apartment._add_device(Device::Thermometer(thermometer)) {
             Ok(_) => {}
             Err(error) => match error {
@@ -221,7 +174,6 @@ mod tests {
                 }
             },
         }
-
         match apartment.remove_device(rosette_name) {
             Ok(_) => {}
             Err(error) => match error {
@@ -230,25 +182,15 @@ mod tests {
                 }
             },
         };
-
         assert_eq!(apartment._list_devices().len(), 1);
     }
 
     #[test]
-    fn _remove_device_error() {
-        let mut apartment = Apartment {
-            name: "Haha".to_string(),
-            devices: vec![],
-        };
+    fn remove_device_error() {
+        let mut apartment = Apartment::new("Haha".to_string());
         let rosette_name = "Rosette1".to_string();
         let search_name = "Rosette2".to_string();
-        let rosette = Rosette {
-            name: rosette_name.clone(),
-            t_device: TypeDevice::Rosette,
-            description: "".to_string(),
-            power: 0,
-        };
-
+        let rosette = Rosette::new(rosette_name.clone());
         match apartment._add_device(Device::Rosette(rosette)) {
             Ok(_) => {}
             Err(error) => match error {
@@ -257,7 +199,6 @@ mod tests {
                 }
             },
         }
-
         match apartment.remove_device(search_name) {
             Ok(_) => {
                 panic!("Remove device by name should get error")

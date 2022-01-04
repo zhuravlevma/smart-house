@@ -2,71 +2,62 @@ use super::TypeDevice;
 
 pub struct Rosette {
     pub name: String,
-    pub t_device: TypeDevice,
-    pub description: String,
-    pub power: u32,
+    _t_device: TypeDevice,
+    _description: String,
+    _power: u32,
+}
+
+impl Rosette {
+    pub fn new(name: String) -> Self {
+        Self {
+            name,
+            _t_device: TypeDevice::Rosette,
+            _description: "It's a rosette".to_string(),
+            _power: 0,
+        }
+    }
 }
 
 impl Rosette {
     fn _on(&mut self) -> bool {
-        self.power = 220;
+        self._power = 220;
         true
     }
 
     fn _off(&mut self) -> bool {
-        self.power = 0;
+        self._power = 0;
         false
     }
 
     fn _current_power(&self) -> u32 {
-        self.power
+        self._power
     }
 }
 
 #[cfg(test)]
 mod tests {
     use crate::house::apartment::device::rosette::Rosette;
-    use crate::house::apartment::device::TypeDevice;
 
     #[test]
     fn rosette_on() {
-        let mut rosette = Rosette {
-            name: "Rosette1".to_string(),
-            t_device: TypeDevice::Thermometer,
-            description: "".to_string(),
-            power: 0,
-        };
-
+        let mut rosette = Rosette::new("Rosette1".to_string());
         rosette._on();
-
-        assert_eq!(rosette.power > 0, true)
+        assert_eq!(rosette._current_power() > 0, true)
     }
 
     #[test]
     fn rosette_off() {
-        let mut rosette = Rosette {
-            name: "Rosette1".to_string(),
-            t_device: TypeDevice::Thermometer,
-            description: "".to_string(),
-            power: 0,
-        };
-
+        let mut rosette = Rosette::new("Rosette1".to_string());
         rosette._off();
-
-        assert_eq!(rosette.power == 0, true)
+        assert_eq!(rosette._current_power() == 0, true)
     }
 
     #[test]
     fn rosette_get_current_power() {
-        let mut rosette = Rosette {
-            name: "Rosette1".to_string(),
-            t_device: TypeDevice::Rosette,
-            description: "".to_string(),
-            power: 0,
-        };
+        let mut rosette = Rosette::new("Rosette1".to_string());
         rosette._off();
-        assert_eq!(rosette.power, rosette._current_power());
+        assert_eq!(0, rosette._current_power());
         rosette._on();
-        assert_eq!(rosette.power, rosette._current_power())
+        assert_eq!(220, rosette._current_power())
     }
 }
