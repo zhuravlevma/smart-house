@@ -2,6 +2,7 @@ use smart_house::house::apartment::device::rosette::Rosette;
 use smart_house::house::apartment::device::thermometer::Thermometer;
 use smart_house::house::apartment::device::Device;
 use smart_house::house::apartment::Apartment;
+use smart_house::result::GetDataError;
 
 fn main() {
     let rosette1 = Rosette::new("Rosette1".to_string());
@@ -29,5 +30,13 @@ fn main() {
         Err(_error) => println!("error"),
     }
 
+    let name_device = "Thermometer1".to_string();
+
     let _result_get = apartment1.get_device_by_name(&"Thermometer1".to_string());
+    find_by_name(&apartment1, name_device).unwrap();
+}
+
+fn find_by_name(apartment: &Apartment, s: String) -> Result<&Device, GetDataError> {
+    let test = apartment.get_device_by_name(&s)?;
+    Ok(test)
 }

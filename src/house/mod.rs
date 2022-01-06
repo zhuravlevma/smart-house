@@ -55,97 +55,53 @@ mod tests {
     use crate::result::{AddDataError, RemoveDataError};
 
     #[test]
-    fn add_apartment_successful() {
+    fn add_apartment_successful() -> Result<(), AddDataError> {
         let mut house = House::new("House1".to_string());
         let apartment = Apartment::new("Apartment1".to_string());
 
-        match house.add_apartment(apartment) {
-            Ok(_) => {}
-            Err(error) => match error {
-                AddDataError::UniqueConstraint => {
-                    panic!("{}", AddDataError::UniqueConstraint);
-                }
-            },
+        house.add_apartment(apartment)?;
+        Ok(())
+    }
+
+    #[test]
+    fn add_apartment_error() -> Result<(), AddDataError> {
+        let mut house = House::new("House1".to_string());
+        let apartment1 = Apartment::new("Apartment1".to_string());
+        let apartment2 = Apartment::new("Apartment1".to_string());
+        house.add_apartment(apartment1)?;
+        match house.add_apartment(apartment2) {
+            Ok(_) => return Err(AddDataError::UniqueConstraint),
+            Err(_) => Ok(()),
         }
     }
 
     #[test]
-    fn add_apartment_error() {
-        let mut house = House::new("House1".to_string());
-        let apartment1 = Apartment::new("Apartment1".to_string());
-        let apartment2 = Apartment::new("Apartment1".to_string());
-
-        match house.add_apartment(apartment1) {
-            Ok(_) => {}
-            Err(_) => {
-                panic!("unknown error");
-            }
-        };
-        match house.add_apartment(apartment2) {
-            Ok(_) => {
-                panic!("Add apartment should get error")
-            }
-            Err(_) => {}
-        };
-    }
-
-    #[test]
-    fn remove_apartment_successful() {
+    fn remove_apartment_successful() -> Result<(), RemoveDataError> {
         let mut house = House::new("House1".to_string());
         let apartment1_name = "Apartment1".to_string();
         let apartment1 = Apartment::new(apartment1_name.clone());
         let apartment2 = Apartment::new("Apartment2".to_string());
 
-        match house.add_apartment(apartment1) {
-            Ok(_) => {}
-            Err(_) => {
-                panic!("unknown error");
-            }
-        };
-        match house.add_apartment(apartment2) {
-            Ok(_) => {}
-            Err(_) => {
-                panic!("unknown error");
-            }
-        };
-
-        match house.remove_apartment(apartment1_name) {
-            Ok(_) => {}
-            Err(error) => match error {
-                RemoveDataError::NotFound => {
-                    panic!("RemoveError NotFound. Remove by name should get ok")
-                }
-            },
-        };
-
-        assert_eq!(house.get_apartments().len(), 1);
+        house.add_apartment(apartment1).unwrap();
+        house.add_apartment(apartment2).unwrap();
+        house.remove_apartment(apartment1_name)?;
+        Ok(())
     }
 
     #[test]
-    fn remove_apartment_error() {
+
+    fn remove_apartment_error() -> Result<(), RemoveDataError> {
         let mut house = House::new("House1".to_string());
         let search_name = "Apartment3".to_string();
         let apartment1 = Apartment::new("Apartment1".to_string());
         let apartment2 = Apartment::new("Apartment2".to_string());
 
-        match house.add_apartment(apartment1) {
-            Ok(_) => {}
-            Err(_) => {
-                panic!("unknown error");
-            }
-        };
-        match house.add_apartment(apartment2) {
-            Ok(_) => {}
-            Err(_) => {
-                panic!("unknown error");
-            }
-        };
+        house.add_apartment(apartment1).unwrap();
+        house.add_apartment(apartment2).unwrap();
 
         match house.remove_apartment(search_name) {
-            Ok(_) => {
-                panic!("Remove by name should get error")
-            }
-            Err(_) => {}
-        };
+            Ok(_) => Err(RemoveDataError::NotFound),
+            Err(_) => Ok(()),
+        }
     }
 }
