@@ -93,7 +93,7 @@ mod tests {
         apartment._add_device(Device::Rosette(rosette)).unwrap();
         match apartment._add_device(Device::Thermometer(thermometer)) {
             Ok(_) => Err(AddDataError::UniqueConstraint),
-            Err(_) => Ok(())
+            Err(_) => Ok(()),
         }
     }
 
@@ -117,7 +117,7 @@ mod tests {
 
         match apartment.get_device_by_name(&device_name) {
             Ok(_) => Err(GetDataError::NotFound),
-            Err(_) => Ok(())
+            Err(_) => Ok(()),
         }
     }
 
@@ -128,7 +128,9 @@ mod tests {
         let rosette = Rosette::new(rosette_name.clone());
         let thermometer = Thermometer::new("Thermometer1".to_string(), 0.0);
         apartment._add_device(Device::Rosette(rosette)).unwrap();
-        apartment._add_device(Device::Thermometer(thermometer)).unwrap();
+        apartment
+            ._add_device(Device::Thermometer(thermometer))
+            .unwrap();
         apartment.remove_device(rosette_name)?;
         Ok(())
     }
@@ -141,10 +143,8 @@ mod tests {
         let rosette = Rosette::new(rosette_name.clone());
         apartment._add_device(Device::Rosette(rosette)).unwrap();
         match apartment.remove_device(search_name) {
-            Ok(_) => {
-                Err(RemoveDataError::NotFound)
-            }
-            Err(_) => Ok(())
+            Ok(_) => Err(RemoveDataError::NotFound),
+            Err(_) => Ok(()),
         }
     }
 }

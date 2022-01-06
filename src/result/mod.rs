@@ -11,7 +11,7 @@ pub enum AddDataError {
 
 impl Debug for AddDataError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Add data error")
+        write!(f, "AddDataError: Unique Error")
     }
 }
 
