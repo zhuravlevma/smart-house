@@ -70,7 +70,7 @@ mod tests {
         let apartment2 = Apartment::new("Apartment1".to_string());
         house.add_apartment(apartment1)?;
         match house.add_apartment(apartment2) {
-            Ok(_) => return Err(AddDataError::UniqueConstraint),
+            Ok(_) => Err(AddDataError::UniqueConstraint),
             Err(_) => Ok(()),
         }
     }
