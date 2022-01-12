@@ -17,43 +17,43 @@ impl Apartment {
 
 impl Apartment {
     pub fn _add_device(&mut self, new_device: Device) -> Result<&Device, AddDataError> {
-        for old_device in &self.devices {
-            let result_check = match &new_device {
+        let device = self.devices.iter().find(|old_device| {
+             match &new_device {
                 Device::Thermometer(new_thermometer) => {
                     self.check_device_eq(old_device, &new_thermometer.name)
                 }
                 Device::Rosette(new_rosette) => self.check_device_eq(old_device, &new_rosette.name),
-            };
+            }
+        });
+        match device {
+            None => {
+                self.devices.push(new_device);
+                let last = self.devices.len() - 1;
 
-            if result_check {
-                return Err(AddDataError::UniqueConstraint);
+                Ok(&self.devices[last])
+            },
+            Some(_) => {
+                Err(AddDataError::UniqueConstraint)
             }
         }
-        self.devices.push(new_device);
-        let last = self.devices.len() - 1;
-
-        Ok(&self.devices[last])
     }
     pub fn remove_device(&mut self, device_name: String) -> Result<Device, RemoveDataError> {
-        for (pos, device) in self.devices.iter().enumerate() {
-            let result = self.check_device_eq(device, &device_name);
-            if result {
-                return Ok(self.devices.remove(pos));
-            }
+        let position = self.devices.iter()
+            .position(|device| self.check_device_eq(device, &device_name));
+        match position {
+            None => Err(RemoveDataError::NotFound),
+            Some(position) => Ok(self.devices.remove(position))
         }
-        Err(RemoveDataError::NotFound)
     }
     pub fn _list_devices(&self) -> &Vec<Device> {
         &self.devices
     }
     pub fn get_device_by_name(&self, device_name: &str) -> Result<&Device, GetDataError> {
-        for device in &self.devices {
-            let result = self.check_device_eq(device, device_name);
-            if result {
-                return Ok(device);
-            }
+        let device = self.devices.iter().find(|device| self.check_device_eq(device, device_name));
+        match device {
+            None => Err(GetDataError::NotFound),
+            Some(device) => Ok(device)
         }
-        Err(GetDataError::NotFound)
     }
     fn check_device_eq(&self, old_device: &Device, new_name: &str) -> bool {
         match old_device {

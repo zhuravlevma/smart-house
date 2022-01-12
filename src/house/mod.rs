@@ -32,12 +32,10 @@ impl House {
         &mut self,
         apartment_name: String,
     ) -> Result<Apartment, RemoveDataError> {
-        let position = &self.apartments.iter().enumerate()
-            .position(|(_pos, apartment)|  apartment.name.eq(&apartment_name));
+        let position = self.apartments.iter()
+            .position(|apartment|  apartment.name.eq(&apartment_name));
         match position {
-            Some(position) => {
-                Ok(self.apartments.remove(*position))
-            }
+            Some(position) => Ok(self.apartments.remove(position)),
             None => Err(RemoveDataError::NotFound),
         }
     }
