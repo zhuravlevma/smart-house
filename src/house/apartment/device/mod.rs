@@ -1,6 +1,3 @@
-pub mod rosette;
-pub mod thermometer;
-
 use rosette::Rosette;
 use thermometer::Thermometer;
 
@@ -13,3 +10,6 @@ pub enum Device {
     Rosette(Rosette),
     Thermometer(Thermometer),
 }
+
+pub mod rosette;
+pub mod thermometer;

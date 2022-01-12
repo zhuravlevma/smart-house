@@ -1,8 +1,8 @@
 use smart_house::errors::GetDataError;
-use smart_house::house::apartment::device::rosette::Rosette;
-use smart_house::house::apartment::device::thermometer::Thermometer;
-use smart_house::house::apartment::device::Device;
-use smart_house::house::apartment::Apartment;
+use smart_house::Apartment;
+use smart_house::Device;
+use smart_house::Rosette;
+use smart_house::Thermometer;
 
 fn main() {
     let rosette1 = Rosette::new("Rosette1".to_string());

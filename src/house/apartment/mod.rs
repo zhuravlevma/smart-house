@@ -1,4 +1,3 @@
-pub mod device;
 use crate::errors::{AddDataError, GetDataError, RemoveDataError};
 use device::Device;
 
@@ -71,11 +70,11 @@ impl Apartment {
 
 #[cfg(test)]
 mod tests {
-    use crate::house::apartment::device::rosette::Rosette;
-    use crate::house::apartment::device::thermometer::Thermometer;
-    use crate::house::apartment::device::Device;
-    use crate::house::apartment::Apartment;
+    use super::*;
+    use device::rosette::Rosette;
+    use device::thermometer::Thermometer;
     use std::error::Error;
+
     #[test]
     fn add_device_successful() -> Result<(), Box<dyn Error>> {
         let mut apartment = Apartment::new("Haha".to_string());
@@ -154,3 +153,5 @@ mod tests {
         Ok(())
     }
 }
+
+pub mod device;

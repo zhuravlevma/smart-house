@@ -36,7 +36,7 @@ impl Rosette {
 
 #[cfg(test)]
 mod tests {
-    use crate::house::apartment::device::rosette::Rosette;
+    use super::*;
 
     #[test]
     fn rosette_on() {

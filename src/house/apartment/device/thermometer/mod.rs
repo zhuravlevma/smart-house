@@ -26,7 +26,7 @@ impl Thermometer {
 
 #[cfg(test)]
 mod tests {
-    use crate::house::apartment::device::thermometer::Thermometer;
+    use super::*;
 
     #[test]
     fn _get_current_temperature() {

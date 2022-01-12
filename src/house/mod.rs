@@ -50,8 +50,7 @@ impl House {
 
 #[cfg(test)]
 mod tests {
-    use crate::house::apartment::Apartment;
-    use crate::house::House;
+    use super::*;
     use std::error::Error;
 
     #[test]
