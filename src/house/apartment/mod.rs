@@ -93,7 +93,12 @@ mod tests {
         let thermometer = Thermometer::new("Device1".to_string(), 0.0);
 
         apartment._add_device(Device::Rosette(rosette))?;
-        assert_eq!(apartment._add_device(Device::Thermometer(thermometer)).is_err(), true);
+        assert_eq!(
+            apartment
+                ._add_device(Device::Thermometer(thermometer))
+                .is_err(),
+            true
+        );
 
         Ok(())
     }
@@ -129,8 +134,7 @@ mod tests {
         let rosette = Rosette::new(rosette_name.clone());
         let thermometer = Thermometer::new("Thermometer1".to_string(), 0.0);
         apartment._add_device(Device::Rosette(rosette))?;
-        apartment
-            ._add_device(Device::Thermometer(thermometer))?;
+        apartment._add_device(Device::Thermometer(thermometer))?;
 
         apartment.remove_device(rosette_name)?;
 

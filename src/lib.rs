@@ -1,2 +1,2 @@
-pub mod house;
 pub mod errors;
+pub mod house;
