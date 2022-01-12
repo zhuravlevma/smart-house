@@ -1,6 +1,4 @@
-pub mod apartment;
-
-use crate::errors::{AddDataError, RemoveDataError};
+use crate::{AddDataError, RemoveDataError};
 use apartment::Apartment;
 
 pub struct House {
@@ -100,3 +98,5 @@ mod tests {
         Ok(())
     }
 }
+
+pub mod apartment;
