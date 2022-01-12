@@ -1,2 +1,2 @@
 pub mod house;
-pub mod result;
+pub mod errors;

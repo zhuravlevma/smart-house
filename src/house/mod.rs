@@ -1,6 +1,6 @@
 pub mod apartment;
 
-use crate::result::{AddDataError, RemoveDataError};
+use crate::errors::{AddDataError, RemoveDataError};
 use apartment::Apartment;
 
 pub struct House {
@@ -52,10 +52,10 @@ impl House {
 mod tests {
     use crate::house::apartment::Apartment;
     use crate::house::House;
-    use crate::result::{AddDataError, RemoveDataError};
+    use std::error::Error;
 
     #[test]
-    fn add_apartment_successful() -> Result<(), AddDataError> {
+    fn add_apartment_successful() -> Result<(), Box<dyn Error>> {
         let mut house = House::new("House1".to_string());
         let apartment = Apartment::new("Apartment1".to_string());
 
@@ -64,44 +64,40 @@ mod tests {
     }
 
     #[test]
-    fn add_apartment_error() -> Result<(), AddDataError> {
+    fn add_apartment_error() -> Result<(), Box<dyn Error>> {
         let mut house = House::new("House1".to_string());
         let apartment1 = Apartment::new("Apartment1".to_string());
         let apartment2 = Apartment::new("Apartment1".to_string());
         house.add_apartment(apartment1)?;
-        match house.add_apartment(apartment2) {
-            Ok(_) => Err(AddDataError::UniqueConstraint),
-            Err(_) => Ok(()),
-        }
+        assert_eq!(house.add_apartment(apartment2).is_err(), true);
+        Ok(())
     }
 
     #[test]
-    fn remove_apartment_successful() -> Result<(), RemoveDataError> {
+    fn remove_apartment_successful() -> Result<(), Box<dyn Error>> {
         let mut house = House::new("House1".to_string());
         let apartment1_name = "Apartment1".to_string();
         let apartment1 = Apartment::new(apartment1_name.clone());
         let apartment2 = Apartment::new("Apartment2".to_string());
 
-        house.add_apartment(apartment1).unwrap();
-        house.add_apartment(apartment2).unwrap();
+        house.add_apartment(apartment1)?;
+        house.add_apartment(apartment2)?;
         house.remove_apartment(apartment1_name)?;
         Ok(())
     }
 
     #[test]
 
-    fn remove_apartment_error() -> Result<(), RemoveDataError> {
+    fn remove_apartment_error() -> Result<(), Box<dyn Error>> {
         let mut house = House::new("House1".to_string());
         let search_name = "Apartment3".to_string();
         let apartment1 = Apartment::new("Apartment1".to_string());
         let apartment2 = Apartment::new("Apartment2".to_string());
 
-        house.add_apartment(apartment1).unwrap();
-        house.add_apartment(apartment2).unwrap();
+        house.add_apartment(apartment1)?;
+        house.add_apartment(apartment2)?;
 
-        match house.remove_apartment(search_name) {
-            Ok(_) => Err(RemoveDataError::NotFound),
-            Err(_) => Ok(()),
-        }
+        assert_eq!(house.remove_apartment(search_name).is_err(), true);
+        Ok(())
     }
 }

@@ -2,7 +2,7 @@ use smart_house::house::apartment::device::rosette::Rosette;
 use smart_house::house::apartment::device::thermometer::Thermometer;
 use smart_house::house::apartment::device::Device;
 use smart_house::house::apartment::Apartment;
-use smart_house::result::GetDataError;
+use smart_house::errors::GetDataError;
 
 fn main() {
     let rosette1 = Rosette::new("Rosette1".to_string());

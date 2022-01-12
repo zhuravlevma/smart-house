@@ -1,5 +1,5 @@
 pub mod device;
-use crate::result::{AddDataError, GetDataError, RemoveDataError};
+use crate::errors::{AddDataError, GetDataError, RemoveDataError};
 use device::Device;
 
 pub struct Apartment {
@@ -75,76 +75,78 @@ mod tests {
     use crate::house::apartment::device::thermometer::Thermometer;
     use crate::house::apartment::device::Device;
     use crate::house::apartment::Apartment;
-    use crate::result::{AddDataError, GetDataError, RemoveDataError};
-
+    use std::error::Error;
     #[test]
-    fn add_device_successful() -> Result<(), AddDataError> {
+    fn add_device_successful() -> Result<(), Box<dyn Error>> {
         let mut apartment = Apartment::new("Haha".to_string());
         let rosette = Rosette::new("".to_string());
+
         apartment._add_device(Device::Rosette(rosette))?;
+
         Ok(())
     }
 
     #[test]
-    fn add_device_unique_error() -> Result<(), AddDataError> {
+    fn add_device_unique_error() -> Result<(), Box<dyn Error>> {
         let mut apartment = Apartment::new("Haha".to_string());
         let rosette = Rosette::new("Device1".to_string());
         let thermometer = Thermometer::new("Device1".to_string(), 0.0);
-        apartment._add_device(Device::Rosette(rosette)).unwrap();
-        match apartment._add_device(Device::Thermometer(thermometer)) {
-            Ok(_) => Err(AddDataError::UniqueConstraint),
-            Err(_) => Ok(()),
-        }
-    }
 
-    #[test]
-    fn get_device_by_name_successful() -> Result<(), GetDataError> {
-        let mut apartment = Apartment::new("Haha".to_string());
-        let device_name = "Device1".to_string();
-        let rosette = Rosette::new(device_name.clone());
-        apartment._add_device(Device::Rosette(rosette)).unwrap();
-        apartment.get_device_by_name(&device_name)?;
+        apartment._add_device(Device::Rosette(rosette))?;
+        assert_eq!(apartment._add_device(Device::Thermometer(thermometer)).is_err(), true);
+
         Ok(())
     }
 
     #[test]
-    fn get_device_by_name_error() -> Result<(), GetDataError> {
+    fn get_device_by_name_successful() -> Result<(), Box<dyn Error>> {
+        let mut apartment = Apartment::new("Haha".to_string());
+        let device_name = "Device1".to_string();
+        let rosette = Rosette::new(device_name.clone());
+        apartment._add_device(Device::Rosette(rosette))?;
+
+        apartment.get_device_by_name(&device_name)?;
+
+        Ok(())
+    }
+
+    #[test]
+    fn get_device_by_name_error() -> Result<(), Box<dyn Error>> {
         let mut apartment = Apartment::new("Haha".to_string());
         let device_name = "Device1".to_string();
         let rosette = Rosette::new("Device2".to_string());
 
-        apartment._add_device(Device::Rosette(rosette)).unwrap();
+        apartment._add_device(Device::Rosette(rosette))?;
 
-        match apartment.get_device_by_name(&device_name) {
-            Ok(_) => Err(GetDataError::NotFound),
-            Err(_) => Ok(()),
-        }
-    }
-
-    #[test]
-    fn remove_device_successful() -> Result<(), RemoveDataError> {
-        let mut apartment = Apartment::new("Haha".to_string());
-        let rosette_name = "Rosette1".to_string();
-        let rosette = Rosette::new(rosette_name.clone());
-        let thermometer = Thermometer::new("Thermometer1".to_string(), 0.0);
-        apartment._add_device(Device::Rosette(rosette)).unwrap();
-        apartment
-            ._add_device(Device::Thermometer(thermometer))
-            .unwrap();
-        apartment.remove_device(rosette_name)?;
+        assert_eq!(apartment.get_device_by_name(&device_name).is_err(), true);
         Ok(())
     }
 
     #[test]
-    fn remove_device_error() -> Result<(), RemoveDataError> {
+    fn remove_device_successful() -> Result<(), Box<dyn Error>> {
+        let mut apartment = Apartment::new("Haha".to_string());
+        let rosette_name = "Rosette1".to_string();
+        let rosette = Rosette::new(rosette_name.clone());
+        let thermometer = Thermometer::new("Thermometer1".to_string(), 0.0);
+        apartment._add_device(Device::Rosette(rosette))?;
+        apartment
+            ._add_device(Device::Thermometer(thermometer))?;
+
+        apartment.remove_device(rosette_name)?;
+
+        Ok(())
+    }
+
+    #[test]
+    fn remove_device_error() -> Result<(), Box<dyn Error>> {
         let mut apartment = Apartment::new("Haha".to_string());
         let rosette_name = "Rosette1".to_string();
         let search_name = "Rosette2".to_string();
         let rosette = Rosette::new(rosette_name.clone());
-        apartment._add_device(Device::Rosette(rosette)).unwrap();
-        match apartment.remove_device(search_name) {
-            Ok(_) => Err(RemoveDataError::NotFound),
-            Err(_) => Ok(()),
-        }
+        apartment._add_device(Device::Rosette(rosette))?;
+
+        assert_eq!(apartment.remove_device(search_name).is_err(), true);
+
+        Ok(())
     }
 }
