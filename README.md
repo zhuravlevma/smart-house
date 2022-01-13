@@ -11,4 +11,4 @@ Type devices: Thermometer, Rosette.
 The thermometer allows you to get temperature.   
 The smart rosette allows to on and off itself. It shows information about current power consumption.    
 
-![smart-houses](https://user-images.githubusercontent.com/44276887/149300552-4ee6367d-79f4-4f33-82f0-69121a30ff8f.jpeg)
+<img width=300 src="https://user-images.githubusercontent.com/44276887/149300552-4ee6367d-79f4-4f33-82f0-69121a30ff8f.jpeg"/>
