@@ -2,7 +2,7 @@
 name = "smart_house"
 version = "0.1.0"
 edition = "2021"
-authors = ["Zhuravlev Maksim <zhuravlevma00@gmail.com>"]
+authors = ["Zhuravlev Maksim <monge.gaspard.1746@gmail.com>"]
 description = "It's a simple library to course OTUS Rust developer"
 license = "MIT OR Apache-2.0"
 
