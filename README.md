@@ -1,6 +1,8 @@
-Homework for course Rust Developer by OTUS
+### What is it?
+It's a homework for course Rust Developer by OTUS
 https://otus.ru/lessons/rust-developer/
 
+### Description
 The house has name and some apartments.  
 The apartment has an unique name and include some devices.  
 The device has an unique name in apartment, type and description.   
