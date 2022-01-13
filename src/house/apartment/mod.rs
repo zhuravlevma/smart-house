@@ -45,7 +45,7 @@ impl Apartment {
             Some(position) => Ok(self.devices.remove(position))
         }
     }
-    pub fn _list_devices(&self) -> &Vec<Device> {
+    pub fn _list_devices(&self) -> &[Device] {
         &self.devices
     }
     pub fn get_device_by_name(&self, device_name: &str) -> Result<&Device, GetDataError> {

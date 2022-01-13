@@ -16,7 +16,7 @@ impl House {
 }
 
 impl House {
-    pub fn get_apartments(&self) -> &Vec<Apartment> {
+    pub fn get_apartments(&self) -> &[Apartment] {
         &self.apartments
     }
     pub fn add_apartment(&mut self, new_apartment: Apartment) -> Result<&Apartment, AddDataError> {
