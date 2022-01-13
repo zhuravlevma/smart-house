@@ -3,11 +3,11 @@ It's a homework for course Rust Developer by OTUS
 https://otus.ru/lessons/rust-developer/
 
 ### Description
-The house has name and some apartments.  
+The house has a name and some apartments.  
 The apartment has an unique name and include some devices.  
 The device has an unique name in apartment, type and description.   
 The library allows you to add, get and remove some device in house, get list devices in apartment.  
-Type devices: Thermometer, Rosette.   
+Types of devices: Thermometer, Rosette.   
 The thermometer allows you to get temperature.   
 The smart rosette allows to on and off itself. It shows information about current power consumption.    
 
