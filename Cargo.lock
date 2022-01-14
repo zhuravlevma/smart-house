@@ -5,3 +5,11 @@ version = 3
 [[package]]
 name = "smart_house"
 version = "0.1.2"
+
+[[package]]
+name = "smart_rosette"
+version = "0.1.0"
+
+[[package]]
+name = "tcp"
+version = "0.1.0"
