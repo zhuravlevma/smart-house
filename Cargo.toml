@@ -3,5 +3,6 @@
 members = [
     "tcp",
     "smart_house",
-    "smart_rosette"
+    "smart_rosette",
+    "smart_house_tui"
 ]
