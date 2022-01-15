@@ -23,6 +23,9 @@ dependencies = [
 [[package]]
 name = "smart_house"
 version = "0.1.2"
+dependencies = [
+ "thiserror",
+]
 
 [[package]]
 name = "smart_house_tui"

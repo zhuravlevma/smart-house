@@ -20,9 +20,14 @@ impl House {
         &self.apartments
     }
     pub fn add_apartment(&mut self, new_apartment: Apartment) -> Result<&Apartment, AddDataError> {
-        let result: Vec<&Apartment> = self.apartments.iter().filter(|apartment| apartment.name.eq(&new_apartment.name)).collect();
-        if result.len() > 0 {
-            return Err(AddDataError::UniqueConstraint)
+        if self
+            .apartments
+            .iter()
+            .filter(|apartment| apartment.name.eq(&new_apartment.name))
+            .count()
+            > 0
+        {
+            return Err(AddDataError::UniqueConstraint);
         }
         self.apartments.push(new_apartment);
         let length = self.apartments.len();
@@ -32,8 +37,10 @@ impl House {
         &mut self,
         apartment_name: String,
     ) -> Result<Apartment, RemoveDataError> {
-        let position = self.apartments.iter()
-            .position(|apartment|  apartment.name.eq(&apartment_name));
+        let position = self
+            .apartments
+            .iter()
+            .position(|apartment| apartment.name.eq(&apartment_name));
         match position {
             Some(position) => Ok(self.apartments.remove(position)),
             None => Err(RemoveDataError::NotFound),

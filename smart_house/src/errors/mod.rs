@@ -1,56 +1,19 @@
-use std::error::Error;
-use std::fmt::{Debug, Display, Formatter};
+use thiserror::Error;
 
+#[derive(Debug, Error)]
 pub enum GetDataError {
+    #[error("Not found data")]
     NotFound,
 }
 
+#[derive(Debug, Error)]
 pub enum AddDataError {
+    #[error("Unique constraint error")]
     UniqueConstraint,
 }
 
-impl Debug for AddDataError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "AddDataError: Unique Error")
-    }
-}
-
-impl Display for AddDataError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Add data error")
-    }
-}
-
-impl Error for AddDataError {}
-
-impl Debug for GetDataError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Get data error")
-    }
-}
-
-impl Display for GetDataError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Get data error")
-    }
-}
-
-impl Error for GetDataError {}
-
+#[derive(Debug, Error)]
 pub enum RemoveDataError {
+    #[error("Not found element")]
     NotFound,
 }
-
-impl Debug for RemoveDataError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Remove data error")
-    }
-}
-
-impl Display for RemoveDataError {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "Remove data error")
-    }
-}
-
-impl Error for RemoveDataError {}
