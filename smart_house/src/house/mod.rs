@@ -20,18 +20,18 @@ impl House {
         &self.apartments
     }
     pub fn add_apartment(&mut self, new_apartment: Apartment) -> Result<&Apartment, AddDataError> {
-        if self
+        match self
             .apartments
             .iter()
-            .filter(|apartment| apartment.name.eq(&new_apartment.name))
-            .count()
-            > 0
+            .find(|&apartment| apartment.name.eq(&new_apartment.name))
         {
-            return Err(AddDataError::UniqueConstraint);
+            None => {
+                self.apartments.push(new_apartment);
+                let length = self.apartments.len();
+                Ok(&self.apartments[length - 1])
+            }
+            Some(_) => Err(AddDataError::UniqueConstraint),
         }
-        self.apartments.push(new_apartment);
-        let length = self.apartments.len();
-        Ok(&self.apartments[length - 1])
     }
     pub fn remove_apartment(
         &mut self,

@@ -6,7 +6,7 @@ pub enum GetDataError {
     NotFound,
 }
 
-#[derive(Debug, Error)]
+#[derive(Error, Debug)]
 pub enum AddDataError {
     #[error("Unique constraint error")]
     UniqueConstraint,

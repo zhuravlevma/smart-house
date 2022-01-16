@@ -17,12 +17,10 @@ impl Apartment {
 
 impl Apartment {
     pub fn _add_device(&mut self, new_device: Device) -> Result<&Device, AddDataError> {
-        let device = self.devices.iter().find(|old_device| match &new_device {
-            Device::Thermometer(new_thermometer) => {
-                self.check_device_eq(old_device, &new_thermometer.name)
-            }
-            Device::Rosette(new_rosette) => self.check_device_eq(old_device, &new_rosette.name),
-        });
+        let device = self
+            .devices
+            .iter()
+            .find(|&old_device| old_device == &new_device);
         match device {
             None => {
                 self.devices.push(new_device);
@@ -37,7 +35,7 @@ impl Apartment {
         let position = self
             .devices
             .iter()
-            .position(|device| self.check_device_eq(device, &device_name));
+            .position(|device| Self::check_device_name(device, &device_name));
         match position {
             None => Err(RemoveDataError::NotFound),
             Some(position) => Ok(self.devices.remove(position)),
@@ -50,22 +48,17 @@ impl Apartment {
         let device = self
             .devices
             .iter()
-            .find(|device| self.check_device_eq(device, device_name));
+            .find(|device| Self::check_device_name(device, device_name));
         match device {
             None => Err(GetDataError::NotFound),
             Some(device) => Ok(device),
         }
     }
-    fn check_device_eq(&self, old_device: &Device, new_name: &str) -> bool {
+    fn check_device_name(old_device: &Device, new_name: &str) -> bool {
         match old_device {
-            Device::Thermometer(old_thermometer) => {
-                self.name_is_eq(new_name, &old_thermometer.name)
-            }
-            Device::Rosette(old_rosette) => self.name_is_eq(new_name, &old_rosette.name),
+            Device::Thermometer(old_thermometer) => new_name.eq(&old_thermometer.name),
+            Device::Rosette(old_rosette) => new_name.eq(&old_rosette.name),
         }
-    }
-    fn name_is_eq(&self, str1: &str, str2: &str) -> bool {
-        str1.eq(str2)
     }
 }
 
