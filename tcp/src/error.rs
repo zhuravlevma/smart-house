@@ -8,6 +8,7 @@ pub enum ConnectError {
     #[error("IO error: {0}")]
     Io(#[from] io::Error),
 }
+pub type ConnectResult<T> = Result<T, ConnectError>;
 
 #[derive(Debug, Error)]
 pub enum BindError {
