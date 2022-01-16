@@ -1,6 +1,6 @@
-pub use errors::AddDataError;
-pub use errors::GetDataError;
-pub use errors::RemoveDataError;
+pub use errors::{
+    AddDataError, AddDataResult, GetDataError, GetDataResult, RemoveDataError, RemoveDataResult,
+};
 pub use house::apartment::device::rosette::Rosette;
 pub use house::apartment::device::thermometer::Thermometer;
 pub use house::apartment::device::Device;

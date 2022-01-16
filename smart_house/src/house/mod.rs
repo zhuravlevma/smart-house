@@ -1,6 +1,6 @@
-use crate::{AddDataError, RemoveDataError};
+use crate::AddDataResult;
+use crate::{AddDataError, RemoveDataError, RemoveDataResult};
 use apartment::Apartment;
-
 pub struct House {
     name: String,
     apartments: Vec<Apartment>,
@@ -19,7 +19,7 @@ impl House {
     pub fn get_apartments(&self) -> &[Apartment] {
         &self.apartments
     }
-    pub fn add_apartment(&mut self, new_apartment: Apartment) -> Result<&Apartment, AddDataError> {
+    pub fn add_apartment(&mut self, new_apartment: Apartment) -> AddDataResult<&Apartment> {
         match self
             .apartments
             .iter()
@@ -33,10 +33,7 @@ impl House {
             Some(_) => Err(AddDataError::UniqueConstraint),
         }
     }
-    pub fn remove_apartment(
-        &mut self,
-        apartment_name: String,
-    ) -> Result<Apartment, RemoveDataError> {
+    pub fn remove_apartment(&mut self, apartment_name: String) -> RemoveDataResult<Apartment> {
         let position = self
             .apartments
             .iter()

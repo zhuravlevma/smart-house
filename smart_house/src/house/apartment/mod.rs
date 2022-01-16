@@ -1,4 +1,6 @@
-use crate::errors::{AddDataError, GetDataError, RemoveDataError};
+use crate::errors::{
+    AddDataError, AddDataResult, GetDataError, GetDataResult, RemoveDataError, RemoveDataResult,
+};
 use device::Device;
 
 pub struct Apartment {
@@ -16,7 +18,7 @@ impl Apartment {
 }
 
 impl Apartment {
-    pub fn _add_device(&mut self, new_device: Device) -> Result<&Device, AddDataError> {
+    pub fn _add_device(&mut self, new_device: Device) -> AddDataResult<&Device> {
         let device = self
             .devices
             .iter()
@@ -31,7 +33,7 @@ impl Apartment {
             Some(_) => Err(AddDataError::UniqueConstraint),
         }
     }
-    pub fn remove_device(&mut self, device_name: String) -> Result<Device, RemoveDataError> {
+    pub fn remove_device(&mut self, device_name: String) -> RemoveDataResult<Device> {
         let position = self
             .devices
             .iter()
@@ -44,7 +46,7 @@ impl Apartment {
     pub fn _list_devices(&self) -> &[Device] {
         &self.devices
     }
-    pub fn get_device_by_name(&self, device_name: &str) -> Result<&Device, GetDataError> {
+    pub fn get_device_by_name(&self, device_name: &str) -> GetDataResult<&Device> {
         let device = self
             .devices
             .iter()
