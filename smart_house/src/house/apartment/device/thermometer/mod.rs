@@ -1,3 +1,4 @@
+use crate::Rosette;
 use super::TypeDevice;
 
 pub struct Thermometer {
@@ -15,6 +16,19 @@ impl Thermometer {
             _description: "It's a thermometer".to_string(),
             temperature,
         }
+    }
+}
+
+impl PartialEq<Self> for Thermometer {
+    fn eq(&self, other: &Self) -> bool {
+        self.name.eq(&other.name)
+    }
+}
+impl Eq for Thermometer {}
+
+impl PartialEq<Rosette> for Thermometer {
+    fn eq(&self, other: &Rosette) -> bool {
+        self.name.eq(&other.name)
     }
 }
 

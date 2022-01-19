@@ -5,7 +5,7 @@ pub struct Server {
 }
 
 impl Server {
-    pub fn bind<IpAddrs>(addrs: IpAddrs) -> Result<Server, BindError> where Addrs: ToSocketAddrs {
+    pub fn bind<IpAddrs>(addrs: IpAddrs) -> Result<Server, BindError> where IpAddrs: ToSocketAddrs {
         let server = TcpListener::bind(addrs)?;
         Ok(Self { tcp: server })
     }

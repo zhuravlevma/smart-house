@@ -1,3 +1,4 @@
+use crate::Thermometer;
 use super::TypeDevice;
 
 pub struct Rosette {
@@ -33,6 +34,18 @@ impl Rosette {
         self._power
     }
 }
+
+impl PartialEq<Self> for Rosette {
+    fn eq(&self, other: &Self) -> bool {
+        self.name.eq(&other.name)
+    }
+}
+impl PartialEq<Thermometer> for Rosette {
+    fn eq(&self, other: &Thermometer) -> bool {
+        self.name.eq(&other.name)
+    }
+}
+impl Eq for Rosette {}
 
 #[cfg(test)]
 mod tests {

@@ -17,7 +17,7 @@ impl Client {
         let mut buffer = [0;4];
         stream.read_exact(&mut buffer)?;
         if &buffer != b"serv" {
-            Err(ConnectError::BadHandshake(format!("received: {:?}", buf)))
+            return Err(ConnectError::BadHandshake(format!("received: {:?}", buffer)));
         }
         Ok(Self { stream })
     }
