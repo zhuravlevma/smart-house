@@ -3,12 +3,16 @@ name: Clippy check
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: rust:latest
     steps:
       - uses: actions/checkout@v2
       - run: cargo build --verbose
   clippy_check:
     needs: build
     runs-on: ubuntu-latest
+    container:
+      image: rust:latest
     steps:
       - uses: actions/checkout@v2
       - run: rustup component add clippy
@@ -21,6 +25,8 @@ jobs:
       - build
       - clippy_check
     runs-on: ubuntu-latest
+    container:
+      image: rust:latest
     steps:
       - uses: actions/checkout@v2
       - run: cargo test --verbose
