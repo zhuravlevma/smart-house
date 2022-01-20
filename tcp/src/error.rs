@@ -15,3 +15,32 @@ pub enum BindError {
     #[error("IO error: {0}")]
     Io(#[from] io::Error),
 }
+
+pub type SendResult = Result<(), SendError>;
+#[derive(Debug, Error)]
+pub enum SendError {
+    #[error("IO error: {0}")]
+    Io(#[from] io::Error),
+}
+pub type ReceiveResult = Result<String, ReceiveError>;
+#[derive(Debug, Error)]
+pub enum ReceiveError {
+    #[error("IO error: {0}")]
+    Io(#[from] io::Error),
+    #[error("bad encoding")]
+    BadEncoding,
+}
+
+pub type RequestResult = Result<String, RequestError>;
+
+/// Error for request sending. It consists from two steps: sending and receiving data.
+///
+/// `SendError` caused by send data error.
+/// `RecvError` caused by receive data error.
+#[derive(Debug, Error)]
+pub enum RequestError {
+    #[error(transparent)]
+    Send(#[from] SendError),
+    #[error(transparent)]
+    Recv(#[from] ReceiveError),
+}

@@ -1,5 +1,5 @@
-use crate::Thermometer;
 use super::TypeDevice;
+use crate::Thermometer;
 
 pub struct Rosette {
     pub name: String,

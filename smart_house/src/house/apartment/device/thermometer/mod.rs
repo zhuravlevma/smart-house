@@ -1,5 +1,5 @@
-use crate::Rosette;
 use super::TypeDevice;
+use crate::Rosette;
 
 pub struct Thermometer {
     pub name: String,
