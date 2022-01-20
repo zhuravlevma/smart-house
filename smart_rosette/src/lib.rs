@@ -1,60 +1,63 @@
 use std::error::Error;
 use std::thread;
-use tcp::server::{Request, RequestHandler, TcpServer, StpConnection};
 use tcp::server::Server;
+use tcp::server::{Connection, Request, RequestHandler, TcpServer};
 
-pub struct RosetteState {
+pub struct Rosette {
     power: u32,
 }
 
-impl RosetteState {
+impl Rosette {
     pub fn new(power: u32) -> Self {
-        Self {power}
+        Self { power }
     }
 }
 
-struct RosetteHandler {
-    data: String
+struct RosetteHandler {}
+impl RequestHandler for RosetteHandler {
+    fn routing(&mut self, mut request: Request) -> String {
+        let command = request.next_data();
+        match command {
+            "get_power" => self.get_power(request),
+            "off" => self.off(request),
+            _ => "Bad command".into(),
+        }
+    }
 }
-impl RequestHandler for RosetteHandler  {
-    fn new(data: String) -> Box<Self> {
-        Box::new(Self { data })
-    }
-    fn get_data(&self) -> String {
-        self.data.to_string()
-    }
-    fn fetch(&self, mut request: Request) -> String {
+
+impl RosetteHandler {
+    fn get_power(&mut self, mut request: Request) -> String {
         let data = request.next_data();
         if data.is_empty() {
             return "data empty".into();
         }
-        // data.to_string();
-        format!("{} - {}", data.to_string(), self.data)
+        let rosette = Rosette::new(220);
+        format!("{} - {}", data.to_string(), rosette.power)
+    }
+    fn off(&self, mut _request: Request) -> String {
+        let rosette = Rosette::new(0);
+        format!("{}", rosette.power)
     }
 }
 
 pub struct RosetteServer {
-    state: RosetteState,
     connection: TcpServer,
 }
 
 impl RosetteServer {
-    pub fn new(power: u32, address: String) -> Result<Self, Box<dyn Error>> {
+    pub fn new(address: String) -> Result<Self, Box<dyn Error>> {
         Ok(Self {
-            state: RosetteState::new(power),
-            connection: TcpServer::bind(address)?
+            connection: TcpServer::bind(address)?,
         })
     }
 }
-
 impl Server for RosetteServer {
     fn get_connection(&self) -> &TcpServer {
         &self.connection
     }
-    fn handle(&self, connection: StpConnection, address: String) {
-        let power = self.state.power.to_string();
+    fn handle(&self, connection: Connection, address: String) {
         thread::spawn(move || {
-            let rosette_handler = RosetteHandler::new(power);
+            let mut rosette_handler = RosetteHandler {};
             if rosette_handler.handle_connection(connection).is_err() {
                 println!("Client disconnected: {}", address);
             }

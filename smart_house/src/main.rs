@@ -36,8 +36,11 @@ fn main() {
         });
 
     let address = fs::read_to_string("settings/addr").unwrap_or_else(|_| String::from("127.0.0.1:55331"));
-    let request = format!("fetch|||{}", "Hello".to_string());
+    let request = format!("get_power|||{}", "Hello".to_string());
     let mut client = Client::connect(address).unwrap();
+    let res = client.send_request(request).unwrap();
+    println!("{}", res);
+    let request = format!("off|||");
     let res = client.send_request(request).unwrap();
     println!("{}", res);
 }

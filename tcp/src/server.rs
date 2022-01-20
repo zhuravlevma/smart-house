@@ -24,7 +24,7 @@ pub trait Server {
             self.handle(connection, address);
         }
     }
-    fn handle(&self, connection: StpConnection, address: String);
+    fn handle(&self, connection: Connection, address: String);
 }
 
 pub struct TcpServer {
@@ -41,14 +41,14 @@ impl TcpServer {
     }
 
     /// Blocking iterator for incoming connections.
-    pub fn incoming(&self) -> impl Iterator<Item = ConnectResult<StpConnection>> + '_ {
+    pub fn incoming(&self) -> impl Iterator<Item = ConnectResult<Connection>> + '_ {
         self.tcp.incoming().map(|s| match s {
             Ok(s) => Self::try_handshake(s),
             Err(e) => Err(ConnectError::Io(e)),
         })
     }
 
-    fn try_handshake(mut stream: TcpStream) -> ConnectResult<StpConnection> {
+    fn try_handshake(mut stream: TcpStream) -> ConnectResult<Connection> {
         let mut buf = [0; 4];
         stream.read_exact(&mut buf)?;
         if &buf != b"clnt" {
@@ -56,29 +56,22 @@ impl TcpServer {
             return Err(ConnectError::BadHandshake(msg));
         }
         stream.write_all(b"serv")?;
-        Ok(StpConnection { stream })
+        Ok(Connection { stream })
     }
 }
 
-/// Represent connection from client.
-///
-/// Allows to receive requests and send responses.
-pub struct StpConnection {
+pub struct Connection {
     stream: TcpStream,
 }
 
-impl StpConnection {
-    /// Send response to client
+impl Connection {
     pub fn send_response<Resp: AsRef<str>>(&mut self, response: Resp) -> SendResult {
         Stream::send_string(response, &mut self.stream)
     }
-
-    /// Receive requests from client
     pub fn recv_request(&mut self) -> ReceiveResult {
         Stream::receive_string(&mut self.stream)
     }
 
-    /// Address of connected client
     pub fn peer_addr(&self) -> io::Result<SocketAddr> {
         self.stream.peer_addr()
     }
@@ -97,25 +90,12 @@ impl<'a> Request<'a> {
 }
 
 pub trait RequestHandler {
-    fn new(data: String) -> Box<Self>;
-    fn get_data(&self) -> String;
-
-    fn handle_connection(&self, mut connection: StpConnection) -> Result<(), Box<dyn Error>> {
-        let mut handler = Self::new(self.get_data());
+    fn handle_connection(&mut self, mut connection: Connection) -> Result<(), Box<dyn Error>> {
         loop {
             let req_str = connection.recv_request()?;
             let req = Request::new(&req_str);
-            connection.send_response(handler.handle(req))?;
+            connection.send_response(self.routing(req))?;
         }
     }
-    fn handle(&mut self, mut request: Request) -> String {
-        let command = request.next_data();
-        match command {
-            "fetch" => self.fetch(request),
-            // "create" => self.create_room(request),
-            // "append" => self.append(request),
-            _ => "Bad command".into(),
-        }
-    }
-    fn fetch(&self, request: Request) -> String;
+    fn routing(&mut self, request: Request) -> String;
 }
