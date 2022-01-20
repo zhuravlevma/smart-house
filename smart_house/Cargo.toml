@@ -10,3 +10,4 @@ license = "MIT OR Apache-2.0"
 
 [dependencies]
 thiserror = "1.0.30"
+tcp = { path = "../tcp" }

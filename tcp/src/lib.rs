@@ -21,6 +21,7 @@ impl Stream {
         let mut buf = [0; 4];
         r.read_exact(&mut buf)?;
         let len = u32::from_be_bytes(buf);
+
         let mut buf = vec![0; len as _];
         r.read_exact(&mut buf)?;
         String::from_utf8(buf).map_err(|_| ReceiveError::BadEncoding)
