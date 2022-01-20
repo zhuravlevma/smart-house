@@ -1,5 +1,5 @@
-use std::fs;
 use smart_house::{Apartment, Device, Rosette, Thermometer};
+use std::fs;
 use tcp::client::Client;
 fn main() {
     let mut apartment_parents = Apartment::new("Parents".to_string());

@@ -1,13 +1,26 @@
 on: push
-name: Clippy check
+name: Ci
 jobs:
   build:
+    name: Build application
     runs-on: ubuntu-latest
     container:
       image: rust:latest
     steps:
       - uses: actions/checkout@v2
       - run: cargo build --verbose
+  fmt_check:
+    name: Cargo fmt
+    needs: build
+    runs-on: ubuntu-latest
+    container:
+      image: rust:latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Fmt
+        run: rustup component add rustfmt
+      - name: Check format in application
+        run: cargo fmt -- --check
   clippy_check:
     needs: build
     runs-on: ubuntu-latest
@@ -20,8 +33,11 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           args: --all-features
+
   run_tests:
-    needs: clippy_check
+    needs:
+      - clippy_check
+      - fmt_check
     runs-on: ubuntu-latest
     container:
       image: rust:latest

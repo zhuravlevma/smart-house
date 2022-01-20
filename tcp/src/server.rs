@@ -1,6 +1,6 @@
-use std::error::Error;
 use crate::error::{BindError, ConnectError, ConnectResult};
 use crate::{ReceiveResult, SendResult, Stream};
+use std::error::Error;
 use std::io;
 use std::io::{Read, Write};
 use std::net::{SocketAddr, TcpListener, TcpStream, ToSocketAddrs};
@@ -76,7 +76,6 @@ impl Connection {
         self.stream.peer_addr()
     }
 }
-
 
 pub struct Request<'a>(Split<'a, &'a str>);
 impl<'a> Request<'a> {
