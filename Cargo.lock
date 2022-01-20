@@ -34,6 +34,9 @@ version = "0.1.0"
 [[package]]
 name = "smart_rosette"
 version = "0.1.0"
+dependencies = [
+ "tcp",
+]
 
 [[package]]
 name = "syn"

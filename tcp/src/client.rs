@@ -1,5 +1,5 @@
-use crate::error::{ConnectError, ConnectResult, RequestResult, SendError};
-use crate::{ReceiveError, Stream};
+use crate::error::{ConnectError, ConnectResult, RequestResult};
+use crate::Stream;
 use std::io::{Read, Write};
 use std::net::{TcpStream, ToSocketAddrs};
 

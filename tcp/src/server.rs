@@ -1,11 +1,11 @@
 use crate::error::{BindError, ConnectError, ConnectResult};
-use crate::{ReceiveError, ReceiveResult, SendResult, Stream};
+use crate::{ReceiveResult, SendResult, Stream};
 use std::io;
 use std::io::{Read, Write};
 use std::net::{SocketAddr, TcpListener, TcpStream, ToSocketAddrs};
-use thiserror::Error;
+
 pub struct Server {
-    tcp: TcpListener,
+    _tcp: TcpListener,
 }
 
 impl Server {
@@ -14,9 +14,9 @@ impl Server {
         IpAddrs: ToSocketAddrs,
     {
         let server = TcpListener::bind(addrs)?;
-        Ok(Self { tcp: server })
+        Ok(Self { _tcp: server })
     }
-    fn try_handshake(mut stream: TcpStream) -> ConnectResult<StpConnection> {
+    fn _try_handshake(mut stream: TcpStream) -> ConnectResult<StpConnection> {
         let mut buf = [0; 4];
         stream.read_exact(&mut buf)?;
         if &buf != b"clnt" {

@@ -1,10 +1,9 @@
 use crate::error::{ReceiveError, ReceiveResult, SendResult};
 use std::io::{Read, Write};
-use std::sync::mpsc::RecvError;
 
-mod client;
-mod error;
-mod server;
+pub mod client;
+pub mod error;
+pub mod server;
 
 struct Stream {}
 
@@ -17,6 +16,7 @@ impl Stream {
         w.write_all(bytes)?;
         Ok(())
     }
+
     fn receive_string<R: Read>(mut r: R) -> ReceiveResult {
         let mut buf = [0; 4];
         r.read_exact(&mut buf)?;
