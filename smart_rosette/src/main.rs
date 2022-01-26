@@ -1,11 +1,11 @@
 use smart_rosette::RosetteServer;
+use smart_rosette::Server;
+use smart_rosette::Config;
+
 use std::error::Error;
-use std::fs;
-use tcp::server::Server;
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let addr =
-        fs::read_to_string("settings/addr").unwrap_or_else(|_| String::from("127.0.0.1:55331"));
-    RosetteServer::new(addr)?.listen();
+    let config = Config::new("127.0.0.1".to_string(), "55331".to_string())?;
+    RosetteServer::new(config)?.listen();
     Ok(())
 }

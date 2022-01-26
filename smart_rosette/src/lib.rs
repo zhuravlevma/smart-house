@@ -1,7 +1,7 @@
-use config::Config;
+pub use config::Config;
 use std::error::Error;
 use std::thread;
-use tcp::server::Server;
+pub use tcp::server::Server;
 use tcp::server::{Connection, Request, RequestHandler, TcpServer};
 
 pub struct Rosette {
@@ -46,9 +46,9 @@ pub struct RosetteServer {
 }
 
 impl RosetteServer {
-    pub fn new(address: String) -> Result<Self, Box<dyn Error>> {
+    pub fn new(config: Config) -> Result<Self, Box<dyn Error>> {
         Ok(Self {
-            connection: TcpServer::bind(address)?,
+            connection: TcpServer::bind(config.url)?,
         })
     }
 }
