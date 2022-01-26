@@ -15,11 +15,11 @@ impl RosetteService {
         Self {}
     }
     pub(crate) fn get_power(&self, data: String) -> String {
-        let rosette = Rosette::new(220);
+        let rosette = Rosette::new(220); // заглушка, считываем с датчика температуру
         format!("{} - {}", data, rosette.power)
     }
     pub(crate) fn off(&self) -> String {
-        let rosette = Rosette::new(0);
+        let rosette = Rosette::new(0); // заглушка, выключаем разетку
         format!("{}", rosette.power)
     }
 }
