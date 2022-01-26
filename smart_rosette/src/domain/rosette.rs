@@ -1,4 +1,12 @@
-use crate::Rosette;
+pub struct Rosette {
+    power: u32,
+}
+
+impl Rosette {
+    pub fn new(power: u32) -> Self {
+        Self { power }
+    }
+}
 
 pub struct RosetteService {}
 
