@@ -1,3 +1,4 @@
+use config::Config;
 use std::error::Error;
 use std::thread;
 use tcp::server::Server;
@@ -64,3 +65,5 @@ impl Server for RosetteServer {
         });
     }
 }
+
+mod config;

@@ -1,6 +1,4 @@
-mod lib;
-
-use crate::lib::RosetteServer;
+use smart_rosette::RosetteServer;
 use std::error::Error;
 use std::fs;
 use tcp::server::Server;
