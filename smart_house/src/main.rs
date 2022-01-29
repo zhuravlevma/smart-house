@@ -41,7 +41,7 @@ fn main() {
     let mut client = Client::connect(address).unwrap();
     let res = client.send_request(request).unwrap();
     println!("{}", res);
-    let request = format!("off|||");
+    let request = "off|||".to_string();
     let res = client.send_request(request).unwrap();
     println!("{}", res);
 }
