@@ -1,5 +1,5 @@
-pub use client::Client;
-pub use server::Server;
+pub use client::UdpClient;
+pub use server::UdpServer;
 pub use socket::Socket;
 
 mod client;

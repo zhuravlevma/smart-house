@@ -1,10 +1,10 @@
 use crate::Socket;
 
-pub struct Client {
+pub struct UdpClient {
     socket: Socket,
 }
 
-impl Client {
+impl UdpClient {
     pub fn new(address: String) -> Self {
         Self {
             socket: Socket::new(address),

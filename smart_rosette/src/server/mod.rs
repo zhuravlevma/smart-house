@@ -1,6 +1,6 @@
 use crate::domain::RosetteService;
 use crate::server::controller::rosette::PowerController;
-use crate::Config;
+use config::ConfigServer;
 use routing::RosetteHandler;
 use std::error::Error;
 use std::thread;
@@ -12,7 +12,7 @@ pub struct RosetteServer {
 }
 
 impl RosetteServer {
-    pub fn new(config: Config) -> Result<Self, Box<dyn Error>> {
+    pub fn new(config: ConfigServer) -> Result<Self, Box<dyn Error>> {
         Ok(Self {
             connection: TcpServer::bind(config.url)?,
         })
