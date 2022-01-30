@@ -1,5 +1,7 @@
 use super::TypeDevice;
 use crate::Thermometer;
+use std::fs;
+use tcp::client::Client;
 
 pub struct Rosette {
     pub name: String,
@@ -20,17 +22,32 @@ impl Rosette {
 }
 
 impl Rosette {
-    fn _on(&mut self) -> bool {
+    fn get_ip_address(&self) -> String {
+        fs::read_to_string("settings/addr").unwrap_or_else(|_| String::from("127.0.0.1:55332"))
+    }
+    fn get_connect_to_rosette(&self, address: String) -> Client {
+        Client::connect(address).unwrap()
+    }
+    pub fn _on(&mut self) -> bool {
+        let mut client = self.get_connect_to_rosette(self.get_ip_address());
+        let res = client.send_request("on|||").unwrap();
+        println!("My test res {}", res);
         self._power = 220;
         true
     }
 
-    fn _off(&mut self) -> bool {
+    pub fn _off(&mut self) -> bool {
+        let mut client = self.get_connect_to_rosette(self.get_ip_address());
+        let res = client.send_request("off|||").unwrap();
+        println!("My test res {}", res);
         self._power = 0;
         false
     }
 
-    fn _current_power(&self) -> u32 {
+    pub fn _current_power(&self) -> u32 {
+        let mut client = self.get_connect_to_rosette(self.get_ip_address());
+        let res = client.send_request("get_power|||").unwrap();
+        println!("My test res {}", res);
         self._power
     }
 }

@@ -376,6 +376,7 @@ checksum = "f2dd574626839106c320a323308629dcb1acfc96e32a8cba364ddc61ac23ee83"
 name = "smart_house"
 version = "0.1.2"
 dependencies = [
+ "simple-log",
  "tcp",
  "thiserror",
 ]

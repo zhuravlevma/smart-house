@@ -8,6 +8,7 @@
       <sourceFolder url="file://$MODULE_DIR$/smart_rosette/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/tcp/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/udp/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/logger/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/.tmp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />

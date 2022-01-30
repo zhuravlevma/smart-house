@@ -1,6 +1,7 @@
 use crate::AddDataResult;
 use crate::{AddDataError, RemoveDataError, RemoveDataResult};
 use apartment::Apartment;
+
 pub struct House {
     name: String,
     apartments: Vec<Apartment>,

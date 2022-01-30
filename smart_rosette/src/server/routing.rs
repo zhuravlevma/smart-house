@@ -12,6 +12,7 @@ impl RequestHandler for RosetteHandler {
         match command {
             "get_power" => self.power_controller.get_power(request),
             "off" => self.power_controller.off(request),
+            "on" => self.power_controller.on(request),
             _ => "Bad command".into(),
         }
     }
