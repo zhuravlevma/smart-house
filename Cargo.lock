@@ -383,11 +383,15 @@ dependencies = [
  "simple-log",
  "tcp",
  "thiserror",
+ "udp",
 ]
 
 [[package]]
 name = "smart_house_tui"
 version = "0.1.0"
+dependencies = [
+ "udp",
+]
 
 [[package]]
 name = "smart_rosette"

@@ -7,7 +7,9 @@ fn main() -> Result<(), Box<dyn Error>> {
     rosette_parents1._on();
     rosette_parents1._off();
     let rosette_parents2 = Rosette::new("Rosette_Parents2".to_string());
-    let thermometer_parents1 = Thermometer::new("Thermometer_Parents1".to_string(), 21.2);
+    let mut thermometer_parents1 = Thermometer::new("Thermometer_Parents1".to_string(), 21.2);
+    thermometer_parents1.update_temperature();
+    println!("{}", thermometer_parents1._get_temperature());
     let thermometer_parents2 = Thermometer::new("Thermometer_Parents2".to_string(), 21.2);
 
     apartment_parents
@@ -36,15 +38,5 @@ fn main() -> Result<(), Box<dyn Error>> {
         .unwrap_or_else(|err| {
             panic!("Getting device filed: {}", err);
         });
-
-    // let address =
-    //     fs::read_to_string("settings/addr").unwrap_or_else(|_| String::from("127.0.0.1:55332"));
-    // let request = format!("get_power|||{}", "Hello".to_string());
-    // let mut client = Client::connect(address).unwrap();
-    // let res = client.send_request(request).unwrap();
-    // println!("{}", res);
-    // let request = "off|||".to_string();
-    // let res = client.send_request(request).unwrap();
-    // println!("{}", res);
     Ok(())
 }

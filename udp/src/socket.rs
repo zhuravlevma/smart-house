@@ -16,13 +16,19 @@ impl Socket {
     }
 
     fn get_duration(&self) -> Option<Duration> {
-        Some(Duration::new(1, 0))
+        std::option::Option::Some(Duration::new(100, 0))
     }
 
-    pub fn set_duration(&self) {
-        self.socket
-            .set_read_timeout(self.get_duration())
-            .expect("failed to set timeout")
+    pub fn set_write_timeout(&self, duration: Option<Duration>) -> std::io::Result<()> {
+        self.socket.set_write_timeout(duration)
+    }
+
+    pub fn set_read_timeout(&self, duration: Option<Duration>) -> std::io::Result<()> {
+        self.socket.set_read_timeout(duration)
+    }
+
+    pub fn set_duration(&self) -> std::io::Result<()> {
+        self.socket.set_write_timeout(self.get_duration())
     }
 
     pub fn send_to(&self, message: &[u8], receiver: String) -> std::io::Result<usize> {

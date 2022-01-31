@@ -1,5 +1,6 @@
 use super::TypeDevice;
 use crate::Rosette;
+use udp::UdpClient;
 
 pub struct Thermometer {
     pub name: String,
@@ -33,6 +34,15 @@ impl PartialEq<Rosette> for Thermometer {
 }
 
 impl Thermometer {
+    pub fn update_temperature(&mut self) -> f32 {
+        let client = UdpClient::new("127.0.0.1:55331".to_string());
+        let temp: f32 = client
+            .send("Signal".to_string(), "127.0.0.1:8081".to_string())
+            .parse()
+            .unwrap();
+        self.temperature = temp;
+        self.temperature
+    }
     pub fn _get_temperature(&self) -> f32 {
         self.temperature
     }

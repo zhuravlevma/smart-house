@@ -12,3 +12,4 @@ license = "MIT OR Apache-2.0"
 thiserror = "1.0.30"
 simple-log = "1.4.0"
 tcp = { path = "../tcp" }
+udp = { path = "../udp" }

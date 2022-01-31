@@ -1,4 +1,6 @@
 use config::ConfigServer;
+use std::sync::Arc;
+use std::thread;
 use udp::UdpServer;
 
 pub struct ThermometerServer {
@@ -12,10 +14,12 @@ impl ThermometerServer {
         }
     }
 
-    pub fn listen(&self) {
-        loop {
-            let message = self.connection.receive();
-            println!("{}", message);
-        }
+    pub fn listen(self) {
+        let cmd_arc = Arc::new(self.connection);
+        let thread = thread::spawn(move || loop {
+            let (_number_of_bytes, src_addr, _data) = cmd_arc.as_ref().receive();
+            cmd_arc.response(37.to_string(), src_addr);
+        });
+        thread.join().unwrap();
     }
 }
