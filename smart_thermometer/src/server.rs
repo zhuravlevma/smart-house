@@ -1,6 +1,7 @@
 use crate::handle::Handle;
 use config::ConfigServer;
 use std::thread;
+use std::sync::{Arc, mpsc};
 use udp::UdpServer;
 
 pub struct ThermometerServer {
@@ -17,10 +18,15 @@ impl ThermometerServer {
     }
 
     pub fn listen(self) {
+        let arc_handle = Arc::new(self.handle);
         let thread = thread::spawn(move || loop {
             let (_number_of_bytes, src_addr, _data) = self.connection.receive();
-            self.connection
-                .response(self.handle.routing(_data), src_addr);
+            let (tx, rx) = mpsc::channel();
+            let handle = arc_handle.clone();
+            thread::spawn(move || {
+                tx.send(handle.routing(_data)).unwrap()
+            });
+            self.connection.response(rx.recv().unwrap(), src_addr);
         });
         thread.join().unwrap();
     }
