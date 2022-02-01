@@ -35,7 +35,7 @@ impl PartialEq<Rosette> for Thermometer {
 
 impl Thermometer {
     pub fn update_temperature(&mut self) -> f32 {
-        let client = UdpClient::new("127.0.0.1:55331".to_string());
+        let client = UdpClient::new("127.0.0.1:55333".to_string());
         let temp: f32 = client
             .send("Signal".to_string(), "127.0.0.1:8081".to_string())
             .parse()
