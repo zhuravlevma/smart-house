@@ -1,4 +1,4 @@
 pub use server::ThermometerServer;
 
-mod server;
 mod handle;
+mod server;
