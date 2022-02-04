@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 tcp = { path = "../tcp" }
 config = { path = "../config" }
+tokio = { version = "1.16.1", features = ["full"] }

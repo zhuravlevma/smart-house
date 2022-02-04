@@ -28,6 +28,7 @@ impl Rosette {
     fn get_connect_to_rosette(&self, address: String) -> Client {
         Client::connect(address).unwrap()
     }
+
     pub fn _on(&mut self) -> bool {
         let mut client = self.get_connect_to_rosette(self.get_ip_address());
         let res = client.send_request("on|||").unwrap();
@@ -35,6 +36,10 @@ impl Rosette {
         self._power = 220;
         true
     }
+
+    // pub fn on_sync(&mut self) -> bool {
+    //     let mut client = self.g
+    // }
 
     pub fn _off(&mut self) -> bool {
         let mut client = self.get_connect_to_rosette(self.get_ip_address());

@@ -6,6 +6,7 @@ use std::error::Error;
 use std::thread;
 pub use tcp::server::Server;
 use tcp::server::{Connection, RequestHandler, TcpServer};
+// use tokio::net::TcpListener;
 
 pub struct RosetteServer {
     connection: TcpServer,
@@ -33,6 +34,10 @@ impl Server for RosetteServer {
         });
     }
 }
+
+// pub struct AsyncRosetteServer {
+//
+// }
 
 mod controller;
 mod routing;
