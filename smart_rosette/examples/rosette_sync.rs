@@ -1,6 +1,6 @@
-use std::error::Error;
 use config::ConfigServer;
 use smart_rosette::RosetteServer;
+use std::error::Error;
 use tcp::server::Server;
 
 fn main() -> Result<(), Box<dyn Error>> {
