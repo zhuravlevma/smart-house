@@ -5,7 +5,7 @@ use crate::{ReceiveError, ReceiveResult, SendResult};
 use std::io;
 use tokio::net::TcpStream;
 
-struct Stream {}
+struct Stream;
 impl Stream {
     async fn read_exact_async(s: &TcpStream, buf: &mut [u8]) -> io::Result<()> {
         let mut red = 0;

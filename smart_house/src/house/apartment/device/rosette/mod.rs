@@ -1,59 +1,54 @@
-use super::TypeDevice;
 use crate::Thermometer;
-use std::fs;
 use tcp::client::Client;
 
 pub struct Rosette {
     pub name: String,
-    _t_device: TypeDevice,
-    _description: String,
-    _power: u32,
+    description: String,
+    power: u32,
+    ip: String,
 }
 
 impl Rosette {
-    pub fn new(name: String) -> Self {
+    pub fn new(name: String, ip_address: String) -> Self {
         Self {
             name,
-            _t_device: TypeDevice::Rosette,
-            _description: "It's a rosette".to_string(),
-            _power: 0,
+            description: "It's a rosette".to_string(),
+            power: 0,
+            ip: ip_address,
         }
     }
 }
 
 impl Rosette {
-    fn get_ip_address(&self) -> String {
-        fs::read_to_string("settings/addr").unwrap_or_else(|_| String::from("127.0.0.1:55332"))
-    }
     fn get_connect_to_rosette(&self, address: String) -> Client {
         Client::connect(address).unwrap()
     }
 
-    pub fn _on(&mut self) -> bool {
-        let mut client = self.get_connect_to_rosette(self.get_ip_address());
+    pub fn on(&mut self) -> bool {
+        let mut client = self.get_connect_to_rosette(self.ip.clone());
         let res = client.send_request("on|||").unwrap();
         println!("My test res {}", res);
-        self._power = 220;
+        self.power = 220;
         true
     }
 
-    // pub fn on_sync(&mut self) -> bool {
-    //     let mut client = self.g
-    // }
-
-    pub fn _off(&mut self) -> bool {
-        let mut client = self.get_connect_to_rosette(self.get_ip_address());
+    pub fn off(&mut self) -> bool {
+        let mut client = self.get_connect_to_rosette(self.ip.clone());
         let res = client.send_request("off|||").unwrap();
         println!("My test res {}", res);
-        self._power = 0;
+        self.power = 0;
         false
     }
 
-    pub fn _current_power(&self) -> u32 {
-        let mut client = self.get_connect_to_rosette(self.get_ip_address());
+    pub fn current_power(&self) -> u32 {
+        let mut client = self.get_connect_to_rosette(self.ip.clone());
         let res = client.send_request("get_power|||").unwrap();
         println!("My test res {}", res);
-        self._power
+        self.power
+    }
+
+    pub fn get_info(&self) -> String {
+        self.description.clone()
     }
 }
 
