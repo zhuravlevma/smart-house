@@ -8,7 +8,7 @@ use crate::error::{ConnectResult, RequestError, RequestResult};
 use crate::{ReceiveError, ReceiveResult, SendResult};
 
 struct Stream {
-    tcp: TcpStream,
+    pub tcp: TcpStream,
 }
 
 impl Stream {
@@ -17,29 +17,14 @@ impl Stream {
             tcp: tcp_stream,
         }
     }
-    pub async fn read_exact_async(&self, buf: &mut [u8]) -> io::Result<()> {
-        let mut red = 0;
-        while red < buf.len() {
-            self.tcp.readable().await?;
-            match self.tcp.try_read(&mut buf[red..]) {
-                Ok(0) => break,
-                Ok(n) => {
-                    red += n;
-                }
-                Err(ref e) if e.kind() == io::ErrorKind::WouldBlock => {}
-                Err(e) => return Err(e),
-            }
-        }
-        Ok(())
-    }
 
-    pub async fn write_all_async(&self, buf: &[u8]) -> io::Result<()> {
+    pub async fn write_all_async(&self, stream: &TcpStream, buf: &[u8]) -> io::Result<()> {
         let mut written = 0;
 
         while written < buf.len() {
-            self.tcp.writable().await?;
+            stream.writable().await?;
 
-            match self.tcp.try_write(&buf[written..]) {
+            match stream.try_write(&buf[written..]) {
                 Ok(0) => break,
                 Ok(n) => {
                     written += n;
@@ -52,12 +37,12 @@ impl Stream {
         Ok(())
     }
 
-    async fn send_string_async<D: AsRef<str>>(&self, d: D) -> SendResult {
+    async fn send_string_async<D: AsRef<str>>(&self, stream: &TcpStream, d: D) -> SendResult {
         let bytes = d.as_ref().as_bytes();
         let len = bytes.len() as u32;
         let len_bytes = len.to_be_bytes();
-        self.write_all_async(&len_bytes).await?;
-        self.write_all_async(bytes).await?;
+        self.write_all_async(stream,&len_bytes).await?;
+        self.write_all_async(stream,bytes).await?;
         Ok(())
     }
 
