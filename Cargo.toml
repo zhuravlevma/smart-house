@@ -6,7 +6,6 @@ members = [
     "config",
     "smart_house",
     "smart_rosette",
-    "smart_rosette_async",
     "smart_thermometer",
     "smart_house_tui",
 ]

@@ -480,13 +480,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "smart_rosette_async"
-version = "0.1.0"
-dependencies = [
- "tokio",
-]
-
-[[package]]
 name = "smart_thermometer"
 version = "0.1.0"
 dependencies = [

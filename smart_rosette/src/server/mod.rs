@@ -6,7 +6,8 @@ use std::error::Error;
 use std::thread;
 pub use tcp::server::Server;
 use tcp::server::{Connection, RequestHandler, TcpServer};
-// use tokio::net::TcpListener;
+use tcp::async_mod::server::{TcpServer as TcpServerAsync};
+use tcp::error::{BindError};
 
 pub struct RosetteServer {
     connection: TcpServer,
@@ -35,9 +36,27 @@ impl Server for RosetteServer {
     }
 }
 
-// pub struct AsyncRosetteServer {
-//
-// }
+pub struct RosetteServerAsync {
+    connection: TcpServerAsync
+}
+
+impl RosetteServerAsync {
+    pub async fn bind(config: ConfigServer) -> Result<Self, BindError> {
+        let server = TcpServerAsync::bind(config.url).await?;
+        Ok(Self {
+            connection: server
+        })
+    }
+    pub async fn listen(&self) -> Result<(), Box<dyn Error>> {
+        loop {
+            let connection = self.connection.accept().await?;
+            let _req = connection.recv_request().await?;
+            connection.send_response("Hello, client").await?;
+        }
+    }
+}
+
+
 
 mod controller;
 mod routing;

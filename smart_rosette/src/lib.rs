@@ -1,5 +1,5 @@
 pub use server::RosetteServer;
 pub use tcp::server::Server;
 
-mod domain;
-mod server;
+pub mod domain;
+pub mod server;
