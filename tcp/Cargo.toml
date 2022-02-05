@@ -7,4 +7,4 @@ edition = "2021"
 
 [dependencies]
 thiserror = "1.0.30"
-simple-log = "1.4.0"
+tokio = { version = "1.16.1", features = ["full"] }

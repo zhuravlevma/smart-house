@@ -509,8 +509,8 @@ dependencies = [
 name = "tcp"
 version = "0.1.0"
 dependencies = [
- "simple-log",
  "thiserror",
+ "tokio",
 ]
 
 [[package]]

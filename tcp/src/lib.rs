@@ -4,6 +4,7 @@ use std::io::{Read, Write};
 pub mod client;
 pub mod error;
 pub mod server;
+pub mod async_mod;
 
 struct Stream {}
 

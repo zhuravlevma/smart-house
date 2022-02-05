@@ -43,4 +43,6 @@ pub enum RequestError {
     Send(#[from] SendError),
     #[error(transparent)]
     Recv(#[from] ReceiveError),
+    #[error("bad encoding")]
+    BadEncoding,
 }
