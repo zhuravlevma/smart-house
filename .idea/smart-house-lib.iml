@@ -14,6 +14,7 @@
       <sourceFolder url="file://$MODULE_DIR$/smart_house/examples" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/smart_rosette/examples" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/smart_rosette_async/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/smart_thermometer/examples" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/tcp/examples" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/.tmp" />
