@@ -28,3 +28,9 @@ impl RosetteService {
         format!("{}", rosette.power)
     }
 }
+
+impl Default for RosetteService {
+    fn default() -> Self {
+        Self::new()
+    }
+}
