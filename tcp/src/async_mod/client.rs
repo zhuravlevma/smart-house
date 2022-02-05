@@ -2,8 +2,8 @@ use tokio::net::{TcpStream, ToSocketAddrs};
 use crate::async_mod::Stream;
 use crate::error::{ConnectError, ConnectResult, RequestResult};
 
-struct TcpClient {
-    stream: Stream,
+pub struct TcpClient {
+    stream: TcpStream,
 }
 
 impl TcpClient {
@@ -15,16 +15,17 @@ impl TcpClient {
         Self::try_handshake(stream).await
     }
 
+    /// Send request to connected STP server.
     pub async fn send_request<R: AsRef<str>>(&mut self, req: R) -> RequestResult {
-        super::send_string_async(req, &self.stream).await?;
-        let response = super::recv_string_async(&self.stream).await?;
+        Stream::send_string_async(req, &self.stream).await?;
+        let response = Stream::recv_string_async(&self.stream).await?;
         Ok(response)
     }
 
     async fn try_handshake(s: TcpStream) -> ConnectResult<Self> {
-        super::write_all_async(&s, b"clnt").await?;
+        Stream::write_all_async(&s, b"clnt").await?;
         let mut buf = [0; 4];
-        super::read_exact_async(&s, &mut buf).await?;
+        Stream::read_exact_async(&s, &mut buf).await?;
         if &buf != b"serv" {
             let msg = format!("received: {:?}", buf);
             return Err(ConnectError::BadHandshake(msg));

@@ -5,13 +5,11 @@ use crate::error::{BindError, ConnectError, ConnectResult};
 use crate::{ReceiveResult, SendResult};
 use crate::async_mod::Stream;
 
-/// Represent STP server, that can accept incoming connections.
-pub struct StpServer {
+pub struct TcpServer {
     tcp: TcpListener,
 }
 
-impl StpServer {
-    /// Binds server to specified socket.
+impl TcpServer {
     pub async fn bind<Addrs>(addrs: Addrs) -> BindResult
         where
             Addrs: ToSocketAddrs,
@@ -28,37 +26,31 @@ impl StpServer {
 
     async fn try_handshake(stream: TcpStream) -> ConnectResult<StpConnection> {
         let mut buf = [0; 4];
-        super::read_exact_async(&stream, &mut buf).await?;
+        Stream::read_exact_async(&stream, &mut buf).await?;
         if &buf != b"clnt" {
             let msg = format!("received: {:?}", buf);
             return Err(ConnectError::BadHandshake(msg));
         }
-        super::write_all_async(&stream, b"serv").await?;
+        Stream::write_all_async(&stream, b"serv").await?;
         Ok(StpConnection { stream })
     }
 }
 
-pub type BindResult = Result<StpServer, BindError>;
+pub type BindResult = Result<TcpServer, BindError>;
 
-/// Represent connection from client.
-///
-/// Allows to receive requests and send responses.
 pub struct StpConnection {
     stream: TcpStream,
 }
 
 impl StpConnection {
-    /// Send response to client
     pub async fn send_response<Resp: AsRef<str>>(&self, response: Resp) -> SendResult {
-        super::send_string_async(response, &self.stream).await
+        Stream::send_string_async(response, &self.stream).await
     }
 
-    /// Receive requests from client
-    pub async fn recv_request(&self) -> RecvResult {
-        super::recv_string_async(&self.stream).await
+    pub async fn recv_request(&self) -> ReceiveResult {
+        Stream::recv_string_async(&self.stream).await
     }
 
-    /// Address of connected client
     pub async fn peer_addr(&self) -> io::Result<SocketAddr> {
         self.stream.peer_addr()
     }
