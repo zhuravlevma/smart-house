@@ -1,16 +1,11 @@
 pub mod client;
 pub mod server;
 
-use std::error::Error;
-use std::io;
-use tokio::net::{TcpStream, ToSocketAddrs};
-use crate::error::{ConnectResult, RequestError, RequestResult};
 use crate::{ReceiveError, ReceiveResult, SendResult};
+use std::io;
+use tokio::net::TcpStream;
 
-struct Stream {
-    pub tcp: TcpStream,
-}
-
+struct Stream {}
 impl Stream {
     async fn read_exact_async(s: &TcpStream, buf: &mut [u8]) -> io::Result<()> {
         let mut red = 0;

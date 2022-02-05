@@ -1,9 +1,9 @@
+use crate::async_mod::Stream;
+use crate::error::{BindError, ConnectError, ConnectResult};
+use crate::{ReceiveResult, SendResult};
 use std::io;
 use std::net::SocketAddr;
 use tokio::net::{TcpListener, TcpStream, ToSocketAddrs};
-use crate::error::{BindError, ConnectError, ConnectResult};
-use crate::{ReceiveResult, SendResult};
-use crate::async_mod::Stream;
 
 pub struct TcpServer {
     tcp: TcpListener,
@@ -11,8 +11,8 @@ pub struct TcpServer {
 
 impl TcpServer {
     pub async fn bind<Addrs>(addrs: Addrs) -> BindResult
-        where
-            Addrs: ToSocketAddrs,
+    where
+        Addrs: ToSocketAddrs,
     {
         let tcp = TcpListener::bind(addrs).await?;
         Ok(Self { tcp })
