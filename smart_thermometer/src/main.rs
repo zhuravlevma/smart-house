@@ -8,6 +8,6 @@ fn main() -> Result<(), Box<dyn Error>> {
     loop {
         let dur = Duration::from_secs(3);
         sleep(dur);
-        pusher.send(27.5.to_string(), "127.0.0.1:8081".to_string());
+        pusher.send(30.5.to_string(), "127.0.0.1:8081".to_string());
     }
 }

@@ -15,6 +15,7 @@
       <sourceFolder url="file://$MODULE_DIR$/tcp_wrapper/examples" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/tcp_wrapper/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/config_simple/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/udp_wrapper/examples" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/udp_wrapper/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/.tmp" />

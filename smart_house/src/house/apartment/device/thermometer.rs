@@ -2,7 +2,7 @@ use crate::Rosette;
 use std::error::Error;
 use std::sync::{Arc, Mutex};
 use std::thread;
-use udp_wrapper::UdpServer;
+use udp_wrapper::{UdpServer, UdpServerAsync};
 
 pub struct Thermometer {
     pub name: String,
@@ -24,19 +24,6 @@ impl Thermometer {
     }
 }
 
-impl PartialEq<Self> for Thermometer {
-    fn eq(&self, other: &Self) -> bool {
-        self.name.eq(&other.name)
-    }
-}
-impl Eq for Thermometer {}
-
-impl PartialEq<Rosette> for Thermometer {
-    fn eq(&self, other: &Rosette) -> bool {
-        self.name.eq(&other.name)
-    }
-}
-
 impl Thermometer {
     pub fn update_temperature(&mut self) -> Result<(), Box<dyn Error>> {
         if self.updating {
@@ -53,6 +40,20 @@ impl Thermometer {
         self.updating = true;
         Ok(())
     }
+
+    pub async fn update_temperature_async(&mut self) -> Result<(), Box<dyn Error>> {
+        let socket = UdpServerAsync::new(self.ip.clone()).await?;
+
+        loop {
+            println!("Current temp: {}", self.get_temperature());
+            let (_usize, _src_address, data) = socket.receive().await;
+            let temp: f32 = data.parse().unwrap();
+            let arc = self.temperature.clone();
+            let mut data = arc.lock().unwrap();
+            *data = temp;
+        }
+    }
+
     pub fn get_temperature(&self) -> f32 {
         let arc_clone = self.temperature.clone();
         let data = arc_clone.lock().unwrap();
@@ -60,6 +61,19 @@ impl Thermometer {
     }
     pub fn get_info(&self) -> String {
         self.description.clone()
+    }
+}
+
+impl PartialEq<Self> for Thermometer {
+    fn eq(&self, other: &Self) -> bool {
+        self.name.eq(&other.name)
+    }
+}
+impl Eq for Thermometer {}
+
+impl PartialEq<Rosette> for Thermometer {
+    fn eq(&self, other: &Rosette) -> bool {
+        self.name.eq(&other.name)
     }
 }
 
