@@ -1,0 +1,1 @@
+It's a simple rosette server for smart home

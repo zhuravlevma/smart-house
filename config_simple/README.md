@@ -1,0 +1,1 @@
+It's a simple util to configuration my apps

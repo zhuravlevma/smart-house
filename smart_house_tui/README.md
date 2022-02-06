@@ -1,0 +1,1 @@
+It's a simple terminal ui for your smart home

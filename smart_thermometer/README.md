@@ -1,0 +1,1 @@
+It's a simple thermometer server for your smart home
