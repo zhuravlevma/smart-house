@@ -66,7 +66,7 @@ impl Eq for Rosette {}
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    // use super::*;
 
     #[test]
     fn rosette_on() {

@@ -1,11 +1,15 @@
 use crate::Rosette;
-use udp::UdpClient;
+use std::error::Error;
+use std::sync::{Arc, Mutex};
+use std::thread;
+use udp::UdpServer;
 
 pub struct Thermometer {
     pub name: String,
     description: String,
-    temperature: f32,
+    temperature: Arc<Mutex<f32>>,
     ip: String,
+    updating: bool,
 }
 
 impl Thermometer {
@@ -13,8 +17,9 @@ impl Thermometer {
         Self {
             name,
             description: "It's a thermometer".to_string(),
-            temperature,
+            temperature: Arc::new(Mutex::new(temperature)),
             ip: ip_address,
+            updating: false,
         }
     }
 }
@@ -33,17 +38,25 @@ impl PartialEq<Rosette> for Thermometer {
 }
 
 impl Thermometer {
-    pub fn update_temperature(&mut self) -> f32 {
-        let client = UdpClient::new("127.0.0.1:55333".to_string());
-        let temp: f32 = client
-            .send("Signal".to_string(), self.ip.clone())
-            .parse()
-            .unwrap();
-        self.temperature = temp;
-        self.temperature
+    pub fn update_temperature(&mut self) -> Result<(), Box<dyn Error>> {
+        if self.updating {
+            return Ok(());
+        }
+        let server = UdpServer::new(self.ip.clone());
+        let clone_mutex = self.temperature.clone();
+        thread::spawn(move || loop {
+            let (_usize, _address, data) = server.receive();
+            let temp: f32 = data.parse().unwrap();
+            let mut temperature = clone_mutex.lock().unwrap();
+            *temperature = temp;
+        });
+        self.updating = true;
+        Ok(())
     }
     pub fn get_temperature(&self) -> f32 {
-        self.temperature
+        let arc_clone = self.temperature.clone();
+        let data = arc_clone.lock().unwrap();
+        *data
     }
     pub fn get_info(&self) -> String {
         self.description.clone()
