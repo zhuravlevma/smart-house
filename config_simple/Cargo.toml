@@ -1,6 +1,6 @@
 [package]
 name = "config_simple"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Zhuravlev Maksim <monge.gaspard.1746@gmail.com>"]
 description = "It's a simple rosette server to smart_house"
