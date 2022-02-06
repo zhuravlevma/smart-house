@@ -1,5 +1,5 @@
-use std::error::Error;
 use crate::Socket;
+use std::error::Error;
 use std::net::SocketAddr;
 use std::time::Duration;
 use tokio::net::UdpSocket;
@@ -52,8 +52,14 @@ impl UdpServerAsync {
         (usize, src_addr, data)
     }
 
-    pub async fn response(&self, data: String, receiver: SocketAddr) -> Result<usize, Box<dyn Error>> {
-        Ok(self.socket
-            .send_to(data.as_bytes(), receiver.to_string()).await?)
+    pub async fn response(
+        &self,
+        data: String,
+        receiver: SocketAddr,
+    ) -> Result<usize, Box<dyn Error>> {
+        Ok(self
+            .socket
+            .send_to(data.as_bytes(), receiver.to_string())
+            .await?)
     }
 }
