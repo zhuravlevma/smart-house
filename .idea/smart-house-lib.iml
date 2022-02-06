@@ -7,7 +7,6 @@
       <sourceFolder url="file://$MODULE_DIR$/smart_house_tui/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/smart_rosette/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/logger/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/config/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/smart_thermometer/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/smart_house/examples" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/smart_rosette/examples" isTestSource="false" />
@@ -15,6 +14,7 @@
       <sourceFolder url="file://$MODULE_DIR$/smart_thermometer/examples" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/tcp_wrapper/examples" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/tcp_wrapper/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/config_simple/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/udp_wrapper/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/.tmp" />

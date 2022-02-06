@@ -1,5 +1,5 @@
 use crate::handle::Handle;
-use config::ConfigServer;
+use config_simple::ConfigServer;
 use std::sync::Arc;
 use std::thread;
 use udp_wrapper::UdpServer;

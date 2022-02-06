@@ -1,6 +1,6 @@
 use crate::domain::RosetteService;
 use crate::server::controller::rosette::PowerController;
-use config::ConfigServer;
+use config_simple::ConfigServer;
 use routing::RosetteHandler;
 use std::error::Error;
 use std::thread;

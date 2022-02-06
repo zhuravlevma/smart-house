@@ -2,7 +2,7 @@
 
 members = [
     "udp_wrapper",
-    "config",
+    "config_simple",
     "smart_house",
     "smart_rosette",
     "smart_thermometer",
