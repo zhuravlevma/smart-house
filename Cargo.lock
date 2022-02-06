@@ -596,9 +596,6 @@ dependencies = [
 [[package]]
 name = "udp"
 version = "0.1.0"
-dependencies = [
- "simple-log",
-]
 
 [[package]]
 name = "unicode-xid"

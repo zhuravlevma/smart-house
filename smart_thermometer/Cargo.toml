@@ -2,6 +2,9 @@
 name = "smart_thermometer"
 version = "0.1.0"
 edition = "2021"
+authors = ["Zhuravlev Maksim <monge.gaspard.1746@gmail.com>"]
+description = "It's a simple thermometer server to smart_house"
+license = "MIT OR Apache-2.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
