@@ -1,7 +1,7 @@
 [workspace]
 
 members = [
-    "udp",
+    "udp_wrapper",
     "config",
     "smart_house",
     "smart_rosette",

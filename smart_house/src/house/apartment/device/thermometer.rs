@@ -2,7 +2,7 @@ use crate::Rosette;
 use std::error::Error;
 use std::sync::{Arc, Mutex};
 use std::thread;
-use udp::UdpServer;
+use udp_wrapper::UdpServer;
 
 pub struct Thermometer {
     pub name: String,

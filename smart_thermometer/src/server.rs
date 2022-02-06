@@ -2,7 +2,7 @@ use crate::handle::Handle;
 use config::ConfigServer;
 use std::sync::Arc;
 use std::thread;
-use udp::UdpServer;
+use udp_wrapper::UdpServer;
 
 pub struct ThermometerServer {
     connection: UdpServer,

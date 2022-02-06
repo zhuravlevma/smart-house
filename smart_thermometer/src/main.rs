@@ -1,7 +1,7 @@
 use std::error::Error;
 use std::thread::sleep;
 use std::time::Duration;
-use udp::UdpPusher;
+use udp_wrapper::UdpPusher;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let pusher = UdpPusher::new("127.0.0.1:5051".to_string());
