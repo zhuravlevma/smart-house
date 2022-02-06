@@ -1,4 +1,4 @@
-use config::ConfigServer;
+use config_simple::ConfigServer;
 use smart_thermometer::ThermometerServer;
 use std::error::Error;
 
