@@ -4,10 +4,10 @@ use config::ConfigServer;
 use routing::RosetteHandler;
 use std::error::Error;
 use std::thread;
-use tcp::async_mod::server::TcpServer as TcpServerAsync;
-use tcp::error::BindError;
-pub use tcp::server::Server;
-use tcp::server::{Connection, RequestHandler, TcpServer};
+use tcp_wrapper::async_mod::server::TcpServer as TcpServerAsync;
+use tcp_wrapper::error::BindError;
+pub use tcp_wrapper::server::Server;
+use tcp_wrapper::server::{Connection, RequestHandler, TcpServer};
 
 pub struct RosetteServer {
     connection: TcpServer,

@@ -1,5 +1,5 @@
 use crate::Thermometer;
-use tcp::client::Client;
+use tcp_wrapper::client::Client;
 
 pub struct Rosette {
     pub name: String,

@@ -1,5 +1,5 @@
 [package]
-name = "tcp"
+name = "tcp_wrapper"
 version = "0.1.0"
 edition = "2021"
 authors = ["Zhuravlev Maksim <monge.gaspard.1746@gmail.com>"]

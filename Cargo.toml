@@ -1,11 +1,11 @@
 [workspace]
 
 members = [
-    "tcp",
     "udp",
     "config",
     "smart_house",
     "smart_rosette",
     "smart_thermometer",
     "smart_house_tui",
+    "tcp_wrapper"
 ]
