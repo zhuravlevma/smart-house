@@ -49,7 +49,8 @@ impl RosetteServerAsync {
         loop {
             let connection = self.connection.accept().await?;
             let _req = connection.recv_request().await?;
-            connection.send_response("Hello, client").await?;
+            println!("{}", _req);
+            connection.send_response(220.to_string()).await?;
         }
     }
 }
