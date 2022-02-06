@@ -2,7 +2,15 @@
 name = "config_simple"
 version = "0.1.0"
 edition = "2021"
-
+authors = ["Zhuravlev Maksim <monge.gaspard.1746@gmail.com>"]
+description = "It's a simple rosette server to smart_house"
+license = "MIT OR Apache-2.0"
+rust-version = "1.56"
+readme = "README.md"
+repository = "https://github.com/zhuravlevma/smart-house-lib"
+categories = ["utils"]
+keywords = ["config"]
+homepage = "https://github.com/zhuravlevma"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
