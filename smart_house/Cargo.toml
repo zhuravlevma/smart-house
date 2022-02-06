@@ -8,7 +8,6 @@ license = "MIT OR Apache-2.0"
 rust-version = "1.56"
 readme = "README.md"
 repository = "https://github.com/zhuravlevma/smart-house-lib"
-categories = ["utils"]
 keywords = ["smart house", "house"]
 homepage = "https://github.com/zhuravlevma"
 
