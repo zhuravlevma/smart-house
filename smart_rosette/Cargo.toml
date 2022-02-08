@@ -12,3 +12,4 @@ license = "MIT OR Apache-2.0"
 tcp_wrapper = {path = "../tcp_wrapper"}
 config_simple = { path = "../config_simple" }
 tokio = { version = "1.16.1", features = ["full"] }
+tcp_server = { path = "../tcp_server" }

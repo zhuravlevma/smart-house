@@ -26,7 +26,7 @@ impl Rosette {
 
     pub fn on(&mut self) -> bool {
         let mut client = self.get_connect_to_rosette(self.ip.clone());
-        let res = client.send_request("on|||").unwrap();
+        let res = client.send_request("rosette_on|||").unwrap();
         println!("My test res {}", res);
         self.power = 220;
         true
@@ -34,7 +34,7 @@ impl Rosette {
 
     pub fn off(&mut self) -> bool {
         let mut client = self.get_connect_to_rosette(self.ip.clone());
-        let res = client.send_request("off|||").unwrap();
+        let res = client.send_request("rosette_off|||").unwrap();
         println!("My test res {}", res);
         self.power = 0;
         false
