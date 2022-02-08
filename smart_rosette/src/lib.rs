@@ -1,8 +1,8 @@
+pub use server::RosetteServer;
 use std::error::Error;
 use std::str::Split;
-pub use server::RosetteServer;
-use tcp_wrapper::server_std::TcpServer;
 use tcp_wrapper::server_std::connection_std::Connection;
+use tcp_wrapper::server_std::TcpServer;
 pub mod domain;
 pub mod server;
 

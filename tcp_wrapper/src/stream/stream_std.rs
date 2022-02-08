@@ -1,5 +1,5 @@
-use std::io::{Read, Write};
 use crate::{ReceiveError, ReceiveResult, SendResult};
+use std::io::{Read, Write};
 
 pub struct Stream {}
 

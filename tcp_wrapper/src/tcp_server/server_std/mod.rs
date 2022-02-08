@@ -1,7 +1,7 @@
-use std::io::{Read, Write};
-use std::net::{TcpListener, TcpStream, ToSocketAddrs};
 use crate::error::{BindError, ConnectError, ConnectResult};
 pub use connection_std::Connection;
+use std::io::{Read, Write};
+use std::net::{TcpListener, TcpStream, ToSocketAddrs};
 
 pub struct TcpServer {
     tcp: TcpListener,
@@ -9,8 +9,8 @@ pub struct TcpServer {
 
 impl TcpServer {
     pub fn bind<IpAddrs>(addrs: IpAddrs) -> Result<TcpServer, BindError>
-        where
-            IpAddrs: ToSocketAddrs,
+    where
+        IpAddrs: ToSocketAddrs,
     {
         let server = TcpListener::bind(addrs)?;
         Ok(Self { tcp: server })

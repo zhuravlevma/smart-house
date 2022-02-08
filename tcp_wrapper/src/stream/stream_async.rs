@@ -1,6 +1,6 @@
+use crate::{ReceiveError, ReceiveResult, SendResult};
 use tokio::io;
 use tokio::net::TcpStream;
-use crate::{ReceiveError, ReceiveResult, SendResult};
 
 pub struct Stream;
 impl Stream {

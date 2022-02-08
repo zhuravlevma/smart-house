@@ -1,7 +1,7 @@
+use crate::stream_std::Stream;
+use crate::{ReceiveResult, SendResult};
 use std::io;
 use std::net::{SocketAddr, TcpStream};
-use crate::{ReceiveResult, SendResult};
-use crate::stream_std::Stream;
 
 pub struct Connection {
     pub(crate) stream: TcpStream,

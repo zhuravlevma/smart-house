@@ -1,14 +1,14 @@
 use crate::domain::RosetteService;
 use crate::server::controller::rosette::PowerController;
+use crate::{RequestHandler, Server};
 use config_simple::ConfigServer;
 use routing::RosetteHandler;
 use std::error::Error;
 use std::thread;
-use tcp_wrapper::server_async::TcpServer as TcpServerAsync;
 use tcp_wrapper::error::BindError;
-use tcp_wrapper::server_std::TcpServer;
+use tcp_wrapper::server_async::TcpServer as TcpServerAsync;
 use tcp_wrapper::server_std::connection_std::Connection;
-use crate::{RequestHandler, Server};
+use tcp_wrapper::server_std::TcpServer;
 
 pub struct RosetteServer {
     connection: TcpServer,

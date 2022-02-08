@@ -1,8 +1,8 @@
+use crate::stream_async::Stream;
+use crate::{ReceiveResult, SendResult};
 use std::net::SocketAddr;
 use tokio::io;
 use tokio::net::TcpStream;
-use crate::{ReceiveResult, SendResult};
-use crate::stream_async::Stream;
 
 pub struct Connection {
     pub(crate) stream: TcpStream,

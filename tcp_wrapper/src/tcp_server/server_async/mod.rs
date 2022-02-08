@@ -1,8 +1,8 @@
 pub use connection_async::Connection;
 
-use tokio::net::{TcpListener, TcpStream, ToSocketAddrs};
 use crate::error::{BindError, ConnectError, ConnectResult};
 use crate::stream::stream_async::Stream;
+use tokio::net::{TcpListener, TcpStream, ToSocketAddrs};
 
 pub struct TcpServer {
     tcp: TcpListener,
@@ -10,8 +10,8 @@ pub struct TcpServer {
 
 impl TcpServer {
     pub async fn bind<Addrs>(addrs: Addrs) -> BindResult
-        where
-            Addrs: ToSocketAddrs,
+    where
+        Addrs: ToSocketAddrs,
     {
         let tcp = TcpListener::bind(addrs).await?;
         Ok(Self { tcp })
