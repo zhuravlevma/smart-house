@@ -48,6 +48,10 @@ impl TcpServer {
         })
     }
 
+    // pub fn handle_datagram() {
+    //
+    // }
+
     fn try_handshake(mut stream: TcpStream) -> ConnectResult<Connection> {
         let mut buf = [0; 4];
         stream.read_exact(&mut buf)?;

@@ -14,7 +14,7 @@ pub struct RosetteServer {
 }
 
 impl RosetteServer {
-    pub fn new(config: ConfigServer) -> Result<Self, Box<dyn Error>> {
+    pub fn new(config: ConfigServer) -> Result<Self, BindError> {
         Ok(Self {
             connection: TcpServer::bind(config.url)?,
         })
