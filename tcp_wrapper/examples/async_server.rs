@@ -1,5 +1,5 @@
 use std::error::Error;
-use tcp_wrapper::async_mod::server::{StpConnection, TcpServer};
+use tcp_wrapper::server_async::{TcpServer, Connection};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
@@ -10,7 +10,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     }
 }
 
-async fn process_connection(conn: StpConnection) -> Result<(), Box<dyn Error>> {
+async fn process_connection(conn: Connection) -> Result<(), Box<dyn Error>> {
     let req = conn.recv_request().await?;
     assert_eq!(req, "Hello, server");
     conn.send_response("Hello, client").await?;

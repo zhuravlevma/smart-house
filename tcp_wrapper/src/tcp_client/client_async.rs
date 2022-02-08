@@ -1,6 +1,6 @@
-use crate::async_mod::Stream;
-use crate::error::{ConnectError, ConnectResult, RequestResult};
 use tokio::net::{TcpStream, ToSocketAddrs};
+use crate::error::{ConnectError, ConnectResult, RequestResult};
+use crate::stream::stream_async::Stream;
 
 pub struct TcpClient {
     stream: TcpStream,
@@ -8,14 +8,13 @@ pub struct TcpClient {
 
 impl TcpClient {
     pub async fn connect<Addrs>(addrs: Addrs) -> ConnectResult<Self>
-    where
-        Addrs: ToSocketAddrs,
+        where
+            Addrs: ToSocketAddrs,
     {
         let stream = TcpStream::connect(addrs).await?;
         Self::try_handshake(stream).await
     }
 
-    /// Send request to connected STP server.
     pub async fn send_request<R: AsRef<str>>(&mut self, req: R) -> RequestResult {
         Stream::send_string_async(req, &self.stream).await?;
         let response = Stream::recv_string_async(&self.stream).await?;

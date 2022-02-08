@@ -1,5 +1,5 @@
 use crate::domain::RosetteService;
-use tcp_wrapper::server::Request;
+use crate::Request;
 
 pub struct PowerController {
     rosette_service: RosetteService,

@@ -1,5 +1,5 @@
 use std::error::Error;
-use tcp_wrapper::async_mod::client::TcpClient;
+use tcp_wrapper::client_async::TcpClient;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {

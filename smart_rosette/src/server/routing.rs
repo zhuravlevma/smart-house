@@ -1,6 +1,5 @@
 use crate::server::controller::rosette::PowerController;
-pub use tcp_wrapper::server::Server;
-use tcp_wrapper::server::{Request, RequestHandler};
+use crate::{Request, RequestHandler};
 
 pub struct RosetteHandler {
     pub power_controller: PowerController,

@@ -1,7 +1,7 @@
-use crate::error::{ConnectError, ConnectResult, RequestResult};
-use crate::Stream;
 use std::io::{Read, Write};
 use std::net::{TcpStream, ToSocketAddrs};
+use crate::error::{ConnectError, ConnectResult, RequestResult};
+use crate::stream::stream_std::Stream;
 
 pub struct Client {
     stream: TcpStream,
@@ -9,8 +9,8 @@ pub struct Client {
 
 impl Client {
     pub fn connect<IpAddrs>(addrs: IpAddrs) -> ConnectResult<Self>
-    where
-        IpAddrs: ToSocketAddrs,
+        where
+            IpAddrs: ToSocketAddrs,
     {
         let stream = TcpStream::connect(addrs)?;
         Self::try_handshake(stream)

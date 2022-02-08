@@ -1,13 +1,10 @@
-pub mod client;
-pub mod server;
-
-use crate::{ReceiveError, ReceiveResult, SendResult};
-use std::io;
+use tokio::io;
 use tokio::net::TcpStream;
+use crate::{ReceiveError, ReceiveResult, SendResult};
 
-struct Stream;
+pub struct Stream;
 impl Stream {
-    async fn read_exact_async(s: &TcpStream, buf: &mut [u8]) -> io::Result<()> {
+    pub async fn read_exact_async(s: &TcpStream, buf: &mut [u8]) -> io::Result<()> {
         let mut red = 0;
         while red < buf.len() {
             s.readable().await?;
@@ -43,7 +40,7 @@ impl Stream {
         Ok(())
     }
 
-    async fn send_string_async<D: AsRef<str>>(d: D, s: &TcpStream) -> SendResult {
+    pub async fn send_string_async<D: AsRef<str>>(d: D, s: &TcpStream) -> SendResult {
         let bytes = d.as_ref().as_bytes();
         let len = bytes.len() as u32;
         let len_bytes = len.to_be_bytes();
@@ -52,7 +49,7 @@ impl Stream {
         Ok(())
     }
 
-    async fn recv_string_async(s: &TcpStream) -> ReceiveResult {
+    pub async fn recv_string_async(s: &TcpStream) -> ReceiveResult {
         let mut buf = [0; 4];
         Self::read_exact_async(s, &mut buf).await?;
         let len = u32::from_be_bytes(buf);
