@@ -4,6 +4,7 @@ pub use server::UdpServer;
 pub use server::UdpServerAsync;
 pub use socket::Socket;
 mod client;
+pub mod error;
 mod pusher;
 mod server;
 mod socket;

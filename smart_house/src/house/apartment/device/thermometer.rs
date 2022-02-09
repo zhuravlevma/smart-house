@@ -29,10 +29,10 @@ impl Thermometer {
         if self.updating {
             return Ok(());
         }
-        let server = UdpServer::new(self.ip.clone());
+        let server = UdpServer::new(self.ip.clone())?;
         let clone_mutex = self.temperature.clone();
         thread::spawn(move || loop {
-            let (_usize, _address, data) = server.receive();
+            let (_usize, _address, data) = server.receive().unwrap();
             let temp: f32 = data.parse().unwrap();
             let mut temperature = clone_mutex.lock().unwrap();
             *temperature = temp;
@@ -46,8 +46,8 @@ impl Thermometer {
 
         loop {
             println!("Current temp: {}", self.get_temperature());
-            let (_usize, _src_address, data) = socket.receive().await;
-            let temp: f32 = data.parse().unwrap();
+            let (_usize, _src_address, data) = socket.receive().await?;
+            let temp: f32 = data.parse()?;
             let arc = self.temperature.clone();
             let mut data = arc.lock().unwrap();
             *data = temp;

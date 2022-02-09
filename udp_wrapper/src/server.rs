@@ -1,7 +1,6 @@
+use crate::error::{BindError, ReceiveError, SendError};
 use crate::Socket;
-use std::error::Error;
 use std::net::SocketAddr;
-use std::time::Duration;
 use tokio::net::UdpSocket;
 
 pub struct UdpServer {
@@ -9,26 +8,23 @@ pub struct UdpServer {
 }
 
 impl UdpServer {
-    pub fn new(address: String) -> Self {
-        let socket = Socket::new(address);
-        socket.set_write_timeout(Some(Duration::new(1, 0))).unwrap();
-        Self { socket }
+    pub fn new(address: String) -> Result<Self, BindError> {
+        let socket = Socket::new(address)?;
+        Ok(Self { socket })
     }
 
-    pub fn receive(&self) -> (usize, SocketAddr, String) {
+    pub fn receive(&self) -> Result<(usize, SocketAddr, String), ReceiveError> {
         let mut buff = [0; 1024];
-        let (usize, src_addr) = self.socket.recv_from(&mut buff).unwrap();
-        let data = String::from_utf8(Vec::from(&buff[0..usize])).unwrap();
+        let (usize, address) = self.socket.recv_from(&mut buff)?;
+        let data = String::from_utf8(Vec::from(&buff[0..usize]))?;
         println!("Len: {}", usize);
         println!("Data: {}", data);
-        println!("Address: {}", src_addr);
-        (usize, src_addr, data)
+        println!("Address: {}", address);
+        Ok((usize, address, data))
     }
 
-    pub fn response(&self, data: String, receiver: SocketAddr) -> usize {
-        self.socket
-            .send_to(data.as_bytes(), receiver.to_string())
-            .unwrap()
+    pub fn response(&self, data: String, receiver: SocketAddr) -> Result<usize, SendError> {
+        Ok(self.socket.send_to(data.as_bytes(), receiver.to_string())?)
     }
 }
 
@@ -37,26 +33,22 @@ pub struct UdpServerAsync {
 }
 
 impl UdpServerAsync {
-    pub async fn new(address: String) -> Result<Self, Box<dyn Error>> {
+    pub async fn new(address: String) -> Result<Self, BindError> {
         let socket = UdpSocket::bind(address).await?;
         Ok(Self { socket })
     }
 
-    pub async fn receive(&self) -> (usize, SocketAddr, String) {
+    pub async fn receive(&self) -> Result<(usize, SocketAddr, String), ReceiveError> {
         let mut buff = [0; 1024];
-        let (usize, src_addr) = self.socket.recv_from(&mut buff).await.unwrap();
+        let (usize, src_addr) = self.socket.recv_from(&mut buff).await?;
         let data = String::from_utf8(Vec::from(&buff[0..usize])).unwrap();
         println!("Len: {}", usize);
         println!("Data: {}", data);
         println!("Address: {}", src_addr);
-        (usize, src_addr, data)
+        Ok((usize, src_addr, data))
     }
 
-    pub async fn response(
-        &self,
-        data: String,
-        receiver: SocketAddr,
-    ) -> Result<usize, Box<dyn Error>> {
+    pub async fn response(&self, data: String, receiver: SocketAddr) -> Result<usize, SendError> {
         Ok(self
             .socket
             .send_to(data.as_bytes(), receiver.to_string())

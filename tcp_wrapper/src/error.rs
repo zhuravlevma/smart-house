@@ -33,10 +33,6 @@ pub enum ReceiveError {
 
 pub type RequestResult = Result<String, RequestError>;
 
-/// Error for request sending. It consists from two steps: sending and receiving data.
-///
-/// `SendError` caused by send data error.
-/// `RecvError` caused by receive data error.
 #[derive(Debug, Error)]
 pub enum RequestError {
     #[error(transparent)]
