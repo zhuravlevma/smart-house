@@ -46,7 +46,7 @@ impl House {
     }
 
     pub fn create_report(&self) -> String {
-        format!("{}, {}", "Test report".to_string(), self.name)
+        format!("{}, {}", "Test report", self.name)
     }
 }
 

@@ -2,6 +2,7 @@
 
 members = [
     "udp_wrapper",
+    "http_server",
     "config_simple",
     "smart_house",
     "smart_rosette",
