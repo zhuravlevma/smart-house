@@ -1,4 +1,5 @@
 use crate::Rosette;
+use log::info;
 use std::error::Error;
 use std::sync::{Arc, Mutex};
 use std::thread;
@@ -27,6 +28,7 @@ impl Thermometer {
 impl Thermometer {
     pub fn update_temperature(&mut self) -> Result<(), Box<dyn Error>> {
         if self.updating {
+            info!("Your thermometer already use simple updating temperature");
             return Ok(());
         }
         let server = UdpServer::new(self.ip.clone())?;
@@ -38,12 +40,25 @@ impl Thermometer {
             *temperature = temp;
         });
         self.updating = true;
+        info!(
+            "Start simple updating temperature for thermometer {}",
+            self.name
+        );
         Ok(())
     }
 
     pub async fn update_temperature_async(&mut self) -> Result<(), Box<dyn Error>> {
+        if self.updating {
+            info!("Your thermometer already use async updating temperature");
+            return Ok(());
+        }
         let socket = UdpServerAsync::new(self.ip.clone()).await?;
 
+        self.updating = true;
+        info!(
+            "Start async updating temperature for thermometer {}",
+            self.name
+        );
         loop {
             println!("Current temp: {}", self.get_temperature());
             let (_usize, _src_address, data) = socket.receive().await?;
@@ -55,11 +70,13 @@ impl Thermometer {
     }
 
     pub fn get_temperature(&self) -> f32 {
+        info!("Getting temperature for thermometer {}", self.name);
         let arc_clone = self.temperature.clone();
         let data = arc_clone.lock().unwrap();
         *data
     }
     pub fn get_info(&self) -> String {
+        info!("Getting info for thermometer {}", self.name);
         self.description.clone()
     }
 }

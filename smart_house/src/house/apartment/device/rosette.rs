@@ -1,4 +1,5 @@
 use crate::Thermometer;
+use log::info;
 use tcp_wrapper::client_std::Client;
 
 pub struct Rosette {
@@ -25,29 +26,33 @@ impl Rosette {
     }
 
     pub fn on(&mut self) -> bool {
+        info!("Rosette IP {} start on", self.ip);
         let mut client = self.get_connect_to_rosette(self.ip.clone());
         let res = client.send_request("rosette_on|||").unwrap();
-        println!("My test res {}", res);
+        info!("Rosette IP on success: {}", res);
         self.power = 220;
         true
     }
 
     pub fn off(&mut self) -> bool {
+        info!("Rosette IP {} start off", self.ip);
         let mut client = self.get_connect_to_rosette(self.ip.clone());
         let res = client.send_request("rosette_off|||").unwrap();
-        println!("My test res {}", res);
+        info!("Rosette IP off success: {}", res);
         self.power = 0;
         false
     }
 
     pub fn current_power(&self) -> u32 {
+        info!("Rosette IP {} start getting power", self.ip);
         let mut client = self.get_connect_to_rosette(self.ip.clone());
         let res = client.send_request("get_power|||").unwrap();
-        println!("My test res {}", res);
+        info!("Rosette IP {} getting power success: {}", self.ip, res);
         self.power
     }
 
     pub fn get_info(&self) -> String {
+        info!("Getting info for rosette {}", self.ip);
         self.description.clone()
     }
 }

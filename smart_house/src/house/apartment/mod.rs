@@ -2,6 +2,7 @@ use crate::errors::{
     AddDataError, AddDataResult, GetDataError, GetDataResult, RemoveDataError, RemoveDataResult,
 };
 use device::Device;
+use log::info;
 
 pub struct Apartment {
     pub name: String,
@@ -19,6 +20,7 @@ impl Apartment {
 
 impl Apartment {
     pub fn _add_device(&mut self, new_device: Device) -> AddDataResult<&Device> {
+        info!("Adding device for apartment {}", self.name);
         let device = self
             .devices
             .iter()
@@ -34,6 +36,10 @@ impl Apartment {
         }
     }
     pub fn remove_device(&mut self, device_name: String) -> RemoveDataResult<Device> {
+        info!(
+            "Remove device with name {} for apartment {}",
+            device_name, self.name
+        );
         let position = self
             .devices
             .iter()
@@ -44,9 +50,14 @@ impl Apartment {
         }
     }
     pub fn _list_devices(&self) -> &[Device] {
+        info!("Get list devices for apartment {}", self.name);
         &self.devices
     }
     pub fn get_device_by_name(&self, device_name: &str) -> GetDataResult<&Device> {
+        info!(
+            "Getting device with name {} for apartment {}",
+            device_name, self.name
+        );
         let device = self
             .devices
             .iter()

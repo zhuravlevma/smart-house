@@ -14,8 +14,8 @@ homepage = "https://github.com/zhuravlevma"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+log = "0.4.14"
 tokio = { version = "1.16.1", features = ["full"] }
 thiserror = "1.0.30"
-simple-log = "1.4.0"
 udp_wrapper = {path = "../udp_wrapper"}
 tcp_wrapper =  {path = "../tcp_wrapper"}

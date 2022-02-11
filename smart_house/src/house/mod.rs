@@ -1,6 +1,7 @@
 use crate::AddDataResult;
 use crate::{AddDataError, RemoveDataError, RemoveDataResult};
 use apartment::Apartment;
+use log::info;
 
 pub struct House {
     name: String,
@@ -18,9 +19,14 @@ impl House {
 
 impl House {
     pub fn get_apartments(&self) -> &[Apartment] {
+        info!("Getting apartments");
         &self.apartments
     }
     pub fn add_apartment(&mut self, new_apartment: Apartment) -> AddDataResult<&Apartment> {
+        info!(
+            "Add apartment with name {} for house {}",
+            new_apartment.name, self.name
+        );
         match self
             .apartments
             .iter()
@@ -35,6 +41,10 @@ impl House {
         }
     }
     pub fn remove_apartment(&mut self, apartment_name: String) -> RemoveDataResult<Apartment> {
+        info!(
+            "Remove apartment with name {} for house {}",
+            apartment_name, self.name
+        );
         let position = self
             .apartments
             .iter()
@@ -46,6 +56,7 @@ impl House {
     }
 
     pub fn create_report(&self) -> String {
+        info!("Creating report for house {}", self.name);
         format!("{}, {}", "Test report", self.name)
     }
 }
