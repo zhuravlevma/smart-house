@@ -1,3 +1,4 @@
+use crate::mongo::apartment::ApartmentData;
 use futures::StreamExt;
 use mongodb::bson::doc;
 use mongodb::bson::oid::ObjectId;
@@ -12,6 +13,7 @@ pub struct HouseData {
     #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
     id: Option<ObjectId>,
     name: String,
+    pub(crate) apartments: Vec<ApartmentData>,
 }
 
 impl MongoHouse {
@@ -24,8 +26,8 @@ impl MongoHouse {
         let query = doc! {};
         let mut houses = collection.find(query, None).await?;
         let mut houses_vec = Vec::new();
-        while let Some(board) = houses.next().await {
-            houses_vec.push(board?);
+        while let Some(house) = houses.next().await {
+            houses_vec.push(house?);
         }
         Ok(houses_vec)
     }
