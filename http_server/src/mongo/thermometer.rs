@@ -9,8 +9,6 @@ pub struct MongoThermometer(Client);
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct ThermometerData {
-    #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
-    id: Option<ObjectId>,
     name: String,
 }
 

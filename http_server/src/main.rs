@@ -1,8 +1,10 @@
-mod mongo;
 pub mod error;
+mod mongo;
 
 use crate::mongo::apartment::{ApartmentData, MongoApartment};
 use crate::mongo::house::{HouseData, MongoHouse};
+use crate::mongo::rosette::MongoRosette;
+use crate::mongo::thermometer::MongoThermometer;
 use actix_web::web::{Data, Path};
 use actix_web::{web, App, HttpResponse, HttpServer};
 use log::LevelFilter;
@@ -11,8 +13,6 @@ use std::env;
 use std::error::Error;
 use std::str::FromStr;
 use std::sync::Arc;
-use crate::mongo::rosette::MongoRosette;
-use crate::mongo::thermometer::MongoThermometer;
 
 #[actix_web::main]
 async fn main() -> Result<(), Box<dyn Error>> {
@@ -59,12 +59,14 @@ async fn get_houses(houses: web::Data<Arc<MongoHouse>>) -> Result<HttpResponse, 
 }
 
 #[actix_web::post("/house")]
-async fn create_house(house_data: web::Json<HouseData>, houses: web::Data<Arc<MongoHouse>>) -> Result<HttpResponse, Box<dyn Error>> {
+async fn create_house(
+    house_data: web::Json<HouseData>,
+    houses: web::Data<Arc<MongoHouse>>,
+) -> Result<HttpResponse, Box<dyn Error>> {
     let house_data = house_data.into_inner();
     let created = houses.create_house(house_data).await?;
     Ok(HttpResponse::Ok().json(created))
 }
-
 
 #[actix_web::get("/house/{id}/apartment")]
 async fn get_apartments(
@@ -88,14 +90,14 @@ async fn create_apartment(
     Ok(HttpResponse::Ok().json(apartments))
 }
 
-
-#[actix_web::get("/apartment/${id}/rosettes")]
+#[actix_web::get("/house/{id}/apartment/{name}/rosette")]
 async fn get_rosettes(
-    path: Path<String>,
+    path: Path<(String, String)>,
     rosette: web::Data<Arc<MongoRosette>>,
 ) -> Result<HttpResponse, Box<dyn Error>> {
-    let id = ObjectId::from_str(&path.into_inner())?;
-    let rosettes = rosette.get_rosettes(id).await?;
+    let (id, name) = path.into_inner();
+    let id = ObjectId::from_str(&id)?;
+    let rosettes = rosette.get_rosettes(id, &name).await?;
     Ok(HttpResponse::Ok().json(rosettes))
 }
 
