@@ -19,16 +19,19 @@ impl MongoThermometer {
 
     pub async fn get_thermometers(
         &self,
-        apartment_id: ObjectId,
+        home_id: ObjectId,
+        apartment_name: &str,
     ) -> Result<Vec<ThermometerData>, Box<dyn Error>> {
         let collection = self.0.database("smart_home").collection("house");
-        let query = doc! { "apartments": [{ "_id": apartment_id}] };
+        let query = doc! { "_id": home_id };
         let house: Option<HouseData> = collection.find_one(query, None).await?;
         let house = house.unwrap();
         let mut thermometers = Vec::new();
         for apartment in house.apartments {
-            for thermometer in apartment.thermometers {
-                thermometers.push(thermometer);
+            if apartment_name == apartment.name {
+                for thermometer in apartment.thermometers {
+                    thermometers.push(thermometer);
+                }
             }
         }
         Ok(thermometers)

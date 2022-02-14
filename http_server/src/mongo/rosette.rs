@@ -1,9 +1,10 @@
 use crate::mongo::house::HouseData;
-use mongodb::bson::doc;
+use mongodb::bson::{doc, ser};
 use mongodb::bson::oid::ObjectId;
-use mongodb::Client;
+use mongodb::{Client, Collection};
 use serde::{Deserialize, Serialize};
 use std::error::Error;
+use crate::error::CustomError;
 
 pub struct MongoRosette(Client);
 
@@ -37,5 +38,57 @@ impl MongoRosette {
         Ok(vec)
     }
 
-    // pub async fn create_rosette(&self, apartment_id: ObjectId) -> Result<RosetteData>
+    pub async fn get_rosette(
+        &self,
+        house_id: ObjectId,
+        apartment_name: &str,
+        rosette_name: &str,
+    ) -> Result<RosetteData, CustomError> {
+        let collection = self.0.database("smart_home").collection("house");
+        let query = doc! {"_id": &house_id };
+        let house: Option<HouseData> = collection.find_one(query, None).await?;
+        let house = house.unwrap();
+        let apartment = house.apartments.into_iter().find(|el| el.name == apartment_name);
+        match apartment {
+            None => Err(CustomError::NotFound(format!(
+                "apartment with house_id and name: {} {}",
+                house_id,
+                apartment_name
+            ))),
+            Some(apartment) => {
+                let rosette = apartment.rosettes.iter().find(|rosette| rosette_name == rosette.name);
+                match rosette {
+                    None => Err(CustomError::NotFound(format!(
+                        "rosette with house_id, apartment_name and rosette_name: {} {} {}",
+                        house_id,
+                        apartment_name,
+                        rosette_name,
+                    ))),
+                    Some(rosette) => Ok(rosette.clone())
+                }
+            }
+        }
+    }
+
+    pub async fn create_rosette(&self, house_id: ObjectId, apartment_name: &str, data: &RosetteData) -> Result<RosetteData, CustomError> {
+        let collection: Collection<HouseData> = self.0.database("smart_home").collection("house");
+        let query = doc! { "_id": &house_id };
+        let house: Option<HouseData> = collection.find_one(query, None).await?;
+        let house = house.unwrap();
+        let apartment = house.apartments.into_iter().enumerate().find(|(_index, apartment)| apartment.name == apartment_name);
+        match apartment {
+            None => Err(CustomError::NotFound(format!(
+                "apartment with house_id and name: {} {}",
+                house_id,
+                apartment_name
+            ))),
+            Some((index, _apartment)) => {
+                let collection: Collection<HouseData> = self.0.database("smart_home").collection("house");
+                let query = doc! { "_id": &house_id };
+                let update = doc! { "$push": {format!("apartments.{}.rosettes", index): ser::to_bson(data)? } };
+                collection.update_one(query, update, None).await?;
+                self.get_rosette(house_id, apartment_name, &data.name).await
+            }
+        }
+    }
 }
