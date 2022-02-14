@@ -101,7 +101,7 @@ impl MongoRosette {
             Some((index, _apartment)) => {
                 let collection: Collection<HouseData> =
                     self.0.database("smart_home").collection("house");
-                let query = doc! { "_id": &house_id };
+                let query = doc! { "_id": &house_id_obj };
                 let update = doc! { "$push": {format!("apartments.{}.rosettes", index): ser::to_bson(data)? } };
                 collection.update_one(query, update, None).await?;
                 self.get_rosette(house_id, apartment_name, &data.name).await

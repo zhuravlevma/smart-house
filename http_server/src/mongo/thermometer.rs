@@ -69,7 +69,7 @@ impl MongoThermometer {
                     .find(|thermometer| thermometer_name == thermometer.name);
                 match thermometer {
                     None => Err(CustomError::NotFound(format!(
-                        "rosette with house_id, apartment_name and thermometer_name: {} {} {}",
+                        "house_id, apartment_name and thermometer_name: {} {} {}",
                         house_id, apartment_name, thermometer_name,
                     ))),
                     Some(thermometer) => Ok(thermometer.clone()),
@@ -102,7 +102,7 @@ impl MongoThermometer {
             Some((index, _apartment)) => {
                 let collection: Collection<HouseData> =
                     self.0.database("smart_home").collection("house");
-                let query = doc! { "_id": house_id };
+                let query = doc! { "_id": house_id_obj };
                 let update = doc! { "$push": {format!("apartments.{}.thermometers", index): ser::to_bson(data)? } };
                 collection.update_one(query, update, None).await?;
                 self.get_thermometer(house_id, apartment_name, &data.name)
