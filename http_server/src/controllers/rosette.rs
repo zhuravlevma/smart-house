@@ -1,5 +1,5 @@
 use crate::mongo::rosette::RosetteData;
-use crate::{DeviceService};
+use crate::DeviceService;
 use actix_web::web::Path;
 use actix_web::{web, HttpResponse};
 use serde::Deserialize;

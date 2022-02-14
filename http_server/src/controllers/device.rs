@@ -1,9 +1,9 @@
+use crate::DeviceService;
+use actix_web::web::Path;
+use actix_web::{web, HttpResponse};
+use serde::Deserialize;
 use std::error::Error;
 use std::sync::Arc;
-use actix_web::{HttpResponse, web};
-use actix_web::web::Path;
-use crate::DeviceService;
-use serde::Deserialize;
 
 #[derive(Deserialize)]
 pub struct ApartmentInfo {

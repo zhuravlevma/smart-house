@@ -1,11 +1,11 @@
-use crate::{DeviceService};
+use crate::DeviceService;
 use actix_web::web::Path;
 use actix_web::{web, HttpResponse};
 use std::error::Error;
 use std::sync::Arc;
 
-use serde::Deserialize;
 use crate::mongo::thermometer::ThermometerData;
+use serde::Deserialize;
 
 #[derive(Deserialize)]
 pub struct ApartmentInfo {
@@ -20,9 +20,7 @@ pub async fn get_thermometers(
 ) -> Result<HttpResponse, Box<dyn Error>> {
     let home_id = &path.into_inner();
     let apartment_name = &apartment_info.apartment_name;
-    let thermometers = device
-        .get_thermometers(home_id, apartment_name)
-        .await?;
+    let thermometers = device.get_thermometers(home_id, apartment_name).await?;
     Ok(HttpResponse::Ok().json(thermometers))
 }
 

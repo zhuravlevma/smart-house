@@ -1,6 +1,6 @@
-use std::error::Error;
-use smart_house::House;
 use crate::{HouseData, MongoHouse};
+use smart_house::House;
+use std::error::Error;
 
 pub struct HouseService {
     db_service: MongoHouse,

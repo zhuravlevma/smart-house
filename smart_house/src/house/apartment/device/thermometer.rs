@@ -5,16 +5,17 @@ use std::sync::{Arc, Mutex};
 use std::thread;
 use udp_wrapper::{UdpServer, UdpServerAsync};
 
-use serde::{Serialize};
+use serde::Serialize;
 
 mod mutex_lock_serde {
-    use serde::{Serialize};
     use serde::ser::Serializer;
+    use serde::Serialize;
     use std::sync::{Arc, Mutex};
 
     pub fn serialize<S, T>(val: &Arc<Mutex<T>>, s: S) -> Result<S::Ok, S::Error>
-        where S: Serializer,
-              T: Serialize,
+    where
+        S: Serializer,
+        T: Serialize,
     {
         T::serialize(&*val.lock().unwrap(), s)
     }

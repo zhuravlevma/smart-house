@@ -3,7 +3,7 @@ use crate::{AddDataError, RemoveDataError, RemoveDataResult};
 use apartment::Apartment;
 use log::info;
 
-use serde::{Serialize};
+use serde::Serialize;
 
 #[derive(Serialize)]
 pub struct House {

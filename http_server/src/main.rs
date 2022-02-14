@@ -1,26 +1,26 @@
-pub mod error;
-mod mongo;
 mod controllers;
 mod domain;
+pub mod error;
+mod mongo;
 
+use crate::controllers::apartment::{create_apartment, get_apartments};
+use crate::controllers::device::get_devices;
+use crate::controllers::house::{create_house, get_houses};
+use crate::controllers::rosette::{create_rosette, get_rosettes};
+use crate::controllers::thermometer::{create_thermometer, get_thermometers};
+use crate::domain::apartment::ApartmentService;
+use crate::domain::device::DeviceService;
+use crate::domain::house::HouseService;
 use crate::mongo::apartment::{ApartmentData, MongoApartment};
 use crate::mongo::house::{HouseData, MongoHouse};
 use crate::mongo::rosette::MongoRosette;
 use crate::mongo::thermometer::MongoThermometer;
-use crate::controllers::apartment::{create_apartment, get_apartments};
-use crate::controllers::house::{create_house, get_houses};
-use crate::controllers::rosette::{create_rosette, get_rosettes};
-use crate::controllers::thermometer::{create_thermometer, get_thermometers};
 use actix_web::web::Data;
 use actix_web::{App, HttpServer};
 use log::LevelFilter;
 use std::env;
 use std::error::Error;
 use std::sync::Arc;
-use crate::controllers::device::get_devices;
-use crate::domain::apartment::ApartmentService;
-use crate::domain::device::DeviceService;
-use crate::domain::house::HouseService;
 
 #[actix_web::main]
 async fn main() -> Result<(), Box<dyn Error>> {

@@ -1,11 +1,11 @@
+use crate::error::CustomError;
 use crate::mongo::house::HouseData;
-use mongodb::bson::{doc, ser};
 use mongodb::bson::oid::ObjectId;
+use mongodb::bson::{doc, ser};
 use mongodb::{Client, Collection};
 use serde::{Deserialize, Serialize};
 use std::error::Error;
 use std::str::FromStr;
-use crate::error::CustomError;
 
 pub struct MongoThermometer(Client);
 
@@ -105,7 +105,8 @@ impl MongoThermometer {
                 let query = doc! { "_id": house_id };
                 let update = doc! { "$push": {format!("apartments.{}.thermometers", index): ser::to_bson(data)? } };
                 collection.update_one(query, update, None).await?;
-                self.get_thermometer(house_id, apartment_name, &data.name).await
+                self.get_thermometer(house_id, apartment_name, &data.name)
+                    .await
             }
         }
     }
