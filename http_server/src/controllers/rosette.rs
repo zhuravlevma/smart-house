@@ -1,11 +1,9 @@
 use crate::mongo::rosette::RosetteData;
-use crate::MongoRosette;
+use crate::{DeviceService};
 use actix_web::web::Path;
 use actix_web::{web, HttpResponse};
-use mongodb::bson::oid::ObjectId;
 use serde::Deserialize;
 use std::error::Error;
-use std::str::FromStr;
 use std::sync::Arc;
 
 #[derive(Deserialize)]
@@ -17,12 +15,11 @@ pub struct ApartmentInfo {
 pub async fn get_rosettes(
     path: Path<String>,
     apartment_info: web::Query<ApartmentInfo>,
-    rosette: web::Data<Arc<MongoRosette>>,
+    device: web::Data<Arc<DeviceService>>,
 ) -> Result<HttpResponse, Box<dyn Error>> {
-    let id = path.into_inner();
-    let id = ObjectId::from_str(&id)?;
+    let id = &path.into_inner();
     let apartment_name = &apartment_info.apartment_name;
-    let rosettes = rosette.get_rosettes(id, apartment_name).await?;
+    let rosettes = device.get_rosettes(id, apartment_name).await?;
     Ok(HttpResponse::Ok().json(rosettes))
 }
 
@@ -31,14 +28,13 @@ pub async fn create_rosette(
     path: Path<String>,
     apartment_info: web::Query<ApartmentInfo>,
     rosette_entity: web::Json<RosetteData>,
-    rosette: web::Data<Arc<MongoRosette>>,
+    device: web::Data<Arc<DeviceService>>,
 ) -> Result<HttpResponse, Box<dyn Error>> {
-    let house_id = path.into_inner();
-    let house_id = ObjectId::from_str(&house_id)?;
+    let house_id = &path.into_inner();
     let apartment_name = &apartment_info.apartment_name;
     let rosette_entity = rosette_entity.into_inner();
-    let rosette = rosette
-        .create_rosette(house_id, apartment_name, &rosette_entity)
+    let rosette = device
+        .create_rosette(house_id, apartment_name, rosette_entity)
         .await?;
     Ok(HttpResponse::Ok().json(rosette))
 }

@@ -1,18 +1,16 @@
-use crate::{ApartmentData, MongoApartment};
+use crate::{ApartmentData, ApartmentService};
 use actix_web::web::Path;
 use actix_web::{web, HttpResponse};
-use mongodb::bson::oid::ObjectId;
 use std::error::Error;
-use std::str::FromStr;
 use std::sync::Arc;
 
 #[actix_web::get("/{home_id}/apartment")]
 pub async fn get_apartments(
     path: Path<String>,
-    apartments: web::Data<Arc<MongoApartment>>,
+    apartments: web::Data<Arc<ApartmentService>>,
 ) -> Result<HttpResponse, Box<dyn Error>> {
-    let id = ObjectId::from_str(&path.into_inner())?;
-    let apartments = apartments.get_apartments(id).await?;
+    let id = &path.into_inner();
+    let apartments = apartments.get_list(id).await?;
     Ok(HttpResponse::Ok().json(apartments))
 }
 
@@ -20,10 +18,10 @@ pub async fn get_apartments(
 pub async fn create_apartment(
     path: Path<String>,
     apartment_data: web::Json<ApartmentData>,
-    apartments: web::Data<Arc<MongoApartment>>,
+    apartments: web::Data<Arc<ApartmentService>>,
 ) -> Result<HttpResponse, Box<dyn Error>> {
-    let id = ObjectId::from_str(&path.into_inner())?;
+    let id = &path.into_inner();
     let data = apartment_data.into_inner();
-    let apartments = apartments.create_apartment(id, &data).await?;
+    let apartments = apartments.create(id, data).await?;
     Ok(HttpResponse::Ok().json(apartments))
 }

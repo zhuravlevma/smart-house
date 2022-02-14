@@ -3,7 +3,9 @@ use crate::errors::{
 };
 use device::Device;
 use log::info;
+use serde::{Serialize};
 
+#[derive(Serialize)]
 pub struct Apartment {
     pub name: String,
     devices: Vec<Device>,

@@ -12,7 +12,7 @@ pub struct MongoHouse(Client);
 pub struct HouseData {
     #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
     id: Option<ObjectId>,
-    name: String,
+    pub name: String,
     pub apartments: Vec<ApartmentData>,
 }
 

@@ -5,9 +5,25 @@ use std::sync::{Arc, Mutex};
 use std::thread;
 use udp_wrapper::{UdpServer, UdpServerAsync};
 
+use serde::{Serialize};
+
+mod mutex_lock_serde {
+    use serde::{Serialize};
+    use serde::ser::Serializer;
+    use std::sync::{Arc, Mutex};
+
+    pub fn serialize<S, T>(val: &Arc<Mutex<T>>, s: S) -> Result<S::Ok, S::Error>
+        where S: Serializer,
+              T: Serialize,
+    {
+        T::serialize(&*val.lock().unwrap(), s)
+    }
+}
+#[derive(Serialize)]
 pub struct Thermometer {
     pub name: String,
     description: String,
+    #[serde(with = "mutex_lock_serde")]
     temperature: Arc<Mutex<f32>>,
     ip: String,
     updating: bool,

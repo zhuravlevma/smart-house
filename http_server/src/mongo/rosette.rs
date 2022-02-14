@@ -5,12 +5,14 @@ use mongodb::bson::{doc, ser};
 use mongodb::{Client, Collection};
 use serde::{Deserialize, Serialize};
 use std::error::Error;
+use std::str::FromStr;
 
 pub struct MongoRosette(Client);
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct RosetteData {
-    name: String,
+    pub(crate) name: String,
+    pub ip_address: String,
 }
 
 impl MongoRosette {
@@ -20,9 +22,10 @@ impl MongoRosette {
 
     pub async fn get_rosettes(
         &self,
-        house_id: ObjectId,
+        house_id: &str,
         apartment_name: &str,
     ) -> Result<Vec<RosetteData>, Box<dyn Error>> {
+        let house_id = ObjectId::from_str(house_id)?;
         let collection = self.0.database("smart_home").collection("house");
         let query = doc! { "_id": house_id };
         let house: Option<HouseData> = collection.find_one(query, None).await?;
@@ -40,10 +43,11 @@ impl MongoRosette {
 
     pub async fn get_rosette(
         &self,
-        house_id: ObjectId,
+        house_id: &str,
         apartment_name: &str,
         rosette_name: &str,
     ) -> Result<RosetteData, CustomError> {
+        let house_id = ObjectId::from_str(house_id)?;
         let collection = self.0.database("smart_home").collection("house");
         let query = doc! {"_id": &house_id };
         let house: Option<HouseData> = collection.find_one(query, None).await?;
@@ -75,12 +79,13 @@ impl MongoRosette {
 
     pub async fn create_rosette(
         &self,
-        house_id: ObjectId,
+        house_id: &str,
         apartment_name: &str,
         data: &RosetteData,
     ) -> Result<RosetteData, CustomError> {
+        let house_id_obj = ObjectId::from_str(house_id)?;
         let collection: Collection<HouseData> = self.0.database("smart_home").collection("house");
-        let query = doc! { "_id": &house_id };
+        let query = doc! { "_id": &house_id_obj };
         let house: Option<HouseData> = collection.find_one(query, None).await?;
         let house = house.unwrap();
         let apartment = house

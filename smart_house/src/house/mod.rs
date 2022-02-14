@@ -3,6 +3,9 @@ use crate::{AddDataError, RemoveDataError, RemoveDataResult};
 use apartment::Apartment;
 use log::info;
 
+use serde::{Serialize};
+
+#[derive(Serialize)]
 pub struct House {
     name: String,
     apartments: Vec<Apartment>,
