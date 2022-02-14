@@ -6,16 +6,16 @@ use crate::mongo::apartment::{ApartmentData, MongoApartment};
 use crate::mongo::house::{HouseData, MongoHouse};
 use crate::mongo::rosette::MongoRosette;
 use crate::mongo::thermometer::MongoThermometer;
-use actix_web::web::{Data};
+use crate::routing::apartment::{create_apartment, get_apartments};
+use crate::routing::house::{create_house, get_houses};
+use crate::routing::rosette::{create_rosette, get_rosettes};
+use crate::routing::thermometer::get_thermometers;
+use actix_web::web::Data;
 use actix_web::{App, HttpServer};
 use log::LevelFilter;
 use std::env;
 use std::error::Error;
 use std::sync::Arc;
-use crate::routing::apartment::{create_apartment, get_apartments};
-use crate::routing::house::{create_house, get_houses};
-use crate::routing::rosette::{create_rosette, get_rosettes};
-use crate::routing::thermometer::get_thermometers;
 
 #[actix_web::main]
 async fn main() -> Result<(), Box<dyn Error>> {

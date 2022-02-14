@@ -1,10 +1,12 @@
+use crate::{HouseData, MongoHouse};
+use actix_web::{web, HttpResponse};
 use std::error::Error;
 use std::sync::Arc;
-use actix_web::{HttpResponse, web};
-use crate::{HouseData, MongoHouse};
 
 #[actix_web::get("/")]
-pub async fn get_houses(houses: web::Data<Arc<MongoHouse>>) -> Result<HttpResponse, Box<dyn Error>> {
+pub async fn get_houses(
+    houses: web::Data<Arc<MongoHouse>>,
+) -> Result<HttpResponse, Box<dyn Error>> {
     let houses = houses.get_houses().await?;
     Ok(HttpResponse::Ok().json(houses))
 }

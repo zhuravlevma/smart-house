@@ -1,12 +1,12 @@
+use crate::MongoThermometer;
+use actix_web::web::Path;
+use actix_web::{web, HttpResponse};
+use mongodb::bson::oid::ObjectId;
 use std::error::Error;
 use std::str::FromStr;
 use std::sync::Arc;
-use actix_web::{HttpResponse, web};
-use actix_web::web::Path;
-use mongodb::bson::oid::ObjectId;
-use crate::MongoThermometer;
 
-use serde::{Deserialize};
+use serde::Deserialize;
 
 #[derive(Deserialize)]
 pub struct ApartmentInfo {
@@ -21,7 +21,8 @@ pub async fn get_thermometers(
 ) -> Result<HttpResponse, Box<dyn Error>> {
     let home_id = ObjectId::from_str(&path.into_inner())?;
     let apartment_name = &apartment_info.apartment_name;
-    let thermometers = thermometer.get_thermometers(home_id, apartment_name).await?;
+    let thermometers = thermometer
+        .get_thermometers(home_id, apartment_name)
+        .await?;
     Ok(HttpResponse::Ok().json(thermometers))
 }
-

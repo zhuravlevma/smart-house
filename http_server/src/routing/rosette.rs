@@ -1,12 +1,12 @@
+use crate::mongo::rosette::RosetteData;
+use crate::MongoRosette;
+use actix_web::web::Path;
+use actix_web::{web, HttpResponse};
+use mongodb::bson::oid::ObjectId;
+use serde::Deserialize;
 use std::error::Error;
 use std::str::FromStr;
 use std::sync::Arc;
-use actix_web::{HttpResponse, web};
-use actix_web::web::Path;
-use mongodb::bson::oid::ObjectId;
-use crate::{MongoRosette};
-use serde::{Deserialize};
-use crate::mongo::rosette::RosetteData;
 
 #[derive(Deserialize)]
 pub struct ApartmentInfo {
@@ -37,6 +37,8 @@ pub async fn create_rosette(
     let house_id = ObjectId::from_str(&house_id)?;
     let apartment_name = &apartment_info.apartment_name;
     let rosette_entity = rosette_entity.into_inner();
-    let rosette = rosette.create_rosette(house_id, apartment_name, &rosette_entity).await?;
+    let rosette = rosette
+        .create_rosette(house_id, apartment_name, &rosette_entity)
+        .await?;
     Ok(HttpResponse::Ok().json(rosette))
 }

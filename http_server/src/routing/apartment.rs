@@ -1,10 +1,10 @@
+use crate::{ApartmentData, MongoApartment};
+use actix_web::web::Path;
+use actix_web::{web, HttpResponse};
+use mongodb::bson::oid::ObjectId;
 use std::error::Error;
 use std::str::FromStr;
 use std::sync::Arc;
-use actix_web::{HttpResponse, web};
-use actix_web::web::Path;
-use mongodb::bson::oid::ObjectId;
-use crate::{ApartmentData, MongoApartment};
 
 #[actix_web::get("/{home_id}/apartment")]
 pub async fn get_apartments(
