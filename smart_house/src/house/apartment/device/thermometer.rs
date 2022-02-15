@@ -3,6 +3,7 @@ use log::info;
 use std::error::Error;
 use std::sync::{Arc, Mutex};
 use std::thread;
+use std::thread::JoinHandle;
 use udp_wrapper::{UdpServer, UdpServerAsync};
 
 use serde::Serialize;
@@ -43,14 +44,14 @@ impl Thermometer {
 }
 
 impl Thermometer {
-    pub fn update_temperature(&mut self) -> Result<(), Box<dyn Error>> {
+    pub fn update_temperature(&mut self) -> Result<JoinHandle<()>, Box<dyn Error>> {
         if self.updating {
             info!("Your thermometer already use simple updating temperature");
-            return Ok(());
+            // return ;
         }
         let server = UdpServer::new(self.ip.clone())?;
         let clone_mutex = self.temperature.clone();
-        thread::spawn(move || loop {
+        let thread: JoinHandle<()> = thread::spawn(move || loop {
             let (_usize, _address, data) = server.receive().unwrap();
             let temp: f32 = data.parse().unwrap();
             let mut temperature = clone_mutex.lock().unwrap();
@@ -61,7 +62,7 @@ impl Thermometer {
             "Start simple updating temperature for thermometer {}",
             self.name
         );
-        Ok(())
+        Ok(thread)
     }
 
     pub async fn update_temperature_async(&mut self) -> Result<(), Box<dyn Error>> {
@@ -76,14 +77,13 @@ impl Thermometer {
             "Start async updating temperature for thermometer {}",
             self.name
         );
-        loop {
-            println!("Current temp: {}", self.get_temperature());
-            let (_usize, _src_address, data) = socket.receive().await?;
-            let temp: f32 = data.parse()?;
-            let arc = self.temperature.clone();
-            let mut data = arc.lock().unwrap();
-            *data = temp;
-        }
+        println!("Current temp: {}", self.get_temperature());
+        let (_usize, _src_address, data) = socket.receive().await?;
+        let temp: f32 = data.parse()?;
+        let arc = self.temperature.clone();
+        let mut data = arc.lock().unwrap();
+        *data = temp;
+        Ok(())
     }
 
     pub fn get_temperature(&self) -> f32 {

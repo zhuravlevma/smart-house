@@ -9,11 +9,12 @@ use crate::controllers::house::{create_house, get_houses};
 use crate::controllers::rosette::{
     create_rosette, get_rosettes, rosette_off, rosette_on, rosette_power,
 };
-use crate::controllers::thermometer::{create_thermometer, get_thermometers};
+use crate::controllers::thermometer::{create_thermometer, get_temperature, get_thermometers};
 use crate::domain::apartment::ApartmentService;
 use crate::domain::device::DeviceService;
 use crate::domain::house::HouseService;
 use crate::domain::rosette::RosetteService;
+use crate::domain::thermometer::ThermometerService;
 use crate::mongo::apartment::{ApartmentData, MongoApartment};
 use crate::mongo::house::{HouseData, MongoHouse};
 use crate::mongo::rosette::MongoRosette;
@@ -37,6 +38,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let apartment_service = Arc::new(ApartmentService::new(connection).await);
     let device_service = Arc::new(DeviceService::new(connection).await);
     let rosette_service = Arc::new(RosetteService::new(connection).await);
+    let thermometer_service = Arc::new(ThermometerService::new(connection).await);
 
     HttpServer::new(move || {
         App::new()
@@ -44,6 +46,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
             .app_data(Data::new(apartment_service.clone()))
             .app_data(Data::new(device_service.clone()))
             .app_data(Data::new(rosette_service.clone()))
+            .app_data(Data::new(thermometer_service.clone()))
             .service(get_houses)
             .service(get_apartments)
             .service(get_thermometers)
@@ -56,6 +59,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
             .service(rosette_on)
             .service(rosette_off)
             .service(rosette_power)
+            .service(get_temperature)
     })
     .bind("127.0.0.1:8080")?
     .run()
