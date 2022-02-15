@@ -42,14 +42,16 @@ impl Rosette {
         let res = client.send_request("rosette_off|||").unwrap();
         info!("Rosette IP off success: {}", res);
         self.power = 0;
-        false
+        true
     }
 
-    pub fn current_power(&self) -> u32 {
+    pub fn current_power(&mut self) -> u32 {
         info!("Rosette IP {} start getting power", self.ip);
         let mut client = self.get_connect_to_rosette(self.ip.clone());
         let res = client.send_request("get_power|||").unwrap();
         info!("Rosette IP {} getting power success: {}", self.ip, res);
+        let num:u32 = res.parse().unwrap();
+        self.power = num;
         self.power
     }
 

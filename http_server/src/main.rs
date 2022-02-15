@@ -6,7 +6,7 @@ mod mongo;
 use crate::controllers::apartment::{create_apartment, get_apartments};
 use crate::controllers::device::get_devices;
 use crate::controllers::house::{create_house, get_houses};
-use crate::controllers::rosette::{create_rosette, get_rosettes};
+use crate::controllers::rosette::{create_rosette, get_rosettes, rosette_off, rosette_on, rosette_power};
 use crate::controllers::thermometer::{create_thermometer, get_thermometers};
 use crate::domain::apartment::ApartmentService;
 use crate::domain::device::DeviceService;
@@ -21,6 +21,7 @@ use log::LevelFilter;
 use std::env;
 use std::error::Error;
 use std::sync::Arc;
+use crate::domain::rosette::RosetteService;
 
 #[actix_web::main]
 async fn main() -> Result<(), Box<dyn Error>> {
@@ -33,12 +34,14 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let house_service = Arc::new(HouseService::new(connection).await);
     let apartment_service = Arc::new(ApartmentService::new(connection).await);
     let device_service = Arc::new(DeviceService::new(connection).await);
+    let rosette_service = Arc::new(RosetteService::new(connection).await);
 
     HttpServer::new(move || {
         App::new()
             .app_data(Data::new(house_service.clone()))
             .app_data(Data::new(apartment_service.clone()))
             .app_data(Data::new(device_service.clone()))
+            .app_data(Data::new(rosette_service.clone()))
             .service(get_houses)
             .service(get_apartments)
             .service(get_thermometers)
@@ -48,6 +51,9 @@ async fn main() -> Result<(), Box<dyn Error>> {
             .service(create_rosette)
             .service(create_thermometer)
             .service(get_devices)
+            .service(rosette_on)
+            .service(rosette_off)
+            .service(rosette_power)
     })
     .bind("127.0.0.1:8080")?
     .run()

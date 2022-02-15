@@ -1,5 +1,5 @@
 use crate::mongo::rosette::RosetteData;
-use crate::DeviceService;
+use crate::{DeviceService, RosetteService};
 use actix_web::web::Path;
 use actix_web::{web, HttpResponse};
 use serde::Deserialize;
@@ -9,6 +9,12 @@ use std::sync::Arc;
 #[derive(Deserialize)]
 pub struct ApartmentInfo {
     apartment_name: String,
+}
+
+#[derive(Deserialize)]
+pub struct RosetteInfo {
+    apartment_name: String,
+    rosette_name: String,
 }
 
 #[actix_web::get("/{home_id}/apartment/rosette")]
@@ -35,6 +41,51 @@ pub async fn create_rosette(
     let rosette_entity = rosette_entity.into_inner();
     let rosette = device
         .create_rosette(house_id, apartment_name, rosette_entity)
+        .await?;
+    Ok(HttpResponse::Ok().json(rosette))
+}
+
+#[actix_web::post("/{home_id}/apartment/rosette/on")]
+pub async fn rosette_on(
+    path: Path<String>,
+    rosette_info: web::Query<RosetteInfo>,
+    rosette: web::Data<Arc<RosetteService>>,
+) -> Result<HttpResponse, Box<dyn Error>> {
+    let house_id = &path.into_inner();
+    let apartment_name = &rosette_info.apartment_name;
+    let rosette_name = &rosette_info.rosette_name;
+    let rosette = rosette
+        .on(house_id, apartment_name, rosette_name)
+        .await?;
+    Ok(HttpResponse::Ok().json(rosette))
+}
+
+#[actix_web::post("/{home_id}/apartment/rosette/off")]
+pub async fn rosette_off(
+    path: Path<String>,
+    rosette_info: web::Query<RosetteInfo>,
+    rosette: web::Data<Arc<RosetteService>>,
+) -> Result<HttpResponse, Box<dyn Error>> {
+    let house_id = &path.into_inner();
+    let apartment_name = &rosette_info.apartment_name;
+    let rosette_name = &rosette_info.rosette_name;
+    let rosette = rosette
+        .off(house_id, apartment_name, rosette_name)
+        .await?;
+    Ok(HttpResponse::Ok().json(rosette))
+}
+
+#[actix_web::get("/{home_id}/apartment/rosette/power")]
+pub async fn rosette_power(
+    path: Path<String>,
+    rosette_info: web::Query<RosetteInfo>,
+    rosette: web::Data<Arc<RosetteService>>,
+) -> Result<HttpResponse, Box<dyn Error>> {
+    let house_id = &path.into_inner();
+    let apartment_name = &rosette_info.apartment_name;
+    let rosette_name = &rosette_info.rosette_name;
+    let rosette = rosette
+        .get_power(house_id, apartment_name, rosette_name)
         .await?;
     Ok(HttpResponse::Ok().json(rosette))
 }

@@ -7,7 +7,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let routing = RosetteRouting {
         rosette_controller: RosetteController::new(RosetteService::new()),
     };
-    let server = Server::new("127.0.0.1:8084")?;
+    let server = Server::new("127.0.0.1:8082")?;
     server.listen(Box::new(routing))?;
     Ok(())
 }
