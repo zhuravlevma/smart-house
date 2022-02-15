@@ -1,5 +1,5 @@
 use crate::{HouseData, MongoHouse};
-use smart_house::House;
+use smart_house::{Apartment, Device, House, Rosette, Thermometer};
 use std::error::Error;
 
 pub struct HouseService {
@@ -17,7 +17,25 @@ impl HouseService {
         let data = self.db_service.get_houses().await?;
         let mut houses = vec![];
         for house in data {
-            houses.push(House::new(house.name));
+            let mut house_domain = House::new(house.name);
+            for apartment in house.apartments {
+                let mut apartment_domain = Apartment::new(apartment.name);
+                for thermometer in apartment.thermometers {
+                    apartment_domain._add_device(Device::Thermometer(Thermometer::new(
+                        thermometer.name,
+                        thermometer.temperature,
+                        thermometer.ip_address,
+                    )))?;
+                }
+                for rosette in apartment.rosettes {
+                    apartment_domain._add_device(Device::Rosette(Rosette::new(
+                        rosette.name,
+                        rosette.ip_address,
+                    )))?;
+                }
+                house_domain.add_apartment(apartment_domain)?;
+            }
+            houses.push(house_domain);
         }
         Ok(houses)
     }
