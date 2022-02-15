@@ -6,11 +6,14 @@ mod mongo;
 use crate::controllers::apartment::{create_apartment, get_apartments};
 use crate::controllers::device::get_devices;
 use crate::controllers::house::{create_house, get_houses};
-use crate::controllers::rosette::{create_rosette, get_rosettes, rosette_off, rosette_on, rosette_power};
+use crate::controllers::rosette::{
+    create_rosette, get_rosettes, rosette_off, rosette_on, rosette_power,
+};
 use crate::controllers::thermometer::{create_thermometer, get_thermometers};
 use crate::domain::apartment::ApartmentService;
 use crate::domain::device::DeviceService;
 use crate::domain::house::HouseService;
+use crate::domain::rosette::RosetteService;
 use crate::mongo::apartment::{ApartmentData, MongoApartment};
 use crate::mongo::house::{HouseData, MongoHouse};
 use crate::mongo::rosette::MongoRosette;
@@ -21,7 +24,6 @@ use log::LevelFilter;
 use std::env;
 use std::error::Error;
 use std::sync::Arc;
-use crate::domain::rosette::RosetteService;
 
 #[actix_web::main]
 async fn main() -> Result<(), Box<dyn Error>> {

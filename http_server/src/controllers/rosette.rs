@@ -54,9 +54,7 @@ pub async fn rosette_on(
     let house_id = &path.into_inner();
     let apartment_name = &rosette_info.apartment_name;
     let rosette_name = &rosette_info.rosette_name;
-    let rosette = rosette
-        .on(house_id, apartment_name, rosette_name)
-        .await?;
+    let rosette = rosette.on(house_id, apartment_name, rosette_name).await?;
     Ok(HttpResponse::Ok().json(rosette))
 }
 
@@ -69,9 +67,7 @@ pub async fn rosette_off(
     let house_id = &path.into_inner();
     let apartment_name = &rosette_info.apartment_name;
     let rosette_name = &rosette_info.rosette_name;
-    let rosette = rosette
-        .off(house_id, apartment_name, rosette_name)
-        .await?;
+    let rosette = rosette.off(house_id, apartment_name, rosette_name).await?;
     Ok(HttpResponse::Ok().json(rosette))
 }
 

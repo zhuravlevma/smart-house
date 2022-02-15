@@ -50,7 +50,7 @@ impl Rosette {
         let mut client = self.get_connect_to_rosette(self.ip.clone());
         let res = client.send_request("get_power|||").unwrap();
         info!("Rosette IP {} getting power success: {}", self.ip, res);
-        let num:u32 = res.parse().unwrap();
+        let num: u32 = res.parse().unwrap();
         self.power = num;
         self.power
     }
