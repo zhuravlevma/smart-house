@@ -102,4 +102,17 @@ impl DeviceService {
             .await?;
         Ok(Device::Rosette(Rosette::new(data.name, data.ip_address)))
     }
+
+    pub async fn delete_rosette(
+        &self,
+        house_id: &str,
+        apartment_name: &str,
+        rosette_name: &str,
+    ) -> Result<(), Box<dyn Error>> {
+        let _data = self
+            .db_rosette
+            .delete_rosette(house_id, apartment_name, rosette_name)
+            .await?;
+        Ok(())
+    }
 }

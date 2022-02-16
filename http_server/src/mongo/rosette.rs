@@ -108,4 +108,35 @@ impl MongoRosette {
             }
         }
     }
+
+    pub async fn delete_rosette(
+        &self,
+        house_id: &str,
+        apartment_name: &str,
+        rosette_name: &str,
+    ) -> Result<(), CustomError> {
+        let house_id = ObjectId::from_str(house_id)?;
+        let collection: Collection<HouseData> = self.0.database("smart_home").collection("house");
+        let query = doc! { "_id": &house_id };
+        let house = collection.find_one(query, None).await?;
+        match house {
+            None => Ok(()),
+            Some(house) => {
+                let res = house
+                    .apartments
+                    .into_iter()
+                    .enumerate()
+                    .find(|(_idx, apartment)| apartment.name == apartment_name);
+                match res {
+                    None => Ok(()),
+                    Some((idx, _apartment_data)) => {
+                        let query = doc! { "_id": &house_id };
+                        let update = doc! { "$pull": {format!("apartments.{}.rosettes", idx): {"name": rosette_name}} };
+                        collection.update_one(query, update, None).await?;
+                        Ok(())
+                    }
+                }
+            }
+        }
+    }
 }

@@ -45,6 +45,18 @@ pub async fn create_rosette(
     Ok(HttpResponse::Ok().json(rosette))
 }
 
+#[actix_web::delete("/{home_id}/apartment/rosette/{apartment_name}/{rosette_name}")]
+pub async fn delete_rosette(
+    path: Path<(String, String, String)>,
+    device: web::Data<Arc<DeviceService>>,
+) -> Result<HttpResponse, Box<dyn Error>> {
+    let (house_id, apartment_name, rosette_name) = &path.into_inner();
+    let created = device
+        .delete_rosette(house_id, apartment_name, rosette_name)
+        .await?;
+    Ok(HttpResponse::Ok().json(created))
+}
+
 #[actix_web::post("/{home_id}/apartment/rosette/on")]
 pub async fn rosette_on(
     path: Path<String>,
