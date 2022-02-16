@@ -44,4 +44,9 @@ impl HouseService {
         let data = self.db_service.create_house(data).await?;
         Ok(House::new(data.name))
     }
+
+    pub async fn delete(&self, house_id: &str) -> Result<House, Box<dyn Error>> {
+        let data = self.db_service.delete_house(house_id).await?;
+        Ok(House::new(data.name))
+    }
 }

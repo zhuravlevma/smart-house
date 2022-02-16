@@ -1,3 +1,4 @@
+use crate::error::CustomError;
 use crate::mongo::apartment::ApartmentData;
 use futures::StreamExt;
 use mongodb::bson::doc;
@@ -5,6 +6,7 @@ use mongodb::bson::oid::ObjectId;
 use mongodb::Client;
 use serde::{Deserialize, Serialize};
 use std::error::Error;
+use std::str::FromStr;
 
 pub struct MongoHouse(Client);
 
@@ -39,5 +41,13 @@ impl MongoHouse {
         let query = doc! { "_id": &id };
         let house: Option<HouseData> = collection.find_one(query, None).await?;
         Ok(house.unwrap())
+    }
+
+    pub async fn delete_house(&self, house_id: &str) -> Result<HouseData, CustomError> {
+        let house_id = ObjectId::from_str(house_id)?;
+        let collection = self.0.database("smart_home").collection("house");
+        let query = doc! { "_id": &house_id };
+        let board = collection.find_one_and_delete(query, None).await?;
+        board.ok_or_else(|| CustomError::NotFound(format!("house with id: {}", house_id)))
     }
 }

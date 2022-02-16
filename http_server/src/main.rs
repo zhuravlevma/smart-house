@@ -5,7 +5,7 @@ mod mongo;
 
 use crate::controllers::apartment::{create_apartment, get_apartments};
 use crate::controllers::device::get_devices;
-use crate::controllers::house::{create_house, get_houses};
+use crate::controllers::house::{create_house, delete_house, get_houses};
 use crate::controllers::rosette::{
     create_rosette, get_rosettes, rosette_off, rosette_on, rosette_power,
 };
@@ -60,6 +60,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
             .service(rosette_off)
             .service(rosette_power)
             .service(get_temperature)
+            .service(delete_house)
     })
     .bind("127.0.0.1:8080")?
     .run()

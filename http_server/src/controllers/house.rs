@@ -1,4 +1,5 @@
 use crate::{HouseData, HouseService};
+use actix_web::web::Path;
 use actix_web::{web, HttpResponse};
 use std::error::Error;
 use std::sync::Arc;
@@ -18,5 +19,15 @@ pub async fn create_house(
 ) -> Result<HttpResponse, Box<dyn Error>> {
     let house_data = house_data.into_inner();
     let created = houses.create(house_data).await?;
+    Ok(HttpResponse::Ok().json(created))
+}
+
+#[actix_web::delete("/{id}")]
+pub async fn delete_house(
+    path: Path<String>,
+    houses: web::Data<Arc<HouseService>>,
+) -> Result<HttpResponse, Box<dyn Error>> {
+    let house_id = &path.into_inner();
+    let created = houses.delete(house_id).await?;
     Ok(HttpResponse::Ok().json(created))
 }
