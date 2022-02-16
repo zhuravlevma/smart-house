@@ -2,6 +2,7 @@ use crate::{HouseData, MongoHouse};
 use smart_house::{Apartment, Device, House, Rosette, Thermometer};
 use std::error::Error;
 
+// test
 pub struct HouseService {
     db_service: MongoHouse,
 }
