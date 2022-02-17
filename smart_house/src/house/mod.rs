@@ -7,13 +7,15 @@ use serde::Serialize;
 
 #[derive(Serialize)]
 pub struct House {
+    id: String,
     name: String,
     apartments: Vec<Apartment>,
 }
 
 impl House {
-    pub fn new(name: String) -> Self {
+    pub fn new(id: String, name: String) -> Self {
         Self {
+            id,
             name,
             apartments: vec![],
         }

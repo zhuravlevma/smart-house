@@ -14,7 +14,7 @@ pub struct MongoHouse {
 #[derive(Clone, Serialize, Deserialize, Default)]
 pub struct HouseData {
     #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
-    id: Option<ObjectId>,
+    pub(crate) id: Option<ObjectId>,
     pub name: String,
     pub apartments: Vec<ApartmentData>,
 }

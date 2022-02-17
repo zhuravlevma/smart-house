@@ -17,7 +17,7 @@ impl HouseService {
         let data = self.db_service.get_houses().await?;
         let mut houses = vec![];
         for house in data {
-            let mut house_domain = House::new(house.name);
+            let mut house_domain = House::new(house.id.unwrap().to_string(), house.name);
             for apartment in house.apartments {
                 let mut apartment_domain = Apartment::new(apartment.name);
                 for thermometer in apartment.thermometers {
@@ -42,11 +42,11 @@ impl HouseService {
 
     pub async fn create(&self, data: HouseData) -> Result<House, Box<dyn Error>> {
         let data = self.db_service.create_house(data).await?;
-        Ok(House::new(data.name))
+        Ok(House::new(data.id.unwrap().to_string(), data.name))
     }
 
     pub async fn delete(&self, house_id: &str) -> Result<House, Box<dyn Error>> {
         let data = self.db_service.delete_house(house_id).await?;
-        Ok(House::new(data.name))
+        Ok(House::new(data.id.unwrap().to_string(), data.name))
     }
 }
