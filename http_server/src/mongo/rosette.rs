@@ -116,9 +116,8 @@ impl MongoRosette {
         apartment_name: &str,
         rosette_name: &str,
     ) -> Result<(), CustomError> {
-        let house_id = self.client.to_mongoid(house_id)?;
         let collection = self.client.get_collection_house();
-        let query = doc! { "_id": &house_id };
+        let query = self.client.create_query_find_by_id(house_id)?;
         let house = collection.find_one(query, None).await?;
         match house {
             None => Ok(()),
@@ -131,7 +130,7 @@ impl MongoRosette {
                 match res {
                     None => Ok(()),
                     Some((idx, _apartment_data)) => {
-                        let query = doc! { "_id": &house_id };
+                        let query = self.client.create_query_find_by_id(house_id)?;
                         let update = doc! { "$pull": {format!("apartments.{}.rosettes", idx): {"name": rosette_name}} };
                         collection.update_one(query, update, None).await?;
                         Ok(())

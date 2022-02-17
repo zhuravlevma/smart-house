@@ -1,10 +1,10 @@
 use crate::error::CustomError;
 use crate::HouseData;
 use mongodb::bson::oid::ObjectId;
+use mongodb::bson::{doc, Document};
 use mongodb::{Client, Collection};
 use std::error::Error;
 use std::str::FromStr;
-use mongodb::bson::{doc, Document};
 
 pub mod apartment;
 pub mod house;
@@ -31,7 +31,7 @@ impl MongoClient {
         self.client.database("smart_home").collection("house")
     }
 
-    pub fn create_query_find_by_id(&self, id: &str) -> Result<Document, CustomError>  {
+    pub fn create_query_find_by_id(&self, id: &str) -> Result<Document, CustomError> {
         let object_id = self.to_mongoid(id)?;
         Ok(doc! {"_id": object_id })
     }
