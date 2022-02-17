@@ -25,12 +25,11 @@ impl MongoThermometer {
 
     pub async fn get_thermometers(
         &self,
-        home_id: &str,
+        house_id: &str,
         apartment_name: &str,
     ) -> Result<Vec<ThermometerData>, Box<dyn Error>> {
-        let home_id = self.client.to_mongoid(home_id)?;
         let collection = self.client.get_collection_house();
-        let query = doc! { "_id": home_id };
+        let query = self.client.create_query_find_by_id(house_id)?;
         let house: Option<HouseData> = collection.find_one(query, None).await?;
         let house = house.unwrap();
         let mut thermometers = Vec::new();
@@ -50,9 +49,8 @@ impl MongoThermometer {
         apartment_name: &str,
         thermometer_name: &str,
     ) -> Result<ThermometerData, CustomError> {
-        let house_id = self.client.to_mongoid(house_id)?;
         let collection = self.client.get_collection_house();
-        let query = doc! {"_id": &house_id };
+        let query = self.client.create_query_find_by_id(house_id)?;
         let house: Option<HouseData> = collection.find_one(query, None).await?;
         let house = house.unwrap();
         let apartment = house
@@ -86,9 +84,8 @@ impl MongoThermometer {
         apartment_name: &str,
         data: &ThermometerData,
     ) -> Result<ThermometerData, CustomError> {
-        let house_id_obj = self.client.to_mongoid(house_id)?;
+        let query = self.client.create_query_find_by_id(house_id)?;
         let collection = self.client.get_collection_house();
-        let query = doc! { "_id": &house_id_obj };
         let house: Option<HouseData> = collection.find_one(query, None).await?;
         let house = house.unwrap();
         let apartment = house
@@ -103,7 +100,7 @@ impl MongoThermometer {
             ))),
             Some((index, _apartment)) => {
                 let collection = self.client.get_collection_house();
-                let query = doc! { "_id": house_id_obj };
+                let query = self.client.create_query_find_by_id(house_id)?;
                 let update = doc! { "$push": {format!("apartments.{}.thermometers", index): ser::to_bson(data)? } };
                 collection.update_one(query, update, None).await?;
                 self.get_thermometer(house_id, apartment_name, &data.name)

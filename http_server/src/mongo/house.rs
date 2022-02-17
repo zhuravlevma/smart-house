@@ -47,9 +47,8 @@ impl MongoHouse {
     }
 
     pub async fn delete_house(&self, house_id: &str) -> Result<HouseData, CustomError> {
-        let house_id = self.client.to_mongoid(house_id)?;
         let collection = self.client.get_collection_house();
-        let query = doc! { "_id": &house_id };
+        let query = self.client.create_query_find_by_id(house_id)?;
         let board = collection.find_one_and_delete(query, None).await?;
         board.ok_or_else(|| CustomError::NotFound(format!("house with id: {}", house_id)))
     }

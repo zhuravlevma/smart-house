@@ -29,9 +29,8 @@ impl MongoApartment {
         &self,
         house_id: &str,
     ) -> Result<Vec<ApartmentData>, Box<dyn Error>> {
-        let house_id = self.client.to_mongoid(house_id)?;
         let collection = self.client.get_collection_house();
-        let query = doc! {"_id": &house_id };
+        let query = self.client.create_query_find_by_id(house_id)?;
         let house: Option<HouseData> = collection.find_one(query, None).await?;
         let house = house.unwrap();
         Ok(house.apartments)
@@ -42,9 +41,8 @@ impl MongoApartment {
         house_id: &str,
         name: &str,
     ) -> Result<ApartmentData, CustomError> {
-        let house_id = self.client.to_mongoid(house_id)?;
         let collection = self.client.get_collection_house();
-        let query = doc! {"_id": &house_id };
+        let query = self.client.create_query_find_by_id(house_id)?;
         let house: Option<HouseData> = collection.find_one(query, None).await?;
         let house = house.unwrap();
         let res = house.apartments.into_iter().find(|el| el.name == name);
@@ -62,9 +60,8 @@ impl MongoApartment {
         house_id: &str,
         data: &ApartmentData,
     ) -> Result<ApartmentData, CustomError> {
-        let house_id_obj = self.client.to_mongoid(house_id)?;
         let collection = self.client.get_collection_house();
-        let query = doc! { "_id": &house_id_obj };
+        let query = self.client.create_query_find_by_id(house_id)?;
         let update = doc! { "$push": {"apartments": ser::to_bson(data)? } };
         collection.update_one(query, update, None).await?;
         self.get_apartment(house_id, &data.name).await
