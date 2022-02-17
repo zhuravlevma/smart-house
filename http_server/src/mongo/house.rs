@@ -1,14 +1,15 @@
 use crate::error::CustomError;
 use crate::mongo::apartment::ApartmentData;
+use crate::MongoClient;
 use futures::StreamExt;
 use mongodb::bson::doc;
 use mongodb::bson::oid::ObjectId;
-use mongodb::Client;
 use serde::{Deserialize, Serialize};
 use std::error::Error;
-use std::str::FromStr;
 
-pub struct MongoHouse(Client);
+pub struct MongoHouse {
+    client: MongoClient,
+}
 
 #[derive(Clone, Serialize, Deserialize, Default)]
 pub struct HouseData {
@@ -19,12 +20,14 @@ pub struct HouseData {
 }
 
 impl MongoHouse {
-    pub async fn new(connection_str: &str) -> Self {
-        Self(Client::with_uri_str(connection_str).await.unwrap())
+    pub async fn new(mongo_client: MongoClient) -> Self {
+        Self {
+            client: mongo_client,
+        }
     }
 
     pub async fn get_houses(&self) -> Result<Vec<HouseData>, Box<dyn Error>> {
-        let collection = self.0.database("smart_home").collection("house");
+        let collection = self.client.get_collection_house();
         let query = doc! {};
         let mut houses = collection.find(query, None).await?;
         let mut houses_vec = Vec::new();
@@ -35,7 +38,7 @@ impl MongoHouse {
     }
 
     pub async fn create_house(&self, data: HouseData) -> Result<HouseData, Box<dyn Error>> {
-        let collection = self.0.database("smart_home").collection("house");
+        let collection = self.client.get_collection_house();
         let inserted = collection.insert_one(data, None).await?;
         let id = inserted.inserted_id;
         let query = doc! { "_id": &id };
@@ -44,8 +47,8 @@ impl MongoHouse {
     }
 
     pub async fn delete_house(&self, house_id: &str) -> Result<HouseData, CustomError> {
-        let house_id = ObjectId::from_str(house_id)?;
-        let collection = self.0.database("smart_home").collection("house");
+        let house_id = self.client.to_mongoid(house_id)?;
+        let collection = self.client.get_collection_house();
         let query = doc! { "_id": &house_id };
         let board = collection.find_one_and_delete(query, None).await?;
         board.ok_or_else(|| CustomError::NotFound(format!("house with id: {}", house_id)))

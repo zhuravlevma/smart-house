@@ -1,3 +1,4 @@
+use crate::mongo::MongoClient;
 use crate::MongoRosette;
 use smart_house::Rosette;
 use std::error::Error;
@@ -7,9 +8,9 @@ pub struct RosetteService {
 }
 
 impl RosetteService {
-    pub async fn new(connection_str: &str) -> Self {
+    pub async fn new(mongo_client: MongoClient) -> Self {
         Self {
-            db_service: MongoRosette::new(connection_str).await,
+            db_service: MongoRosette::new(mongo_client).await,
         }
     }
 

@@ -1,4 +1,4 @@
-use crate::MongoThermometer;
+use crate::{MongoClient, MongoThermometer};
 use smart_house::Thermometer;
 use std::error::Error;
 
@@ -7,9 +7,9 @@ pub struct ThermometerService {
 }
 
 impl ThermometerService {
-    pub async fn new(connection_str: &str) -> Self {
+    pub async fn new(mongo_client: MongoClient) -> Self {
         Self {
-            db_service: MongoThermometer::new(connection_str).await,
+            db_service: MongoThermometer::new(mongo_client).await,
         }
     }
 

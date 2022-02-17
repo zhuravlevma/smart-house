@@ -19,6 +19,7 @@ use crate::mongo::apartment::{ApartmentData, MongoApartment};
 use crate::mongo::house::{HouseData, MongoHouse};
 use crate::mongo::rosette::MongoRosette;
 use crate::mongo::thermometer::MongoThermometer;
+use crate::mongo::MongoClient;
 use actix_web::web::Data;
 use actix_web::{App, HttpServer};
 use log::LevelFilter;
@@ -34,11 +35,13 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .init();
 
     let connection = &env::var("MONGO_CONNECTION")?;
-    let house_service = Arc::new(HouseService::new(connection).await);
-    let apartment_service = Arc::new(ApartmentService::new(connection).await);
-    let device_service = Arc::new(DeviceService::new(connection).await);
-    let rosette_service = Arc::new(RosetteService::new(connection).await);
-    let thermometer_service = Arc::new(ThermometerService::new(connection).await);
+    let mongo_client = MongoClient::new(connection).await?;
+    let house_service = Arc::new(HouseService::new(mongo_client.clone()).await);
+    let apartment_service = Arc::new(ApartmentService::new(mongo_client.clone()).await);
+    let device_service =
+        Arc::new(DeviceService::new(mongo_client.clone(), mongo_client.clone()).await);
+    let rosette_service = Arc::new(RosetteService::new(mongo_client.clone()).await);
+    let thermometer_service = Arc::new(ThermometerService::new(mongo_client.clone()).await);
 
     HttpServer::new(move || {
         App::new()

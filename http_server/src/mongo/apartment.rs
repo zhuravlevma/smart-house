@@ -2,14 +2,14 @@ use crate::error::CustomError;
 use crate::mongo::house::HouseData;
 use crate::mongo::rosette::RosetteData;
 use crate::mongo::thermometer::ThermometerData;
-use mongodb::bson::oid::ObjectId;
+use crate::MongoClient;
 use mongodb::bson::{doc, ser};
-use mongodb::{Client, Collection};
 use serde::{Deserialize, Serialize};
 use std::error::Error;
-use std::str::FromStr;
 
-pub struct MongoApartment(Client);
+pub struct MongoApartment {
+    client: MongoClient,
+}
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct ApartmentData {
@@ -19,16 +19,18 @@ pub struct ApartmentData {
 }
 
 impl MongoApartment {
-    pub async fn new(connection_str: &str) -> Self {
-        Self(Client::with_uri_str(connection_str).await.unwrap())
+    pub async fn new(mongo_client: MongoClient) -> Self {
+        Self {
+            client: mongo_client,
+        }
     }
 
     pub async fn get_apartments(
         &self,
         house_id: &str,
     ) -> Result<Vec<ApartmentData>, Box<dyn Error>> {
-        let house_id = ObjectId::from_str(house_id)?;
-        let collection = self.0.database("smart_home").collection("house");
+        let house_id = self.client.to_mongoid(house_id)?;
+        let collection = self.client.get_collection_house();
         let query = doc! {"_id": &house_id };
         let house: Option<HouseData> = collection.find_one(query, None).await?;
         let house = house.unwrap();
@@ -40,8 +42,8 @@ impl MongoApartment {
         house_id: &str,
         name: &str,
     ) -> Result<ApartmentData, CustomError> {
-        let house_id = ObjectId::from_str(house_id)?;
-        let collection = self.0.database("smart_home").collection("house");
+        let house_id = self.client.to_mongoid(house_id)?;
+        let collection = self.client.get_collection_house();
         let query = doc! {"_id": &house_id };
         let house: Option<HouseData> = collection.find_one(query, None).await?;
         let house = house.unwrap();
@@ -60,8 +62,8 @@ impl MongoApartment {
         house_id: &str,
         data: &ApartmentData,
     ) -> Result<ApartmentData, CustomError> {
-        let house_id_obj = ObjectId::from_str(house_id)?;
-        let collection: Collection<HouseData> = self.0.database("smart_home").collection("house");
+        let house_id_obj = self.client.to_mongoid(house_id)?;
+        let collection = self.client.get_collection_house();
         let query = doc! { "_id": &house_id_obj };
         let update = doc! { "$push": {"apartments": ser::to_bson(data)? } };
         collection.update_one(query, update, None).await?;

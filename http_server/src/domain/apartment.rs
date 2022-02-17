@@ -1,4 +1,4 @@
-use crate::{ApartmentData, MongoApartment};
+use crate::{ApartmentData, MongoApartment, MongoClient};
 use smart_house::{Apartment, Device, Rosette, Thermometer};
 use std::error::Error;
 
@@ -7,9 +7,9 @@ pub struct ApartmentService {
 }
 
 impl ApartmentService {
-    pub async fn new(connection_str: &str) -> Self {
+    pub async fn new(mongo_client: MongoClient) -> Self {
         Self {
-            db_service: MongoApartment::new(connection_str).await,
+            db_service: MongoApartment::new(mongo_client).await,
         }
     }
 

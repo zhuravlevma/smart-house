@@ -1,13 +1,13 @@
 use crate::error::CustomError;
 use crate::mongo::house::HouseData;
-use mongodb::bson::oid::ObjectId;
+use crate::mongo::MongoClient;
 use mongodb::bson::{doc, ser};
-use mongodb::{Client, Collection};
 use serde::{Deserialize, Serialize};
 use std::error::Error;
-use std::str::FromStr;
 
-pub struct MongoRosette(Client);
+pub struct MongoRosette {
+    client: MongoClient,
+}
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct RosetteData {
@@ -16,8 +16,10 @@ pub struct RosetteData {
 }
 
 impl MongoRosette {
-    pub async fn new(connection_str: &str) -> Self {
-        Self(Client::with_uri_str(connection_str).await.unwrap())
+    pub async fn new(mongo_client: MongoClient) -> Self {
+        Self {
+            client: mongo_client,
+        }
     }
 
     pub async fn get_rosettes(
@@ -25,8 +27,8 @@ impl MongoRosette {
         house_id: &str,
         apartment_name: &str,
     ) -> Result<Vec<RosetteData>, Box<dyn Error>> {
-        let house_id = ObjectId::from_str(house_id)?;
-        let collection = self.0.database("smart_home").collection("house");
+        let house_id = self.client.to_mongoid(house_id)?;
+        let collection = self.client.get_collection_house();
         let query = doc! { "_id": house_id };
         let house: Option<HouseData> = collection.find_one(query, None).await?;
         let house = house.unwrap();
@@ -47,8 +49,8 @@ impl MongoRosette {
         apartment_name: &str,
         rosette_name: &str,
     ) -> Result<RosetteData, CustomError> {
-        let house_id = ObjectId::from_str(house_id)?;
-        let collection = self.0.database("smart_home").collection("house");
+        let house_id = self.client.to_mongoid(house_id)?;
+        let collection = self.client.get_collection_house();
         let query = doc! {"_id": &house_id };
         let house: Option<HouseData> = collection.find_one(query, None).await?;
         let house = house.unwrap();
@@ -83,8 +85,8 @@ impl MongoRosette {
         apartment_name: &str,
         data: &RosetteData,
     ) -> Result<RosetteData, CustomError> {
-        let house_id_obj = ObjectId::from_str(house_id)?;
-        let collection: Collection<HouseData> = self.0.database("smart_home").collection("house");
+        let house_id_obj = self.client.to_mongoid(house_id)?;
+        let collection = self.client.get_collection_house();
         let query = doc! { "_id": &house_id_obj };
         let house: Option<HouseData> = collection.find_one(query, None).await?;
         let house = house.unwrap();
@@ -99,8 +101,7 @@ impl MongoRosette {
                 house_id, apartment_name
             ))),
             Some((index, _apartment)) => {
-                let collection: Collection<HouseData> =
-                    self.0.database("smart_home").collection("house");
+                let collection = self.client.get_collection_house();
                 let query = doc! { "_id": &house_id_obj };
                 let update = doc! { "$push": {format!("apartments.{}.rosettes", index): ser::to_bson(data)? } };
                 collection.update_one(query, update, None).await?;
@@ -115,8 +116,8 @@ impl MongoRosette {
         apartment_name: &str,
         rosette_name: &str,
     ) -> Result<(), CustomError> {
-        let house_id = ObjectId::from_str(house_id)?;
-        let collection: Collection<HouseData> = self.0.database("smart_home").collection("house");
+        let house_id = self.client.to_mongoid(house_id)?;
+        let collection = self.client.get_collection_house();
         let query = doc! { "_id": &house_id };
         let house = collection.find_one(query, None).await?;
         match house {

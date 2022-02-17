@@ -1,6 +1,6 @@
 use crate::mongo::rosette::RosetteData;
 use crate::mongo::thermometer::ThermometerData;
-use crate::{MongoRosette, MongoThermometer};
+use crate::{MongoClient, MongoRosette, MongoThermometer};
 use smart_house::{Device, Rosette, Thermometer};
 use std::error::Error;
 
@@ -10,10 +10,13 @@ pub struct DeviceService {
 }
 
 impl DeviceService {
-    pub async fn new(connection_str: &str) -> Self {
+    pub async fn new(
+        mongo_client_thermometer: MongoClient,
+        mongo_client_rosette: MongoClient,
+    ) -> Self {
         Self {
-            db_thermometer: MongoThermometer::new(connection_str).await,
-            db_rosette: MongoRosette::new(connection_str).await,
+            db_thermometer: MongoThermometer::new(mongo_client_thermometer).await,
+            db_rosette: MongoRosette::new(mongo_client_rosette).await,
         }
     }
 
