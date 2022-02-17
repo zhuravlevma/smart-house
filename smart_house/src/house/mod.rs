@@ -73,7 +73,7 @@ mod tests {
 
     #[test]
     fn add_apartment_successful() -> Result<(), Box<dyn Error>> {
-        let mut house = House::new("House1".to_string());
+        let mut house = House::new("id".to_string(),"House1".to_string());
         let apartment = Apartment::new("Apartment1".to_string());
 
         house.add_apartment(apartment)?;
@@ -82,7 +82,7 @@ mod tests {
 
     #[test]
     fn add_apartment_error() -> Result<(), Box<dyn Error>> {
-        let mut house = House::new("House1".to_string());
+        let mut house = House::new("id".to_string(),"House1".to_string());
         let apartment1 = Apartment::new("Apartment1".to_string());
         let apartment2 = Apartment::new("Apartment1".to_string());
         house.add_apartment(apartment1)?;
@@ -92,7 +92,7 @@ mod tests {
 
     #[test]
     fn remove_apartment_successful() -> Result<(), Box<dyn Error>> {
-        let mut house = House::new("House1".to_string());
+        let mut house = House::new("id".to_string(),"House1".to_string());
         let apartment1_name = "Apartment1".to_string();
         let apartment1 = Apartment::new(apartment1_name.clone());
         let apartment2 = Apartment::new("Apartment2".to_string());
@@ -106,7 +106,7 @@ mod tests {
     #[test]
 
     fn remove_apartment_error() -> Result<(), Box<dyn Error>> {
-        let mut house = House::new("House1".to_string());
+        let mut house = House::new("id".to_string(),"House1".to_string());
         let search_name = "Apartment3".to_string();
         let apartment1 = Apartment::new("Apartment1".to_string());
         let apartment2 = Apartment::new("Apartment2".to_string());
