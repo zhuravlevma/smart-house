@@ -118,4 +118,17 @@ impl DeviceService {
             .await?;
         Ok(())
     }
+
+    pub async fn delete_thermometer(
+        &self,
+        house_id: &str,
+        apartment_name: &str,
+        thermometer_name: &str,
+    ) -> Result<(), Box<dyn Error>> {
+        let _data = self
+            .db_thermometer
+            .delete_thermometer(house_id, apartment_name, thermometer_name)
+            .await?;
+        Ok(())
+    }
 }

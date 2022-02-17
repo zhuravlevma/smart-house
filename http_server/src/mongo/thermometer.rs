@@ -108,4 +108,34 @@ impl MongoThermometer {
             }
         }
     }
+
+    pub async fn delete_thermometer(
+        &self,
+        house_id: &str,
+        apartment_name: &str,
+        thermometer_name: &str,
+    ) -> Result<(), CustomError> {
+        let collection = self.client.get_collection_house();
+        let query = self.client.create_query_find_by_id(house_id)?;
+        let house = collection.find_one(query, None).await?;
+        match house {
+            None => Ok(()),
+            Some(house) => {
+                let res = house
+                    .apartments
+                    .into_iter()
+                    .enumerate()
+                    .find(|(_idx, apartment)| apartment.name == apartment_name);
+                match res {
+                    None => Ok(()),
+                    Some((idx, _apartment_data)) => {
+                        let query = self.client.create_query_find_by_id(house_id)?;
+                        let update = doc! { "$pull": {format!("apartments.{}.thermometers", idx): {"name": thermometer_name}} };
+                        collection.update_one(query, update, None).await?;
+                        Ok(())
+                    }
+                }
+            }
+        }
+    }
 }

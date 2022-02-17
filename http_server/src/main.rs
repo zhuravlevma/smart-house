@@ -3,13 +3,15 @@ mod domain;
 pub mod error;
 mod mongo;
 
-use crate::controllers::apartment::{create_apartment, get_apartments};
+use crate::controllers::apartment::{create_apartment, delete_apartment, get_apartments};
 use crate::controllers::device::get_devices;
 use crate::controllers::house::{create_house, delete_house, get_houses};
 use crate::controllers::rosette::{
     create_rosette, delete_rosette, get_rosettes, rosette_off, rosette_on, rosette_power,
 };
-use crate::controllers::thermometer::{create_thermometer, get_temperature, get_thermometers};
+use crate::controllers::thermometer::{
+    create_thermometer, delete_thermometer, get_temperature, get_thermometers,
+};
 use crate::domain::apartment::ApartmentService;
 use crate::domain::device::DeviceService;
 use crate::domain::house::HouseService;
@@ -65,6 +67,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
             .service(get_temperature)
             .service(delete_house)
             .service(delete_rosette)
+            .service(delete_thermometer)
+            .service(delete_apartment)
     })
     .bind("127.0.0.1:8080")?
     .run()

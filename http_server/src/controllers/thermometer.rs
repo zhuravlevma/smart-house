@@ -46,6 +46,18 @@ pub async fn create_thermometer(
     Ok(HttpResponse::Ok().json(thermometer))
 }
 
+#[actix_web::delete("/{home_id}/apartment/rosette/{apartment_name}/{thermometer_name}")]
+pub async fn delete_thermometer(
+    path: Path<(String, String, String)>,
+    device: web::Data<Arc<DeviceService>>,
+) -> Result<HttpResponse, Box<dyn Error>> {
+    let (house_id, apartment_name, thermometer_name) = &path.into_inner();
+    let created = device
+        .delete_thermometer(house_id, apartment_name, thermometer_name)
+        .await?;
+    Ok(HttpResponse::Ok().json(created))
+}
+
 #[actix_web::get("/{home_id}/apartment/thermometer/temp")]
 pub async fn get_temperature(
     path: Path<String>,

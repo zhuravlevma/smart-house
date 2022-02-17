@@ -45,4 +45,12 @@ impl ApartmentService {
         let data = self.db_service.create_apartment(house_id, &data).await?;
         Ok(Apartment::new(data.name))
     }
+
+    pub async fn delete(&self, house_id: &str, apartment_name: &str) -> Result<(), Box<dyn Error>> {
+        let _data = self
+            .db_service
+            .delete_apartment(house_id, apartment_name)
+            .await?;
+        Ok(())
+    }
 }

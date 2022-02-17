@@ -66,4 +66,23 @@ impl MongoApartment {
         collection.update_one(query, update, None).await?;
         self.get_apartment(house_id, &data.name).await
     }
+
+    pub async fn delete_apartment(
+        &self,
+        house_id: &str,
+        apartment_name: &str,
+    ) -> Result<(), CustomError> {
+        let collection = self.client.get_collection_house();
+        let query = self.client.create_query_find_by_id(house_id)?;
+        let house = collection.find_one(query, None).await?;
+        match house {
+            None => Ok(()),
+            Some(_house) => {
+                let query = self.client.create_query_find_by_id(house_id)?;
+                let update = doc! { "$pull": {"apartments": {"name": apartment_name} } };
+                collection.update_one(query, update, None).await?;
+                Ok(())
+            }
+        }
+    }
 }

@@ -25,3 +25,13 @@ pub async fn create_apartment(
     let apartments = apartments.create(id, data).await?;
     Ok(HttpResponse::Ok().json(apartments))
 }
+
+#[actix_web::delete("/{home_id}/apartment/{apartment_name}")]
+pub async fn delete_apartment(
+    path: Path<(String, String)>,
+    apartment: web::Data<Arc<ApartmentService>>,
+) -> Result<HttpResponse, Box<dyn Error>> {
+    let (house_id, apartment_name) = &path.into_inner();
+    let created = apartment.delete(house_id, apartment_name).await?;
+    Ok(HttpResponse::Ok().json(created))
+}
