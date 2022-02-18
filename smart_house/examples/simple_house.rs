@@ -18,22 +18,22 @@ fn main() {
     );
 
     apartment_parents
-        ._add_device(Device::Rosette(rosette_parents1))
+        .add_device(Device::Rosette(rosette_parents1))
         .unwrap_or_else(|err| {
             panic!("Adding device return error: {}", err);
         });
     apartment_parents
-        ._add_device(Device::Rosette(rosette_parents2))
+        .add_device(Device::Rosette(rosette_parents2))
         .unwrap_or_else(|err| {
             panic!("Adding device filed: {}", err);
         });
     apartment_parents
-        ._add_device(Device::Thermometer(thermometer_parents1))
+        .add_device(Device::Thermometer(thermometer_parents1))
         .unwrap_or_else(|err| {
             panic!("Adding device filed: {}", err);
         });
     apartment_parents
-        ._add_device(Device::Thermometer(thermometer_parents2))
+        .add_device(Device::Thermometer(thermometer_parents2))
         .unwrap_or_else(|err| {
             panic!("Adding device filed: {}", err);
         });

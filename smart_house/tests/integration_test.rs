@@ -18,10 +18,10 @@ fn create_apartment_with_devices_and_find() -> Result<(), Box<dyn Error>> {
         21.2,
         "127.0.0.1:9002".to_string(),
     );
-    apartment_parents._add_device(Device::Rosette(rosette_parents1))?;
-    apartment_parents._add_device(Device::Rosette(rosette_parents2))?;
-    apartment_parents._add_device(Device::Thermometer(thermometer_parents1))?;
-    apartment_parents._add_device(Device::Thermometer(thermometer_parents2))?;
+    apartment_parents.add_device(Device::Rosette(rosette_parents1))?;
+    apartment_parents.add_device(Device::Rosette(rosette_parents2))?;
+    apartment_parents.add_device(Device::Thermometer(thermometer_parents1))?;
+    apartment_parents.add_device(Device::Thermometer(thermometer_parents2))?;
 
     assert_eq!(
         "Thermometer_Parents2",

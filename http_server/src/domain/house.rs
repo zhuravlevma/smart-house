@@ -21,14 +21,14 @@ impl HouseService {
             for apartment in house.apartments {
                 let mut apartment_domain = Apartment::new(apartment.name);
                 for thermometer in apartment.thermometers {
-                    apartment_domain._add_device(Device::Thermometer(Thermometer::new(
+                    apartment_domain.add_device(Device::Thermometer(Thermometer::new(
                         thermometer.name,
                         thermometer.temperature,
                         thermometer.ip_address,
                     )))?;
                 }
                 for rosette in apartment.rosettes {
-                    apartment_domain._add_device(Device::Rosette(Rosette::new(
+                    apartment_domain.add_device(Device::Rosette(Rosette::new(
                         rosette.name,
                         rosette.ip_address,
                     )))?;

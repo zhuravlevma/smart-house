@@ -20,8 +20,28 @@ impl Apartment {
     }
 }
 
+/// Create Apartment
+/// ```
+/// use smart_house::Apartment;
+/// let apartment = Apartment::new("name".to_string());
+/// ```
+/// Add devices to apartment
+/// ```
+/// use smart_house::{Apartment, Device, Rosette};
+/// let mut apartment = Apartment::new("name".to_string());
+/// let device = Device::Rosette(Rosette::new("test".to_string(), "127.0.0.1:8080".to_string()));
+/// apartment.add_device(device);
+/// ```
+/// Remove device from apartment
+/// ```
+/// use smart_house::{Apartment, Device, Rosette};
+/// let mut apartment = Apartment::new("name".to_string());
+/// let device = Device::Rosette(Rosette::new("test".to_string(), "127.0.0.1:8080".to_string()));
+/// apartment.add_device(device);
+/// apartment.remove_device("test".to_string());
+/// ```
 impl Apartment {
-    pub fn _add_device(&mut self, new_device: Device) -> AddDataResult<&Device> {
+    pub fn add_device(&mut self, new_device: Device) -> AddDataResult<&Device> {
         info!("Adding device for apartment {}", self.name);
         let device = self
             .devices
@@ -51,7 +71,7 @@ impl Apartment {
             Some(position) => Ok(self.devices.remove(position)),
         }
     }
-    pub fn _list_devices(&self) -> &[Device] {
+    pub fn list_devices(&self) -> &[Device] {
         info!("Get list devices for apartment {}", self.name);
         &self.devices
     }
@@ -89,7 +109,7 @@ mod tests {
         let mut apartment = Apartment::new("Haha".to_string());
         let rosette = Rosette::new("".to_string(), "127.0.0.1:8080".to_string());
 
-        apartment._add_device(Device::Rosette(rosette))?;
+        apartment.add_device(Device::Rosette(rosette))?;
 
         Ok(())
     }
@@ -101,10 +121,10 @@ mod tests {
         let thermometer =
             Thermometer::new("Device1".to_string(), 0.0, "127.0.0.1:8080".to_string());
 
-        apartment._add_device(Device::Rosette(rosette))?;
+        apartment.add_device(Device::Rosette(rosette))?;
         assert_eq!(
             apartment
-                ._add_device(Device::Thermometer(thermometer))
+                .add_device(Device::Thermometer(thermometer))
                 .is_err(),
             true
         );
@@ -117,7 +137,7 @@ mod tests {
         let mut apartment = Apartment::new("Haha".to_string());
         let device_name = "Device1".to_string();
         let rosette = Rosette::new(device_name.clone(), "127.0.0.1:8080".to_string());
-        apartment._add_device(Device::Rosette(rosette))?;
+        apartment.add_device(Device::Rosette(rosette))?;
 
         apartment.get_device_by_name(&device_name)?;
 
@@ -130,7 +150,7 @@ mod tests {
         let device_name = "Device1".to_string();
         let rosette = Rosette::new("Device2".to_string(), "127.0.0.1:8080".to_string());
 
-        apartment._add_device(Device::Rosette(rosette))?;
+        apartment.add_device(Device::Rosette(rosette))?;
 
         assert_eq!(apartment.get_device_by_name(&device_name).is_err(), true);
         Ok(())
@@ -146,8 +166,8 @@ mod tests {
             0.0,
             "127.0.0.1:9000".to_string(),
         );
-        apartment._add_device(Device::Rosette(rosette))?;
-        apartment._add_device(Device::Thermometer(thermometer))?;
+        apartment.add_device(Device::Rosette(rosette))?;
+        apartment.add_device(Device::Thermometer(thermometer))?;
 
         apartment.remove_device(rosette_name)?;
 
@@ -160,7 +180,7 @@ mod tests {
         let rosette_name = "Rosette1".to_string();
         let search_name = "Rosette2".to_string();
         let rosette = Rosette::new(rosette_name.clone(), "127.0.0.1:8080".to_string());
-        apartment._add_device(Device::Rosette(rosette))?;
+        apartment.add_device(Device::Rosette(rosette))?;
 
         assert_eq!(apartment.remove_device(search_name).is_err(), true);
 

@@ -2,7 +2,6 @@ use crate::AddDataResult;
 use crate::{AddDataError, RemoveDataError, RemoveDataResult};
 use apartment::Apartment;
 use log::info;
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -122,7 +121,6 @@ mod tests {
     }
 
     #[test]
-
     fn remove_apartment_error() -> Result<(), Box<dyn Error>> {
         let mut house = House::new("id".to_string(), "House1".to_string());
         let search_name = "Apartment3".to_string();
