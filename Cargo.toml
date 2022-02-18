@@ -7,7 +7,7 @@ members = [
     "smart_house",
     "smart_rosette",
     "smart_thermometer",
-    "smart_house_tui",
+    "smart_house_gui",
     "tcp_wrapper",
     "tcp_server"
 ]

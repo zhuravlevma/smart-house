@@ -1,9 +1,9 @@
 use rosette::Rosette;
 use thermometer::Thermometer;
 
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub enum Device {
     Rosette(Rosette),
     Thermometer(Thermometer),

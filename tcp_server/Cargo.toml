@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 tokio = "1.16.1"
 tcp_wrapper = { path = "../tcp_wrapper" }
+log = "0.4.14"

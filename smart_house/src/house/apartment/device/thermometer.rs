@@ -6,11 +6,11 @@ use std::thread;
 use std::thread::JoinHandle;
 use udp_wrapper::{UdpServer, UdpServerAsync};
 
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 mod mutex_lock_serde {
     use serde::ser::Serializer;
-    use serde::Serialize;
+    use serde::{Deserialize, Deserializer, Serialize};
     use std::sync::{Arc, Mutex};
 
     pub fn serialize<S, T>(val: &Arc<Mutex<T>>, s: S) -> Result<S::Ok, S::Error>
@@ -20,8 +20,16 @@ mod mutex_lock_serde {
     {
         T::serialize(&*val.lock().unwrap(), s)
     }
+
+    pub fn deserialize<'de, D, T>(d: D) -> Result<Arc<Mutex<T>>, D::Error>
+    where
+        D: Deserializer<'de>,
+        T: Deserialize<'de>,
+    {
+        Ok(Arc::new(Mutex::new(T::deserialize(d)?)))
+    }
 }
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Thermometer {
     pub name: String,
     description: String,

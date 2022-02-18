@@ -1,9 +1,9 @@
 use crate::Thermometer;
 use log::info;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use tcp_wrapper::client_std::Client;
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Rosette {
     pub name: String,
     description: String,
