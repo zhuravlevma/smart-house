@@ -1,5 +1,6 @@
 use crate::error::{ConnectError, ConnectResult, RequestResult};
 use crate::stream::stream_std::Stream;
+use log::{debug, info};
 use std::io::{Read, Write};
 use std::net::{TcpStream, ToSocketAddrs};
 
@@ -13,12 +14,14 @@ impl Client {
         IpAddrs: ToSocketAddrs,
     {
         let stream = TcpStream::connect(addrs)?;
+        info!("Tcp stream connect to address {}", stream.local_addr()?);
         Self::try_handshake(stream)
     }
 
     pub fn send_request<R: AsRef<str>>(&mut self, req: R) -> RequestResult {
         Stream::send_string(req, &mut self.stream)?;
         let response = Stream::receive_string(&mut self.stream)?;
+        debug!("Tcp async client resource {}", response);
         Ok(response)
     }
 

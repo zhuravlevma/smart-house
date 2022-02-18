@@ -2,15 +2,19 @@ use crate::routing::Routing;
 use crate::tcp_request::Request;
 use log::{debug, info};
 use std::error::Error;
+use std::net::ToSocketAddrs;
 use tcp_wrapper::server_std::TcpServer;
 
 pub struct Server {
     tcp: TcpServer,
 }
 impl Server {
-    pub fn new(address: &str) -> Result<Self, Box<dyn Error>> {
+    pub fn new<Addrs>(address: Addrs) -> Result<Self, Box<dyn Error>>
+    where
+        Addrs: ToSocketAddrs,
+    {
         let tcp = TcpServer::bind(address)?;
-        info!("Initial tcp server with address {}", address);
+        info!("Initial tcp server");
         Ok(Self { tcp })
     }
     pub fn listen(&self, mut routing: Box<dyn Routing>) -> Result<(), Box<dyn Error>> {

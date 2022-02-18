@@ -1,5 +1,6 @@
 use crate::error::{ConnectError, ConnectResult, RequestResult};
 use crate::stream::stream_async::Stream;
+use log::{debug, info};
 use tokio::net::{TcpStream, ToSocketAddrs};
 
 pub struct TcpClient {
@@ -12,12 +13,17 @@ impl TcpClient {
         Addrs: ToSocketAddrs,
     {
         let stream = TcpStream::connect(addrs).await?;
+        info!(
+            "Tcp async stream connect to address {}",
+            stream.local_addr()?
+        );
         Self::try_handshake(stream).await
     }
 
     pub async fn send_request<R: AsRef<str>>(&mut self, req: R) -> RequestResult {
         Stream::send_string_async(req, &self.stream).await?;
         let response = Stream::recv_string_async(&self.stream).await?;
+        debug!("Tcp async client resource {}", response);
         Ok(response)
     }
 

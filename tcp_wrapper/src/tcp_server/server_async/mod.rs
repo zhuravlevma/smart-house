@@ -1,4 +1,5 @@
 pub use connection_async::Connection;
+use log::info;
 
 use crate::error::{BindError, ConnectError, ConnectResult};
 use crate::stream::stream_async::Stream;
@@ -14,6 +15,7 @@ impl TcpServer {
         Addrs: ToSocketAddrs,
     {
         let tcp = TcpListener::bind(addrs).await?;
+        info!("Tcp server async listen port {} ", tcp.local_addr()?);
         Ok(Self { tcp })
     }
 

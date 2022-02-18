@@ -1,5 +1,6 @@
 use crate::error::{BindError, ConnectError, ConnectResult};
 pub use connection_std::Connection;
+use log::info;
 use std::io::{Read, Write};
 use std::net::{TcpListener, TcpStream, ToSocketAddrs};
 
@@ -13,6 +14,7 @@ impl TcpServer {
         IpAddrs: ToSocketAddrs,
     {
         let server = TcpListener::bind(addrs)?;
+        info!("Tcp server async listen port {} ", server.local_addr()?);
         Ok(Self { tcp: server })
     }
 

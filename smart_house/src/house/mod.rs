@@ -22,6 +22,24 @@ impl House {
     }
 }
 
+/// Create House
+/// ```
+/// use smart_house::{House};
+/// let house = House::new("test_id".to_string(), "name".to_string());
+/// ```
+/// Add apartment to house
+/// ```
+/// use smart_house::{House, Apartment};
+/// let mut house = House::new("test_id".to_string(), "name".to_string());
+/// house.add_apartment(Apartment::new("name".to_string()));
+/// ```
+/// Remove apartment from house
+/// ```
+/// use smart_house::{House, Apartment};
+/// let mut house = House::new("test_id".to_string(), "name".to_string());
+/// house.add_apartment(Apartment::new("name".to_string()));
+/// house.remove_apartment("name".to_string());
+/// ```
 impl House {
     pub fn get_apartments(&self) -> &[Apartment] {
         info!("Getting apartments");

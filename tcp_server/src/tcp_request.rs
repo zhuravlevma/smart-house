@@ -1,3 +1,4 @@
+use log::debug;
 use std::error::Error;
 use std::str::Split;
 
@@ -22,6 +23,7 @@ impl Request {
         let mut request = ConnectionRequest::new(req_str);
         let resource = String::from(request.next_data());
         let data = String::from(request.next_data());
+        debug!("Request resource {} with data {}", resource, data);
         Ok(Self { resource, data })
     }
 }

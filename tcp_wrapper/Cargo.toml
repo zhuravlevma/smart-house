@@ -17,3 +17,4 @@ homepage = "https://github.com/zhuravlevma"
 [dependencies]
 thiserror = "1.0.30"
 tokio = { version = "1.16.1", features = ["full"] }
+log = "0.4.14"
