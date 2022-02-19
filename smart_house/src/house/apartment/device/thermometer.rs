@@ -29,6 +29,7 @@ mod mutex_lock_serde {
         Ok(Arc::new(Mutex::new(T::deserialize(d)?)))
     }
 }
+
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Thermometer {
     pub name: String,

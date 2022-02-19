@@ -6,6 +6,6 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-tokio = "1.16.1"
+tokio = "1"
 tcp_wrapper = { path = "../tcp_wrapper" }
 log = "0.4.14"
