@@ -1,1 +1,1 @@
-It's a simple terminal ui for your smart home
+It's a simple ui for your smart home
