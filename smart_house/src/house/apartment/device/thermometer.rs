@@ -108,6 +108,13 @@ impl Thermometer {
     pub fn get_name(&self) -> &str {
         &self.name
     }
+    pub fn get_description(&self) -> &str {
+        &self.description
+    }
+
+    pub fn get_ip(&self) -> &str {
+        &self.ip
+    }
 }
 
 impl PartialEq<Self> for Thermometer {

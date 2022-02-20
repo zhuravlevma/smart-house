@@ -1,3 +1,4 @@
+use crate::style;
 use iced::{button, Align, Button, Element, Row, Text};
 use serde::{Deserialize, Serialize};
 
@@ -5,8 +6,6 @@ use serde::{Deserialize, Serialize};
 pub struct HouseView {
     pub(crate) id: String,
     name: String,
-    completed: bool,
-
     #[serde(skip)]
     state: HouseViewState,
 }
@@ -18,13 +17,13 @@ pub enum HouseViewMessage {
 
 #[derive(Debug, Clone)]
 pub enum HouseViewState {
-    Idle { edit_button: button::State },
+    Idle { show_apartments: button::State },
 }
 
 impl Default for HouseViewState {
     fn default() -> Self {
         HouseViewState::Idle {
-            edit_button: button::State::new(),
+            show_apartments: button::State::new(),
         }
     }
 }
@@ -35,22 +34,25 @@ impl HouseView {
             id,
             name,
             state: HouseViewState::Idle {
-                edit_button: button::State::new(),
+                show_apartments: button::State::new(),
             },
-            completed: false,
         }
     }
     pub fn view(&mut self) -> Element<HouseViewMessage> {
         match &mut self.state {
-            HouseViewState::Idle { edit_button } => Row::new()
-                .spacing(20)
-                .align_items(Align::Center)
-                .push(
-                    Button::new(edit_button, Text::new(&self.name))
-                        .on_press(HouseViewMessage::ViewDetails)
-                        .padding(10),
-                )
-                .into(),
+            HouseViewState::Idle { show_apartments } => {
+                let label = Text::new(&self.name);
+                Row::new()
+                    .spacing(20)
+                    .align_items(Align::Center)
+                    .push(
+                        Button::new(show_apartments, label)
+                            .on_press(HouseViewMessage::ViewDetails)
+                            .padding(10)
+                            .style(style::Button::House),
+                    )
+                    .into()
+            }
         }
     }
 }
