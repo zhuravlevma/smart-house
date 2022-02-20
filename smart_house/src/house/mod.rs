@@ -80,6 +80,9 @@ impl House {
     pub fn get_name(&self) -> &str {
         &self.name
     }
+    pub fn get_id(&self) -> &str {
+        &self.id
+    }
 
     pub fn create_report(&self) -> String {
         info!("Creating report for house {}", self.name);
