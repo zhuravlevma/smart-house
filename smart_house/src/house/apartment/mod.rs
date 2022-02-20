@@ -57,6 +57,11 @@ impl Apartment {
             Some(_) => Err(AddDataError::UniqueConstraint),
         }
     }
+
+    pub fn get_name(&self) -> &str {
+        &self.name
+    }
+
     pub fn remove_device(&mut self, device_name: String) -> RemoveDataResult<Device> {
         info!(
             "Remove device with name {} for apartment {}",

@@ -59,6 +59,10 @@ impl Rosette {
         info!("Getting info for rosette {}", self.ip);
         self.description.clone()
     }
+
+    pub fn get_name(&self) -> &str {
+        &self.name
+    }
 }
 
 impl PartialEq<Self> for Rosette {

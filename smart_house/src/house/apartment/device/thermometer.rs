@@ -105,6 +105,9 @@ impl Thermometer {
         info!("Getting info for thermometer {}", self.name);
         self.description.clone()
     }
+    pub fn get_name(&self) -> &str {
+        &self.name
+    }
 }
 
 impl PartialEq<Self> for Thermometer {
