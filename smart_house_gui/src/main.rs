@@ -1,25 +1,10 @@
-mod house;
-
-use crate::house::HomeElem;
+use crate::house::{HouseView, HouseViewMessage};
 use iced::{Application, Clipboard, Column, Command, Container, Element, Length, Settings, Text};
 use smart_house::{Apartment, House};
+use crate::api::{get_apartments, get_houses};
 
 fn main() -> iced::Result {
     Home::run(Settings::default())
-}
-
-async fn get_houses() -> Vec<House> {
-    let url = String::from("http://127.0.0.1:8080/");
-    let res = reqwest::get(&url).await.unwrap();
-    let tmp: Vec<House> = res.json().await.unwrap();
-    tmp
-}
-
-async fn get_apartments(id: String) -> Vec<Apartment> {
-    let url = format!("http://127.0.0.1:8080/{}/apartment", { id });
-    let res = reqwest::get(&url).await.unwrap();
-    let tmp: Vec<Apartment> = res.json().await.unwrap();
-    tmp
 }
 
 enum Home {
@@ -29,19 +14,14 @@ enum Home {
 
 #[derive(Debug, Default)]
 struct State {
-    houses: Vec<HomeElem>,
+    houses: Vec<HouseView>,
 }
 
 #[derive(Debug, Clone)]
 enum Message {
     ViewResultApartments(Vec<Apartment>),
     Loaded(Vec<House>),
-    HomeMessages(String, usize, HomeMessage),
-}
-
-#[derive(Debug, Clone)]
-pub enum HomeMessage {
-    ViewDetails,
+    HomeMessages(String, usize, HouseViewMessage),
 }
 
 impl Application for Home {
@@ -74,7 +54,7 @@ impl Application for Home {
                     println!("{:?}", data);
                     Command::none()
                 }
-                Message::HomeMessages(house_id, _i, HomeMessage::ViewDetails) => {
+                Message::HomeMessages(house_id, _i, HouseViewMessage::ViewDetails) => {
                     Command::perform(get_apartments(house_id), Message::ViewResultApartments)
                 }
                 _ => Command::none(),
@@ -84,10 +64,9 @@ impl Application for Home {
                     let house_domain = houses
                         .iter()
                         .map(|elem| {
-                            HomeElem::new(
+                            HouseView::new(
                                 elem.get_id().to_string(),
-                                elem.get_name().to_string(),
-                                "Haha".to_string(),
+                                elem.get_name().to_string()
                             )
                         })
                         .collect();
@@ -140,3 +119,6 @@ fn loading_message<'a>() -> Element<'a, Message> {
         .center_y()
         .into()
 }
+
+mod house;
+mod api;

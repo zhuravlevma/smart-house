@@ -1,51 +1,53 @@
-use crate::HomeMessage;
 use iced::{button, Align, Button, Element, Row, Text};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct HomeElem {
+pub struct HouseView {
     pub(crate) id: String,
-    description: String,
     name: String,
     completed: bool,
 
     #[serde(skip)]
-    state: HomeElemState,
+    state: HouseViewState,
 }
 
 #[derive(Debug, Clone)]
-pub enum HomeElemState {
+pub enum HouseViewMessage {
+    ViewDetails,
+}
+
+#[derive(Debug, Clone)]
+pub enum HouseViewState {
     Idle { edit_button: button::State },
 }
 
-impl Default for HomeElemState {
+impl Default for HouseViewState {
     fn default() -> Self {
-        HomeElemState::Idle {
+        HouseViewState::Idle {
             edit_button: button::State::new(),
         }
     }
 }
 
-impl HomeElem {
-    pub fn new(id: String, name: String, description: String) -> Self {
+impl HouseView {
+    pub fn new(id: String, name: String) -> Self {
         Self {
             id,
             name,
-            description,
-            state: HomeElemState::Idle {
+            state: HouseViewState::Idle {
                 edit_button: button::State::new(),
             },
             completed: false,
         }
     }
-    pub fn view(&mut self) -> Element<HomeMessage> {
+    pub fn view(&mut self) -> Element<HouseViewMessage> {
         match &mut self.state {
-            HomeElemState::Idle { edit_button } => Row::new()
+            HouseViewState::Idle { edit_button } => Row::new()
                 .spacing(20)
                 .align_items(Align::Center)
                 .push(
                     Button::new(edit_button, Text::new(&self.name))
-                        .on_press(HomeMessage::ViewDetails)
+                        .on_press(HouseViewMessage::ViewDetails)
                         .padding(10),
                 )
                 .into(),
