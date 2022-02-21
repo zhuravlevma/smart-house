@@ -9,6 +9,14 @@ pub enum CustomError {
     InternalError(String),
 }
 
+#[derive(Debug, Error, Clone, Serialize, Deserialize)]
+pub enum DomainError {
+    #[error("RosetteError")]
+    RosetteError,
+    #[error("CustomError: {0}")]
+    CustomError(#[from] CustomError),
+}
+
 impl From<mongodb::error::Error> for CustomError {
     fn from(source: mongodb::error::Error) -> Self {
         Self::InternalError(source.to_string())

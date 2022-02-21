@@ -1,18 +1,16 @@
+use crate::errors::ThermometerError;
 use crate::Rosette;
-use log::info;
-use std::error::Error;
+use log::{error, info};
+use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::thread::JoinHandle;
 use udp_wrapper::{UdpServer, UdpServerAsync};
 
-use serde::{Deserialize, Serialize};
-
 mod mutex_lock_serde {
     use serde::ser::Serializer;
     use serde::{Deserialize, Deserializer, Serialize};
     use std::sync::{Arc, Mutex};
-
     pub fn serialize<S, T>(val: &Arc<Mutex<T>>, s: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
@@ -40,6 +38,11 @@ pub struct Thermometer {
     updating: bool,
 }
 
+/// Create thermometer
+/// ```
+/// use smart_house::Thermometer;
+/// let thermometer = Thermometer::new("name".to_string(), 23.0, "127.0.0.1:9091".to_string());
+/// ```
 impl Thermometer {
     pub fn new(name: String, temperature: f32, ip_address: String) -> Self {
         Self {
@@ -53,10 +56,10 @@ impl Thermometer {
 }
 
 impl Thermometer {
-    pub fn update_temperature(&mut self) -> Result<JoinHandle<()>, Box<dyn Error>> {
+    pub fn update_temperature(&mut self) -> Result<JoinHandle<()>, ThermometerError> {
         if self.updating {
-            info!("Your thermometer already use simple updating temperature");
-            // return ;
+            error!("Your thermometer already use simple updating temperature");
+            return Err(ThermometerError::Busy(self.ip.clone()));
         }
         let server = UdpServer::new(self.ip.clone())?;
         let clone_mutex = self.temperature.clone();
@@ -74,10 +77,10 @@ impl Thermometer {
         Ok(thread)
     }
 
-    pub async fn update_temperature_async(&mut self) -> Result<(), Box<dyn Error>> {
+    pub async fn update_temperature_async(&mut self) -> Result<(), ThermometerError> {
         if self.updating {
-            info!("Your thermometer already use async updating temperature");
-            return Ok(());
+            error!("Your thermometer already use async updating temperature");
+            return Err(ThermometerError::Busy(self.ip.clone()));
         }
         let socket = UdpServerAsync::new(self.ip.clone()).await?;
 
@@ -88,11 +91,15 @@ impl Thermometer {
         );
         println!("Current temp: {}", self.get_temperature());
         let (_usize, _src_address, data) = socket.receive().await?;
-        let temp: f32 = data.parse()?;
-        let arc = self.temperature.clone();
-        let mut data = arc.lock().unwrap();
-        *data = temp;
-        Ok(())
+        match data.parse::<f32>() {
+            Ok(num) => {
+                let arc = self.temperature.clone();
+                let mut data = arc.lock().unwrap();
+                *data = num;
+                Ok(())
+            }
+            Err(_) => Err(ThermometerError::ParseFloatError(data)),
+        }
     }
 
     pub fn get_temperature(&self) -> f32 {

@@ -3,6 +3,12 @@ use thermometer::Thermometer;
 
 use serde::{Deserialize, Serialize};
 
+/// Create devices
+/// ```
+/// use smart_house::{Device, Rosette, Thermometer};
+/// let thermometer = Device::Thermometer(Thermometer::new("name".to_string(), 23.0, "127.0.0.1:9091".to_string()));
+/// let rosette = Device::Rosette(Rosette::new("name".to_string(), "127.0.0.1:8081".to_string()));
+/// ```
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub enum Device {
     Rosette(Rosette),

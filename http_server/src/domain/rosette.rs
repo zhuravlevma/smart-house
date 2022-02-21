@@ -1,7 +1,7 @@
+use crate::error::DomainError;
 use crate::mongo::MongoClient;
 use crate::MongoRosette;
 use smart_house::Rosette;
-use std::error::Error;
 
 pub struct RosetteService {
     db_service: MongoRosette,
@@ -19,13 +19,16 @@ impl RosetteService {
         house_id: &str,
         apartment_name: &str,
         rosette_name: &str,
-    ) -> Result<bool, Box<dyn Error>> {
+    ) -> Result<bool, DomainError> {
         let data = self
             .db_service
             .get_rosette(house_id, apartment_name, rosette_name)
             .await?;
         let mut domain_rosette = Rosette::new(data.name, data.ip_address);
-        Ok(domain_rosette.on())
+        match domain_rosette.on() {
+            Ok(res) => Ok(res),
+            Err(_) => Err(DomainError::RosetteError),
+        }
     }
 
     pub async fn off(
@@ -33,13 +36,16 @@ impl RosetteService {
         house_id: &str,
         apartment_name: &str,
         rosette_name: &str,
-    ) -> Result<bool, Box<dyn Error>> {
+    ) -> Result<bool, DomainError> {
         let data = self
             .db_service
             .get_rosette(house_id, apartment_name, rosette_name)
             .await?;
         let mut domain_rosette = Rosette::new(data.name, data.ip_address);
-        Ok(domain_rosette.off())
+        match domain_rosette.off() {
+            Ok(res) => Ok(res),
+            Err(_) => Err(DomainError::RosetteError),
+        }
     }
 
     pub async fn get_power(
@@ -47,12 +53,15 @@ impl RosetteService {
         house_id: &str,
         apartment_name: &str,
         rosette_name: &str,
-    ) -> Result<u32, Box<dyn Error>> {
+    ) -> Result<u32, DomainError> {
         let data = self
             .db_service
             .get_rosette(house_id, apartment_name, rosette_name)
             .await?;
         let mut domain_rosette = Rosette::new(data.name, data.ip_address);
-        Ok(domain_rosette.current_power())
+        match domain_rosette.current_power() {
+            Ok(power) => Ok(power),
+            Err(_) => Err(DomainError::RosetteError),
+        }
     }
 }

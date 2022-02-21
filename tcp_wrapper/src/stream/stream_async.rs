@@ -1,4 +1,4 @@
-use crate::{ReceiveError, ReceiveResult, SendResult};
+use crate::{ReceiveError, SendResult};
 use tokio::io;
 use tokio::net::TcpStream;
 
@@ -49,7 +49,7 @@ impl Stream {
         Ok(())
     }
 
-    pub async fn recv_string_async(s: &TcpStream) -> ReceiveResult {
+    pub async fn recv_string_async(s: &TcpStream) -> Result<String, ReceiveError> {
         let mut buf = [0; 4];
         Self::read_exact_async(s, &mut buf).await?;
         let len = u32::from_be_bytes(buf);

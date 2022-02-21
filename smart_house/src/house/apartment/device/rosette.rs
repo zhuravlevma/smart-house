@@ -1,3 +1,4 @@
+use crate::errors::RosetteError;
 use crate::Thermometer;
 use log::info;
 use serde::{Deserialize, Serialize};
@@ -22,37 +23,46 @@ impl Rosette {
     }
 }
 
+/// Create thermometer
+/// ```
+/// use smart_house::Rosette;
+/// let rosette = Rosette::new("name".to_string(), "127.0.0.1:9091".to_string());
+/// ```
 impl Rosette {
-    fn get_connect_to_rosette(&self, address: String) -> Client {
-        Client::connect(address).unwrap()
+    fn get_connect_to_rosette(&self, address: String) -> Result<Client, RosetteError> {
+        Ok(Client::connect(address)?)
     }
 
-    pub fn on(&mut self) -> bool {
+    pub fn on(&mut self) -> Result<bool, RosetteError> {
         info!("Rosette IP {} start on", self.ip);
-        let mut client = self.get_connect_to_rosette(self.ip.clone());
-        let res = client.send_request("rosette_on|||").unwrap();
+        let mut client = self.get_connect_to_rosette(self.ip.clone())?;
+        let res = client.send_request("rosette_on|||")?;
         info!("Rosette IP on success: {}", res);
         self.power = 220;
-        true
+        Ok(true)
     }
 
-    pub fn off(&mut self) -> bool {
+    pub fn off(&mut self) -> Result<bool, RosetteError> {
         info!("Rosette IP {} start off", self.ip);
-        let mut client = self.get_connect_to_rosette(self.ip.clone());
-        let res = client.send_request("rosette_off|||").unwrap();
+        let mut client = self.get_connect_to_rosette(self.ip.clone())?;
+        let res = client.send_request("rosette_off|||")?;
         info!("Rosette IP off success: {}", res);
         self.power = 0;
-        true
+        Ok(true)
     }
 
-    pub fn current_power(&mut self) -> u32 {
+    pub fn current_power(&mut self) -> Result<u32, RosetteError> {
         info!("Rosette IP {} start getting power", self.ip);
-        let mut client = self.get_connect_to_rosette(self.ip.clone());
-        let res = client.send_request("get_power|||").unwrap();
+        let mut client = self.get_connect_to_rosette(self.ip.clone())?;
+        let res = client.send_request("get_power|||")?;
         info!("Rosette IP {} getting power success: {}", self.ip, res);
-        let num: u32 = res.parse().unwrap();
-        self.power = num;
-        self.power
+        match res.parse::<u32>() {
+            Ok(data) => {
+                self.power = data;
+                Ok(self.power)
+            }
+            Err(_) => Err(RosetteError::ParsePowerError(res.clone())),
+        }
     }
 
     pub fn get_info(&self) -> String {
