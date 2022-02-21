@@ -243,7 +243,6 @@ impl Application for Home {
                     .push(title)
                     .push(Container::new(houses))
                     .push(Container::new(apartments))
-                    // .push(Container::new(Row::new().align_items(Align::Center).push(rosettes).push(thermometers)));
                     .push(Container::new(rosettes))
                     .push(Container::new(thermometers));
                 Container::new(content)
