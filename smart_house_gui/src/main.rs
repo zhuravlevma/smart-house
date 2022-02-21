@@ -226,7 +226,6 @@ impl Application for Home {
                                 )
                                 .spacing(20),
                             |column, rosette| {
-                                // let name = apartment.name.clone();
                                 let id = rosette.house_id.clone();
                                 column.push(rosette.view().map(move |message| {
                                     Message::RosetteMessages(id.clone(), message)
@@ -243,9 +242,8 @@ impl Application for Home {
                     .spacing(20)
                     .push(title)
                     .push(Container::new(houses))
-                    // .push(title_apartments)
                     .push(Container::new(apartments))
-                    // .push(title_devices)
+                    // .push(Container::new(Row::new().align_items(Align::Center).push(rosettes).push(thermometers)));
                     .push(Container::new(rosettes))
                     .push(Container::new(thermometers));
                 Container::new(content)

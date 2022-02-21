@@ -1,5 +1,5 @@
 use crate::style;
-use iced::{button, Align, Button, Element, Row, Text};
+use iced::{button, Align, Button, Element, Row, Text, Column};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -60,16 +60,22 @@ impl ThermometerView {
         match &mut self.state {
             ThermometerViewState::Idle { show_thermometer } => {
                 let label = Text::new(&self.name);
-                Row::new()
+                let description_label = Text::new(&self.description);
+                let temperature_label = Text::new("Update temperature");
+                let title = Row::new().push(Text::new("Name: ")).push(label);
+                let description = Row::new().push(Text::new("Description: ")).push(description_label);
+                let ip_label = Text::new(&self.ip);
+                let ip = Row::new().push(Text::new("Ip: ")).push(ip_label);
+                let row = Row::new()
                     .spacing(20)
                     .align_items(Align::Center)
                     .push(
-                        Button::new(show_thermometer, label)
+                        Button::new(show_thermometer, temperature_label)
                             .on_press(ThermometerViewMessage::ViewDetails)
                             .padding(10)
                             .style(style::Button::Device),
-                    )
-                    .into()
+                    );
+                Column::new().spacing(10).push(title).push(description).push(ip).push(row).into()
             }
         }
     }

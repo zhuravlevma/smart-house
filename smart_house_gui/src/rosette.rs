@@ -1,5 +1,5 @@
 use crate::style;
-use iced::{button, Align, Button, Element, Row, Text};
+use iced::{button, Align, Button, Element, Row, Text, Column};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -21,13 +21,14 @@ pub enum RosetteViewMessage {
 
 #[derive(Debug, Clone)]
 pub enum RosetteViewState {
-    Idle { show_rosette: button::State },
+    Idle { rosette_on: button::State, rosette_off: button::State},
 }
 
 impl Default for RosetteViewState {
     fn default() -> Self {
         RosetteViewState::Idle {
-            show_rosette: button::State::new(),
+            rosette_on: button::State::new(),
+            rosette_off: button::State::new(),
         }
     }
 }
@@ -48,25 +49,38 @@ impl RosetteView {
             description,
             ip,
             state: RosetteViewState::Idle {
-                show_rosette: Default::default(),
+                rosette_on: Default::default(),
+                rosette_off: Default::default(),
             },
             power,
         }
     }
     pub fn view(&mut self) -> Element<RosetteViewMessage> {
         match &mut self.state {
-            RosetteViewState::Idle { show_rosette } => {
+            RosetteViewState::Idle { rosette_on, rosette_off } => {
                 let label = Text::new(&self.name);
-                Row::new()
+                let description_label = Text::new(&self.description);
+                let label_on = Text::new("On");
+                let label_off = Text::new("Off");
+                let title = Row::new().push(Text::new("Name: ")).push(label);
+                let description = Row::new().push(Text::new("Description: ")).push(description_label);
+                let ip_label = Text::new(&self.ip);
+                let ip = Row::new().push(Text::new("Ip: ")).push(ip_label);
+                let row = Row::new()
                     .spacing(20)
                     .align_items(Align::Center)
                     .push(
-                        Button::new(show_rosette, label)
+                        Button::new(rosette_on, label_on)
                             .on_press(RosetteViewMessage::ViewDetails)
                             .padding(10)
                             .style(style::Button::Device),
-                    )
-                    .into()
+                    ).push(
+                    Button::new(rosette_off, label_off)
+                        .on_press(RosetteViewMessage::ViewDetails)
+                        .padding(10)
+                        .style(style::Button::Device),
+                );
+                Column::new().spacing(10).push(title).push(description).push(ip).push(row).into()
             }
         }
     }
