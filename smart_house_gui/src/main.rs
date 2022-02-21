@@ -65,6 +65,8 @@ impl Application for Home {
                         .iter()
                         .map(|elem| ApartmentView::new(id.clone(), elem.get_name().to_string()))
                         .collect();
+                    state.thermometers = vec![];
+                    state.rosettes = vec![];
                     state.apartments = apartments_domain;
                     Command::none()
                 }
@@ -162,49 +164,94 @@ impl Application for Home {
                     })
                     .into();
 
-                let apartments: Element<Message> = apartments
-                    .iter_mut()
-                    .fold(Column::new().spacing(20), |column, apartment| {
-                        let name = apartment.name.clone();
-                        let id = apartment.house_id.clone();
-                        column.push(apartment.view().map(move |message| {
-                            Message::ApartmentMessages(id.clone(), name.clone(), message)
-                        }))
-                    })
-                    .into();
+                let apartments: Element<Message> = if !apartments.is_empty() {
+                    apartments
+                        .iter_mut()
+                        .fold(
+                            Column::new()
+                                .push(
+                                    Text::new("Apartments")
+                                        .width(Length::Fill)
+                                        .size(50)
+                                        .color([0.5, 0.5, 0.5]),
+                                )
+                                .spacing(20),
+                            |column, apartment| {
+                                let name = apartment.name.clone();
+                                let id = apartment.house_id.clone();
+                                column.push(apartment.view().map(move |message| {
+                                    Message::ApartmentMessages(id.clone(), name.clone(), message)
+                                }))
+                            },
+                        )
+                        .into()
+                } else {
+                    Column::new().into()
+                };
 
-                let thermometers: Element<Message> =
+                let thermometers: Element<Message> = if !thermometers.is_empty() {
                     thermometers
                         .iter_mut()
-                        .fold(Column::new().spacing(20), |column, thermometer| {
-                            let id = thermometer.house_id.clone();
-                            column.push(thermometer.view().map(move |message| {
-                                Message::ThermometerMessages(id.clone(), message)
-                            }))
-                        })
-                        .into();
-
-                let rosettes: Element<Message> = rosettes
-                    .iter_mut()
-                    .fold(Column::new().spacing(20), |column, rosette| {
-                        // let name = apartment.name.clone();
-                        let id = rosette.house_id.clone();
-                        column.push(
-                            rosette
-                                .view()
-                                .map(move |message| Message::RosetteMessages(id.clone(), message)),
+                        .fold(
+                            Column::new()
+                                .push(
+                                    Text::new("Thermometers")
+                                        .width(Length::Fill)
+                                        .size(40)
+                                        .color([0.5, 0.5, 0.5]),
+                                )
+                                .spacing(20),
+                            |column, thermometer| {
+                                let id = thermometer.house_id.clone();
+                                column.push(thermometer.view().map(move |message| {
+                                    Message::ThermometerMessages(id.clone(), message)
+                                }))
+                            },
                         )
-                    })
-                    .into();
+                        .into()
+                } else {
+                    Column::new().into()
+                };
+
+                let rosettes: Element<Message> = if !rosettes.is_empty() {
+                    rosettes
+                        .iter_mut()
+                        .fold(
+                            Column::new()
+                                .push(
+                                    Text::new("Rosettes")
+                                        .width(Length::Fill)
+                                        .size(40)
+                                        .color([0.5, 0.5, 0.5]),
+                                )
+                                .spacing(20),
+                            |column, rosette| {
+                                // let name = apartment.name.clone();
+                                let id = rosette.house_id.clone();
+                                column.push(rosette.view().map(move |message| {
+                                    Message::RosetteMessages(id.clone(), message)
+                                }))
+                            },
+                        )
+                        .into()
+                } else {
+                    Column::new().into()
+                };
 
                 let content = Column::new()
+                    .max_width(800)
+                    .spacing(20)
                     .push(title)
                     .push(Container::new(houses))
+                    // .push(title_apartments)
                     .push(Container::new(apartments))
+                    // .push(title_devices)
                     .push(Container::new(rosettes))
-                    .push(Container::new(thermometers))
-                    .into();
-                content
+                    .push(Container::new(thermometers));
+                Container::new(content)
+                    .width(Length::Fill)
+                    .center_x()
+                    .into()
             }
             Home::Loading => loading_message(),
         }
