@@ -5,7 +5,6 @@ use crate::mongo::thermometer::ThermometerData;
 use crate::MongoClient;
 use mongodb::bson::{doc, ser};
 use serde::{Deserialize, Serialize};
-use std::error::Error;
 
 pub struct MongoApartment {
     client: MongoClient,
@@ -25,10 +24,7 @@ impl MongoApartment {
         }
     }
 
-    pub async fn get_apartments(
-        &self,
-        house_id: &str,
-    ) -> Result<Vec<ApartmentData>, Box<dyn Error>> {
+    pub async fn get_apartments(&self, house_id: &str) -> Result<Vec<ApartmentData>, CustomError> {
         let collection = self.client.get_collection_house();
         let query = self.client.create_query_find_by_id(house_id)?;
         let house: Option<HouseData> = collection.find_one(query, None).await?;

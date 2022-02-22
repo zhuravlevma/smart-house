@@ -5,7 +5,6 @@ use futures::StreamExt;
 use mongodb::bson::doc;
 use mongodb::bson::oid::ObjectId;
 use serde::{Deserialize, Serialize};
-use std::error::Error;
 
 pub struct MongoHouse {
     client: MongoClient,
@@ -26,7 +25,7 @@ impl MongoHouse {
         }
     }
 
-    pub async fn get_houses(&self) -> Result<Vec<HouseData>, Box<dyn Error>> {
+    pub async fn get_houses(&self) -> Result<Vec<HouseData>, CustomError> {
         let collection = self.client.get_collection_house();
         let query = doc! {};
         let mut houses = collection.find(query, None).await?;
@@ -37,7 +36,7 @@ impl MongoHouse {
         Ok(houses_vec)
     }
 
-    pub async fn create_house(&self, data: HouseData) -> Result<HouseData, Box<dyn Error>> {
+    pub async fn create_house(&self, data: HouseData) -> Result<HouseData, CustomError> {
         let collection = self.client.get_collection_house();
         let inserted = collection.insert_one(data, None).await?;
         let id = inserted.inserted_id;

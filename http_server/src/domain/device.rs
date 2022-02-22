@@ -1,8 +1,8 @@
+use crate::error::DomainError;
 use crate::mongo::rosette::RosetteData;
 use crate::mongo::thermometer::ThermometerData;
 use crate::{MongoClient, MongoRosette, MongoThermometer};
 use smart_house::{Device, Rosette, Thermometer};
-use std::error::Error;
 
 pub struct DeviceService {
     db_thermometer: MongoThermometer,
@@ -24,7 +24,7 @@ impl DeviceService {
         &self,
         house_id: &str,
         apartment_name: &str,
-    ) -> Result<Vec<Device>, Box<dyn Error>> {
+    ) -> Result<Vec<Device>, DomainError> {
         let rosettes = self.get_rosettes(house_id, apartment_name).await?;
         let thermometers = self.get_thermometers(house_id, apartment_name).await?;
         let mut devices = vec![];
@@ -41,7 +41,7 @@ impl DeviceService {
         &self,
         house_id: &str,
         apartment_name: &str,
-    ) -> Result<Vec<Device>, Box<dyn Error>> {
+    ) -> Result<Vec<Device>, DomainError> {
         let rosettes = self
             .db_rosette
             .get_rosettes(house_id, apartment_name)
@@ -60,7 +60,7 @@ impl DeviceService {
         &self,
         house_id: &str,
         apartment_name: &str,
-    ) -> Result<Vec<Device>, Box<dyn Error>> {
+    ) -> Result<Vec<Device>, DomainError> {
         let thermometers = self
             .db_thermometer
             .get_thermometers(house_id, apartment_name)
@@ -81,7 +81,7 @@ impl DeviceService {
         house_id: &str,
         apartment_name: &str,
         data: ThermometerData,
-    ) -> Result<Device, Box<dyn Error>> {
+    ) -> Result<Device, DomainError> {
         let data = self
             .db_thermometer
             .create_thermometer(house_id, apartment_name, &data)
@@ -98,7 +98,7 @@ impl DeviceService {
         house_id: &str,
         apartment_name: &str,
         data: RosetteData,
-    ) -> Result<Device, Box<dyn Error>> {
+    ) -> Result<Device, DomainError> {
         let data = self
             .db_rosette
             .create_rosette(house_id, apartment_name, &data)
@@ -111,7 +111,7 @@ impl DeviceService {
         house_id: &str,
         apartment_name: &str,
         rosette_name: &str,
-    ) -> Result<(), Box<dyn Error>> {
+    ) -> Result<(), DomainError> {
         let _data = self
             .db_rosette
             .delete_rosette(house_id, apartment_name, rosette_name)
@@ -124,7 +124,7 @@ impl DeviceService {
         house_id: &str,
         apartment_name: &str,
         thermometer_name: &str,
-    ) -> Result<(), Box<dyn Error>> {
+    ) -> Result<(), DomainError> {
         let _data = self
             .db_thermometer
             .delete_thermometer(house_id, apartment_name, thermometer_name)

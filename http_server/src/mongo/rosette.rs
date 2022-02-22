@@ -3,7 +3,6 @@ use crate::mongo::house::HouseData;
 use crate::mongo::MongoClient;
 use mongodb::bson::{doc, ser};
 use serde::{Deserialize, Serialize};
-use std::error::Error;
 
 pub struct MongoRosette {
     client: MongoClient,
@@ -26,7 +25,7 @@ impl MongoRosette {
         &self,
         house_id: &str,
         apartment_name: &str,
-    ) -> Result<Vec<RosetteData>, Box<dyn Error>> {
+    ) -> Result<Vec<RosetteData>, CustomError> {
         let house_id = self.client.to_mongoid(house_id)?;
         let collection = self.client.get_collection_house();
         let query = doc! { "_id": house_id };

@@ -11,11 +11,19 @@ pub enum CustomError {
 
 #[derive(Debug, Error, Clone, Serialize, Deserialize)]
 pub enum DomainError {
+    #[error("HouseError")]
+    HouseError,
+    #[error("ApartmentError")]
+    ApartmentError,
     #[error("RosetteError")]
     RosetteError,
+    #[error("ThermometerError")]
+    ThermometerError,
     #[error("CustomError: {0}")]
     CustomError(#[from] CustomError),
 }
+
+impl actix_web::error::ResponseError for DomainError {}
 
 impl From<mongodb::error::Error> for CustomError {
     fn from(source: mongodb::error::Error) -> Self {

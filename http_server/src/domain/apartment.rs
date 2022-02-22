@@ -1,6 +1,6 @@
+use crate::error::DomainError;
 use crate::{ApartmentData, MongoApartment, MongoClient};
 use smart_house::{Apartment, Device, Rosette, Thermometer};
-use std::error::Error;
 
 pub struct ApartmentService {
     db_service: MongoApartment,
@@ -13,23 +13,29 @@ impl ApartmentService {
         }
     }
 
-    pub async fn get_list(&self, house_id: &str) -> Result<Vec<Apartment>, Box<dyn Error>> {
+    pub async fn get_list(&self, house_id: &str) -> Result<Vec<Apartment>, DomainError> {
         let data = self.db_service.get_apartments(house_id).await?;
         let mut houses = vec![];
         for apartment in data {
             let mut apartment_domain = Apartment::new(apartment.name);
             for thermometer in apartment.thermometers {
-                apartment_domain.add_device(Device::Thermometer(Thermometer::new(
+                match apartment_domain.add_device(Device::Thermometer(Thermometer::new(
                     thermometer.name,
                     thermometer.temperature,
                     thermometer.ip_address,
-                )))?;
+                ))) {
+                    Ok(_) => {}
+                    Err(_) => return Err(DomainError::ApartmentError),
+                };
             }
             for rosette in apartment.rosettes {
-                apartment_domain.add_device(Device::Rosette(Rosette::new(
+                match apartment_domain.add_device(Device::Rosette(Rosette::new(
                     rosette.name,
                     rosette.ip_address,
-                )))?;
+                ))) {
+                    Ok(_) => {}
+                    Err(_) => return Err(DomainError::ApartmentError),
+                };
             }
 
             houses.push(apartment_domain);
@@ -41,12 +47,12 @@ impl ApartmentService {
         &self,
         house_id: &str,
         data: ApartmentData,
-    ) -> Result<Apartment, Box<dyn Error>> {
+    ) -> Result<Apartment, DomainError> {
         let data = self.db_service.create_apartment(house_id, &data).await?;
         Ok(Apartment::new(data.name))
     }
 
-    pub async fn delete(&self, house_id: &str, apartment_name: &str) -> Result<(), Box<dyn Error>> {
+    pub async fn delete(&self, house_id: &str, apartment_name: &str) -> Result<(), DomainError> {
         let _data = self
             .db_service
             .delete_apartment(house_id, apartment_name)

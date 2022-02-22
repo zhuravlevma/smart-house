@@ -1,9 +1,9 @@
+use crate::error::DomainError;
 use crate::mongo::rosette::RosetteData;
 use crate::{DeviceService, RosetteService};
 use actix_web::web::Path;
 use actix_web::{web, HttpResponse};
 use serde::Deserialize;
-use std::error::Error;
 use std::sync::Arc;
 
 #[derive(Deserialize)]
@@ -22,7 +22,7 @@ pub async fn get_rosettes(
     path: Path<String>,
     apartment_info: web::Query<ApartmentInfo>,
     device: web::Data<Arc<DeviceService>>,
-) -> Result<HttpResponse, Box<dyn Error>> {
+) -> Result<HttpResponse, DomainError> {
     let id = &path.into_inner();
     let apartment_name = &apartment_info.apartment_name;
     let rosettes = device.get_rosettes(id, apartment_name).await?;
@@ -35,7 +35,7 @@ pub async fn create_rosette(
     apartment_info: web::Query<ApartmentInfo>,
     rosette_entity: web::Json<RosetteData>,
     device: web::Data<Arc<DeviceService>>,
-) -> Result<HttpResponse, Box<dyn Error>> {
+) -> Result<HttpResponse, DomainError> {
     let house_id = &path.into_inner();
     let apartment_name = &apartment_info.apartment_name;
     let rosette_entity = rosette_entity.into_inner();
@@ -49,7 +49,7 @@ pub async fn create_rosette(
 pub async fn delete_rosette(
     path: Path<(String, String, String)>,
     device: web::Data<Arc<DeviceService>>,
-) -> Result<HttpResponse, Box<dyn Error>> {
+) -> Result<HttpResponse, DomainError> {
     let (house_id, apartment_name, rosette_name) = &path.into_inner();
     let created = device
         .delete_rosette(house_id, apartment_name, rosette_name)
@@ -62,7 +62,7 @@ pub async fn rosette_on(
     path: Path<String>,
     rosette_info: web::Query<RosetteInfo>,
     rosette: web::Data<Arc<RosetteService>>,
-) -> Result<HttpResponse, Box<dyn Error>> {
+) -> Result<HttpResponse, DomainError> {
     let house_id = &path.into_inner();
     let apartment_name = &rosette_info.apartment_name;
     let rosette_name = &rosette_info.rosette_name;
@@ -75,7 +75,7 @@ pub async fn rosette_off(
     path: Path<String>,
     rosette_info: web::Query<RosetteInfo>,
     rosette: web::Data<Arc<RosetteService>>,
-) -> Result<HttpResponse, Box<dyn Error>> {
+) -> Result<HttpResponse, DomainError> {
     let house_id = &path.into_inner();
     let apartment_name = &rosette_info.apartment_name;
     let rosette_name = &rosette_info.rosette_name;
@@ -88,7 +88,7 @@ pub async fn rosette_power(
     path: Path<String>,
     rosette_info: web::Query<RosetteInfo>,
     rosette: web::Data<Arc<RosetteService>>,
-) -> Result<HttpResponse, Box<dyn Error>> {
+) -> Result<HttpResponse, DomainError> {
     let house_id = &path.into_inner();
     let apartment_name = &rosette_info.apartment_name;
     let rosette_name = &rosette_info.rosette_name;

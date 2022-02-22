@@ -1,9 +1,9 @@
 use crate::{DeviceService, ThermometerService};
 use actix_web::web::Path;
 use actix_web::{web, HttpResponse};
-use std::error::Error;
 use std::sync::Arc;
 
+use crate::error::DomainError;
 use crate::mongo::thermometer::ThermometerData;
 use serde::Deserialize;
 
@@ -23,7 +23,7 @@ pub async fn get_thermometers(
     path: Path<String>,
     apartment_info: web::Query<ApartmentInfo>,
     device: web::Data<Arc<DeviceService>>,
-) -> Result<HttpResponse, Box<dyn Error>> {
+) -> Result<HttpResponse, DomainError> {
     let home_id = &path.into_inner();
     let apartment_name = &apartment_info.apartment_name;
     let thermometers = device.get_thermometers(home_id, apartment_name).await?;
@@ -36,7 +36,7 @@ pub async fn create_thermometer(
     apartment_info: web::Query<ApartmentInfo>,
     thermometer_entity: web::Json<ThermometerData>,
     device: web::Data<Arc<DeviceService>>,
-) -> Result<HttpResponse, Box<dyn Error>> {
+) -> Result<HttpResponse, DomainError> {
     let house_id = &path.into_inner();
     let apartment_name = &apartment_info.apartment_name;
     let thermometer_entity = thermometer_entity.into_inner();
@@ -50,7 +50,7 @@ pub async fn create_thermometer(
 pub async fn delete_thermometer(
     path: Path<(String, String, String)>,
     device: web::Data<Arc<DeviceService>>,
-) -> Result<HttpResponse, Box<dyn Error>> {
+) -> Result<HttpResponse, DomainError> {
     let (house_id, apartment_name, thermometer_name) = &path.into_inner();
     let created = device
         .delete_thermometer(house_id, apartment_name, thermometer_name)
@@ -63,7 +63,7 @@ pub async fn get_temperature(
     path: Path<String>,
     apartment_info: web::Query<ThermometerInfo>,
     thermometer: web::Data<Arc<ThermometerService>>,
-) -> Result<HttpResponse, Box<dyn Error>> {
+) -> Result<HttpResponse, DomainError> {
     let house_id = &path.into_inner();
     let apartment_name = &apartment_info.apartment_name;
     let thermometer_name = &apartment_info.thermometer_name;
