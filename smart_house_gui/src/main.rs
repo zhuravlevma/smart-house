@@ -4,6 +4,7 @@ use crate::house::{HouseView, HouseViewMessage};
 use crate::rosette::{RosetteView, RosetteViewMessage};
 use crate::thermometer::{ThermometerView, ThermometerViewMessage};
 use iced::{Application, Clipboard, Column, Command, Container, Element, Length, Settings, Text};
+use iced::scrollable::{self, Scrollable};
 use smart_house::{Apartment, Device, House};
 
 fn main() -> iced::Result {
@@ -21,6 +22,7 @@ struct State {
     apartments: Vec<ApartmentView>,
     thermometers: Vec<ThermometerView>,
     rosettes: Vec<RosetteView>,
+    scroll: scrollable::State,
 }
 
 #[derive(Debug, Clone)]
@@ -132,6 +134,7 @@ impl Application for Home {
                         apartments: vec![],
                         thermometers: vec![],
                         rosettes: vec![],
+                        ..State::default()
                     });
                     Command::none()
                 }
@@ -147,6 +150,7 @@ impl Application for Home {
                 apartments,
                 thermometers,
                 rosettes,
+                             scroll,
             }) => {
                 let title = Text::new("Houses")
                     .width(Length::Fill)
@@ -245,9 +249,12 @@ impl Application for Home {
                     .push(Container::new(apartments))
                     .push(Container::new(rosettes))
                     .push(Container::new(thermometers));
-                Container::new(content)
+                let content = Container::new(content)
                     .width(Length::Fill)
-                    .center_x()
+                    .center_x();
+                Scrollable::new(scroll)
+                    .padding(40)
+                    .push(content)
                     .into()
             }
             Home::Loading => loading_message(),
