@@ -1,5 +1,5 @@
 use crate::style;
-use iced::{button, Align, Button, Element, Row, Text};
+use iced::{button, Align, Button, Element, Row, Text, Column};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -41,16 +41,21 @@ impl ApartmentView {
 
     pub fn view(&mut self) -> Element<ApartmentViewMessage> {
         match &mut self.state {
-            ApartmentViewState::Idle { show_devices } => Row::new()
-                .spacing(20)
-                .align_items(Align::Center)
-                .push(
-                    Button::new(show_devices, Text::new(&self.name))
-                        .on_press(ApartmentViewMessage::ViewDetails)
-                        .padding(10)
-                        .style(style::Button::Apartment),
-                )
-                .into(),
+            ApartmentViewState::Idle { show_devices } => {
+                let label = Text::new(&self.name);
+                let title = Row::new().push(Text::new("Name: ")).push(label);
+                Column::new().spacing(20).push(title).push(
+                    Row::new()
+                        .spacing(20)
+                        .align_items(Align::Center)
+                        .push(
+                            Button::new(show_devices, Text::new("show details"))
+                                .on_press(ApartmentViewMessage::ViewDetails)
+                                .padding(10)
+                                .style(style::Button::Apartment),
+                        )
+                ).into()
+            },
         }
     }
 }

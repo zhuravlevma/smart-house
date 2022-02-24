@@ -6,6 +6,8 @@ use crate::thermometer::{ThermometerView, ThermometerViewMessage};
 use iced::{Application, Clipboard, Column, Command, Container, Element, Length, Settings, Text};
 use iced::scrollable::{self, Scrollable};
 use smart_house::{Apartment, Device, House};
+// use iced::text_input::{self, TextInput};
+
 
 fn main() -> iced::Result {
     Home::run(Settings::default())
