@@ -1,4 +1,4 @@
-use crate::apartment::{ApartmentView, ApartmentViewMessage};
+use crate::apartment::{ApartmentView, ApartmentViewMessage, empty_apartments};
 use crate::api::{get_apartments, get_devices, get_houses};
 use crate::house::{HouseView, HouseViewMessage};
 use crate::rosette::{RosetteView, RosetteViewMessage};
@@ -28,7 +28,7 @@ struct State {
 }
 
 #[derive(Debug, Clone)]
-enum Message {
+pub enum Message {
     ViewResultApartments((String, Vec<Apartment>)),
     Loaded(Vec<House>),
     HomeMessages(String, HouseViewMessage),
@@ -192,7 +192,7 @@ impl Application for Home {
                         )
                         .into()
                 } else {
-                    Column::new().into()
+                    empty_apartments()
                 };
 
                 let thermometers: Element<Message> = if !thermometers.is_empty() {

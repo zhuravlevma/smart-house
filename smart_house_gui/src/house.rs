@@ -1,7 +1,7 @@
 use crate::style;
 use iced::{button, Align, Button, Element, Row, Text, Column};
 use serde::{Deserialize, Serialize};
-use crate::style::{delete_icon};
+use crate::style::{details_icons, delete_icon};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct HouseView {
@@ -46,7 +46,7 @@ impl HouseView {
         match &mut self.state {
             HouseViewState::Idle { show_apartments, delete_button } => {
                 let label = Text::new(&self.name);
-                let label_add = Text::new("show details");
+                let label_detail = Text::new("apartments");
                 let column = Column::new();
                 let title = Row::new().push(Text::new("Name: ")).push(label);
                 column.push(title).spacing(10).push(
@@ -54,7 +54,10 @@ impl HouseView {
                         .spacing(20)
                         .align_items(Align::Center)
                         .push(
-                            Button::new(show_apartments, label_add)
+                            Button::new(show_apartments, Row::new()
+                                .spacing(5)
+                                .push(label_detail)
+                                .push(details_icons()))
                                 .on_press(HouseViewMessage::ViewDetails)
                                 .padding(10)
                                 .style(style::Button::House),
