@@ -60,3 +60,20 @@ pub async fn rosette_on(
     let tmp = res.json().await.unwrap();
     (house_id, apartment, rosette, tmp)
 }
+
+pub async fn rosette_sync(
+    id: String,
+    apartment_name: String,
+    rosette_name: String,
+) -> (String, String, String, u32) {
+    let house_id = id.clone();
+    let apartment = apartment_name.clone();
+    let rosette = rosette_name.clone();
+    let url = format!(
+        "http://127.0.0.1:8080/{}/apartment/rosette/power?apartment_name={}&rosette_name={}",
+        id, apartment_name, rosette_name
+    );
+    let res = reqwest::get(&url).await.unwrap();
+    let tmp = res.json().await.unwrap();
+    (house_id, apartment, rosette, tmp)
+}

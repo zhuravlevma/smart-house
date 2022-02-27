@@ -1,7 +1,7 @@
 use crate::apartment::{
     create_apartment_elements, empty_apartments, ApartmentView, ApartmentViewMessage,
 };
-use crate::api::{get_apartments, get_devices, get_houses, rosette_off, rosette_on};
+use crate::api::{get_apartments, get_devices, get_houses, rosette_off, rosette_on, rosette_sync};
 use crate::house::{create_house_elements, HouseView, HouseViewMessage};
 use crate::rosette::{create_rosette_elements, RosetteView, RosetteViewMessage};
 use crate::thermometer::{create_thermometer_elements, ThermometerView, ThermometerViewMessage};
@@ -38,6 +38,7 @@ pub enum Message {
     RosetteMessages(String, String, String, RosetteViewMessage),
     RosetteOff((String, String, String, bool)),
     RosetteOn((String, String, String, bool)),
+    RosetteSync((String, String, String, u32)),
 }
 
 impl Application for Home {
@@ -121,7 +122,6 @@ impl Application for Home {
                 }
                 Message::RosetteMessages(id, apartment_name, rosette_name, message) => {
                     match message {
-                        RosetteViewMessage::ViewPower => Command::none(),
                         RosetteViewMessage::On => Command::perform(
                             rosette_on(id, apartment_name, rosette_name),
                             Message::RosetteOn,
@@ -129,6 +129,10 @@ impl Application for Home {
                         RosetteViewMessage::Off => Command::perform(
                             rosette_off(id, apartment_name, rosette_name),
                             Message::RosetteOff,
+                        ),
+                        RosetteViewMessage::Sync => Command::perform(
+                            rosette_sync(id, apartment_name, rosette_name),
+                            Message::RosetteSync,
                         ),
                     }
                 }
@@ -150,6 +154,17 @@ impl Application for Home {
                             && el.name == rosette_name
                         {
                             el.power = 220
+                        }
+                    });
+                    Command::none()
+                }
+                Message::RosetteSync((id, apartment_name, rosette_name, res)) => {
+                    state.rosettes.iter_mut().for_each(|el| {
+                        if el.house_id == id
+                            && el.apartment_name == apartment_name
+                            && el.name == rosette_name
+                        {
+                            el.power = res
                         }
                     });
                     Command::none()

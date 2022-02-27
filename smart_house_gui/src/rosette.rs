@@ -1,3 +1,4 @@
+use crate::style::{power_icon, sync_icon};
 use crate::{style, Message};
 use iced::{button, Align, Button, Column, Element, Length, Row, Text};
 use serde::{Deserialize, Serialize};
@@ -16,9 +17,9 @@ pub struct RosetteView {
 
 #[derive(Debug, Clone)]
 pub enum RosetteViewMessage {
-    ViewPower,
     On,
     Off,
+    Sync,
 }
 
 #[derive(Debug, Clone)]
@@ -26,6 +27,7 @@ pub enum RosetteViewState {
     Idle {
         rosette_on: button::State,
         rosette_off: button::State,
+        rosette_sync: button::State,
     },
 }
 
@@ -34,6 +36,7 @@ impl Default for RosetteViewState {
         RosetteViewState::Idle {
             rosette_on: button::State::new(),
             rosette_off: button::State::new(),
+            rosette_sync: button::State::new(),
         }
     }
 }
@@ -56,6 +59,7 @@ impl RosetteView {
             state: RosetteViewState::Idle {
                 rosette_on: Default::default(),
                 rosette_off: Default::default(),
+                rosette_sync: Default::default(),
             },
             power,
         }
@@ -65,11 +69,13 @@ impl RosetteView {
             RosetteViewState::Idle {
                 rosette_on,
                 rosette_off,
+                rosette_sync,
             } => {
                 let label = Text::new(&self.name);
                 let description_label = Text::new(&self.description);
-                let label_on = Text::new("On");
-                let label_off = Text::new("Off");
+                let label_on = Row::new().push(Text::new("On ")).push(power_icon());
+                let label_off = Row::new().push(Text::new("Off ")).push(power_icon());
+                let label_sync = Row::new().push(Text::new("Sync ")).push(sync_icon());
                 let power_label = Text::new(&self.power.to_string());
                 let title = Row::new().push(Text::new("Name: ")).push(label);
                 let description = Row::new()
@@ -90,6 +96,12 @@ impl RosetteView {
                     .push(
                         Button::new(rosette_off, label_off)
                             .on_press(RosetteViewMessage::Off)
+                            .padding(10)
+                            .style(style::Button::Device),
+                    )
+                    .push(
+                        Button::new(rosette_sync, label_sync)
+                            .on_press(RosetteViewMessage::Sync)
                             .padding(10)
                             .style(style::Button::Device),
                     );

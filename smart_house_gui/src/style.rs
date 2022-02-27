@@ -64,3 +64,11 @@ pub fn details_icons() -> Text {
 pub fn exclamation_icon() -> Text {
     icon('\u{f06a}')
 }
+
+pub fn power_icon() -> Text {
+    icon('\u{f011}')
+}
+
+pub fn sync_icon() -> Text {
+    icon('\u{f021}')
+}
