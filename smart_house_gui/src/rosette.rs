@@ -1,5 +1,5 @@
-use crate::style;
-use iced::{button, Align, Button, Column, Element, Row, Text};
+use crate::{style, Message};
+use iced::{button, Align, Button, Column, Element, Length, Row, Text};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -8,7 +8,7 @@ pub struct RosetteView {
     pub apartment_name: String,
     pub name: String,
     description: String,
-    power: u32,
+    pub(crate) power: u32,
     ip: String,
     #[serde(skip)]
     state: RosetteViewState,
@@ -16,7 +16,9 @@ pub struct RosetteView {
 
 #[derive(Debug, Clone)]
 pub enum RosetteViewMessage {
-    ViewDetails,
+    ViewPower,
+    On,
+    Off,
 }
 
 #[derive(Debug, Clone)]
@@ -68,24 +70,26 @@ impl RosetteView {
                 let description_label = Text::new(&self.description);
                 let label_on = Text::new("On");
                 let label_off = Text::new("Off");
+                let power_label = Text::new(&self.power.to_string());
                 let title = Row::new().push(Text::new("Name: ")).push(label);
                 let description = Row::new()
                     .push(Text::new("Description: "))
                     .push(description_label);
                 let ip_label = Text::new(&self.ip);
                 let ip = Row::new().push(Text::new("Ip: ")).push(ip_label);
+                let power = Row::new().push(Text::new("Power: ")).push(power_label);
                 let row = Row::new()
                     .spacing(20)
                     .align_items(Align::Center)
                     .push(
                         Button::new(rosette_on, label_on)
-                            .on_press(RosetteViewMessage::ViewDetails)
+                            .on_press(RosetteViewMessage::On)
                             .padding(10)
                             .style(style::Button::Device),
                     )
                     .push(
                         Button::new(rosette_off, label_off)
-                            .on_press(RosetteViewMessage::ViewDetails)
+                            .on_press(RosetteViewMessage::Off)
                             .padding(10)
                             .style(style::Button::Device),
                     );
@@ -94,9 +98,39 @@ impl RosetteView {
                     .push(title)
                     .push(description)
                     .push(ip)
+                    .push(power)
                     .push(row)
                     .into()
             }
         }
     }
+}
+
+pub fn create_rosette_elements(rosettes: &mut Vec<RosetteView>) -> Element<Message> {
+    rosettes
+        .iter_mut()
+        .fold(
+            Column::new()
+                .push(
+                    Text::new("Rosettes")
+                        .width(Length::Fill)
+                        .size(40)
+                        .color([0.5, 0.5, 0.5]),
+                )
+                .spacing(20),
+            |column, rosette| {
+                let id = rosette.house_id.clone();
+                let rosette_name = rosette.name.clone();
+                let apartment_name = rosette.apartment_name.clone();
+                column.push(rosette.view().map(move |message| {
+                    Message::RosetteMessages(
+                        id.clone(),
+                        apartment_name.clone(),
+                        rosette_name.clone(),
+                        message,
+                    )
+                }))
+            },
+        )
+        .into()
 }

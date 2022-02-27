@@ -26,3 +26,37 @@ pub async fn get_devices(id: String, apartment_name: String) -> (String, String,
     let tmp: Vec<Device> = res.json().await.unwrap();
     (house_id, apartment, tmp)
 }
+
+pub async fn rosette_off(
+    id: String,
+    apartment_name: String,
+    rosette_name: String,
+) -> (String, String, String, bool) {
+    let house_id = id.clone();
+    let apartment = apartment_name.clone();
+    let rosette = rosette_name.clone();
+    let url = format!(
+        "http://127.0.0.1:8080/{}/apartment/rosette/off?apartment_name={}&rosette_name={}",
+        id, apartment_name, rosette_name
+    );
+    let res = reqwest::Client::new().post(url).send().await.unwrap();
+    let tmp = res.json().await.unwrap();
+    (house_id, apartment, rosette, tmp)
+}
+
+pub async fn rosette_on(
+    id: String,
+    apartment_name: String,
+    rosette_name: String,
+) -> (String, String, String, bool) {
+    let house_id = id.clone();
+    let apartment = apartment_name.clone();
+    let rosette = rosette_name.clone();
+    let url = format!(
+        "http://127.0.0.1:8080/{}/apartment/rosette/on?apartment_name={}&rosette_name={}",
+        id, apartment_name, rosette_name
+    );
+    let res = reqwest::Client::new().post(url).send().await.unwrap();
+    let tmp = res.json().await.unwrap();
+    (house_id, apartment, rosette, tmp)
+}

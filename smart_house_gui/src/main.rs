@@ -1,13 +1,13 @@
-use crate::apartment::{ApartmentView, ApartmentViewMessage, empty_apartments};
-use crate::api::{get_apartments, get_devices, get_houses};
-use crate::house::{HouseView, HouseViewMessage};
-use crate::rosette::{RosetteView, RosetteViewMessage};
-use crate::thermometer::{ThermometerView, ThermometerViewMessage};
-use iced::{Application, Clipboard, Column, Command, Container, Element, Length, Settings, Text};
+use crate::apartment::{
+    create_apartment_elements, empty_apartments, ApartmentView, ApartmentViewMessage,
+};
+use crate::api::{get_apartments, get_devices, get_houses, rosette_off, rosette_on};
+use crate::house::{create_house_elements, HouseView, HouseViewMessage};
+use crate::rosette::{create_rosette_elements, RosetteView, RosetteViewMessage};
+use crate::thermometer::{create_thermometer_elements, ThermometerView, ThermometerViewMessage};
 use iced::scrollable::{self, Scrollable};
+use iced::{Application, Clipboard, Column, Command, Container, Element, Length, Settings, Text};
 use smart_house::{Apartment, Device, House};
-// use iced::text_input::{self, TextInput};
-
 
 fn main() -> iced::Result {
     Home::run(Settings::default())
@@ -35,7 +35,9 @@ pub enum Message {
     ApartmentMessages(String, String, ApartmentViewMessage),
     ViewDetailsApartments((String, String, Vec<Device>)),
     ThermometerMessages(String, ThermometerViewMessage),
-    RosetteMessages(String, RosetteViewMessage),
+    RosetteMessages(String, String, String, RosetteViewMessage),
+    RosetteOff((String, String, String, bool)),
+    RosetteOn((String, String, String, bool)),
 }
 
 impl Application for Home {
@@ -117,8 +119,39 @@ impl Application for Home {
                     println!("{}", id);
                     Command::none()
                 }
-                Message::RosetteMessages(id, _message) => {
-                    println!("{}", id);
+                Message::RosetteMessages(id, apartment_name, rosette_name, message) => {
+                    match message {
+                        RosetteViewMessage::ViewPower => Command::none(),
+                        RosetteViewMessage::On => Command::perform(
+                            rosette_on(id, apartment_name, rosette_name),
+                            Message::RosetteOn,
+                        ),
+                        RosetteViewMessage::Off => Command::perform(
+                            rosette_off(id, apartment_name, rosette_name),
+                            Message::RosetteOff,
+                        ),
+                    }
+                }
+                Message::RosetteOff((id, apartment_name, rosette_name, _res)) => {
+                    state.rosettes.iter_mut().for_each(|el| {
+                        if el.house_id == id
+                            && el.apartment_name == apartment_name
+                            && el.name == rosette_name
+                        {
+                            el.power = 0
+                        }
+                    });
+                    Command::none()
+                }
+                Message::RosetteOn((id, apartment_name, rosette_name, _res)) => {
+                    state.rosettes.iter_mut().for_each(|el| {
+                        if el.house_id == id
+                            && el.apartment_name == apartment_name
+                            && el.name == rosette_name
+                        {
+                            el.power = 220
+                        }
+                    });
                     Command::none()
                 }
                 _ => Command::none(),
@@ -152,93 +185,28 @@ impl Application for Home {
                 apartments,
                 thermometers,
                 rosettes,
-                             scroll,
+                scroll,
             }) => {
                 let title = Text::new("Houses")
                     .width(Length::Fill)
                     .size(100)
                     .color([0.5, 0.5, 0.5]);
-                let houses: Element<Message> = houses
-                    .iter_mut()
-                    .fold(Column::new().spacing(20), |column, house| {
-                        let id = house.id.clone();
-                        column.push(
-                            house
-                                .view()
-                                .map(move |message| Message::HomeMessages(id.clone(), message)),
-                        )
-                    })
-                    .into();
+                let houses: Element<Message> = create_house_elements(houses);
 
                 let apartments: Element<Message> = if !apartments.is_empty() {
-                    apartments
-                        .iter_mut()
-                        .fold(
-                            Column::new()
-                                .push(
-                                    Text::new("Apartments")
-                                        .width(Length::Fill)
-                                        .size(50)
-                                        .color([0.5, 0.5, 0.5]),
-                                )
-                                .spacing(20),
-                            |column, apartment| {
-                                let name = apartment.name.clone();
-                                let id = apartment.house_id.clone();
-                                column.push(apartment.view().map(move |message| {
-                                    Message::ApartmentMessages(id.clone(), name.clone(), message)
-                                }))
-                            },
-                        )
-                        .into()
+                    create_apartment_elements(apartments)
                 } else {
                     empty_apartments()
                 };
 
                 let thermometers: Element<Message> = if !thermometers.is_empty() {
-                    thermometers
-                        .iter_mut()
-                        .fold(
-                            Column::new()
-                                .push(
-                                    Text::new("Thermometers")
-                                        .width(Length::Fill)
-                                        .size(40)
-                                        .color([0.5, 0.5, 0.5]),
-                                )
-                                .spacing(20),
-                            |column, thermometer| {
-                                let id = thermometer.house_id.clone();
-                                column.push(thermometer.view().map(move |message| {
-                                    Message::ThermometerMessages(id.clone(), message)
-                                }))
-                            },
-                        )
-                        .into()
+                    create_thermometer_elements(thermometers)
                 } else {
                     Column::new().into()
                 };
 
                 let rosettes: Element<Message> = if !rosettes.is_empty() {
-                    rosettes
-                        .iter_mut()
-                        .fold(
-                            Column::new()
-                                .push(
-                                    Text::new("Rosettes")
-                                        .width(Length::Fill)
-                                        .size(40)
-                                        .color([0.5, 0.5, 0.5]),
-                                )
-                                .spacing(20),
-                            |column, rosette| {
-                                let id = rosette.house_id.clone();
-                                column.push(rosette.view().map(move |message| {
-                                    Message::RosetteMessages(id.clone(), message)
-                                }))
-                            },
-                        )
-                        .into()
+                    create_rosette_elements(rosettes)
                 } else {
                     Column::new().into()
                 };
@@ -251,12 +219,9 @@ impl Application for Home {
                     .push(Container::new(apartments))
                     .push(Container::new(rosettes))
                     .push(Container::new(thermometers));
-                let content = Container::new(content)
-                    .width(Length::Fill)
-                    .center_x();
                 Scrollable::new(scroll)
                     .padding(40)
-                    .push(content)
+                    .push(Container::new(content).width(Length::Fill).center_x())
                     .into()
             }
             Home::Loading => loading_message(),

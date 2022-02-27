@@ -1,5 +1,5 @@
-use crate::style;
-use iced::{button, Align, Button, Column, Element, Row, Text};
+use crate::{style, Message};
+use iced::{button, Align, Button, Column, Element, Length, Row, Text};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -84,4 +84,28 @@ impl ThermometerView {
             }
         }
     }
+}
+
+pub fn create_thermometer_elements(thermometers: &mut Vec<ThermometerView>) -> Element<Message> {
+    thermometers
+        .iter_mut()
+        .fold(
+            Column::new()
+                .push(
+                    Text::new("Thermometers")
+                        .width(Length::Fill)
+                        .size(40)
+                        .color([0.5, 0.5, 0.5]),
+                )
+                .spacing(20),
+            |column, thermometer| {
+                let id = thermometer.house_id.clone();
+                column.push(
+                    thermometer
+                        .view()
+                        .map(move |message| Message::ThermometerMessages(id.clone(), message)),
+                )
+            },
+        )
+        .into()
 }

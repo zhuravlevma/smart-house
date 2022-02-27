@@ -1,5 +1,5 @@
-use iced::{button, Background, Color, Vector, Font, Text, Length};
 use iced::HorizontalAlignment;
+use iced::{button, Background, Color, Font, Length, Text, Vector};
 
 pub enum Button {
     House,
@@ -30,9 +30,7 @@ impl button::StyleSheet for Button {
                 ..button::Style::default()
             },
             Button::Destructive => button::Style {
-                background: Some(Background::Color(Color::from_rgb(
-                    0.9, 0.3, 0.3,
-                ))),
+                background: Some(Background::Color(Color::from_rgb(0.9, 0.3, 0.3))),
                 border_radius: 5.0,
                 text_color: Color::WHITE,
                 shadow_offset: Vector::new(1.0, 1.0),
