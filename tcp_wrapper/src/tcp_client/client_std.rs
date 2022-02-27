@@ -8,6 +8,32 @@ pub struct Client {
     stream: TcpStream,
 }
 
+
+/// Tcp client and server
+/// ```
+/// use tcp_wrapper::client_std::Client;
+/// use tcp_wrapper::server_std::TcpServer;
+/// use std::error::Error;
+/// use std::thread;
+///
+/// fn main() -> Result<(), Box<dyn Error>> {
+///     let server = TcpServer::bind("127.0.0.1:9092")?;
+///     thread::spawn(move || {
+///        for elem in server.incoming() {
+///             let mut e = elem.unwrap();
+///             let req_str = e.recv_request().unwrap();
+///             e.send_response("test").unwrap();
+///         }
+///     });
+///     let mut client = Client::connect("127.0.0.1:9092")?;
+///     let resp = client.send_request("hello").unwrap();
+///     assert_eq!(resp, "test");
+///     Ok(())
+/// }
+///
+///
+/// fn client() {}
+/// ```
 impl Client {
     pub fn connect<IpAddrs>(addrs: IpAddrs) -> ConnectResult<Self>
     where
