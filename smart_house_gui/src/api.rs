@@ -77,3 +77,20 @@ pub async fn rosette_sync(
     let tmp = res.json().await.unwrap();
     (house_id, apartment, rosette, tmp)
 }
+
+pub async fn thermometer_sync(
+    id: String,
+    apartment_name: String,
+    thermometer_name: String,
+) -> (String, String, String, f32) {
+    let house_id = id.clone();
+    let apartment = apartment_name.clone();
+    let thermometer = thermometer_name.clone();
+    let url = format!(
+        "http://127.0.0.1:8080/{}/apartment/thermometer/temp?apartment_name={}&thermometer_name={}",
+        id, apartment_name, thermometer_name
+    );
+    let res = reqwest::get(&url).await.unwrap();
+    let tmp = res.json::<f32>().await.unwrap();
+    (house_id, apartment, thermometer,  tmp)
+}

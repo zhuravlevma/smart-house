@@ -1,6 +1,7 @@
 use crate::{style, Message};
 use iced::{button, Align, Button, Column, Element, Length, Row, Text};
 use serde::{Deserialize, Serialize};
+use crate::style::sync_icon;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ThermometerView {
@@ -8,7 +9,7 @@ pub struct ThermometerView {
     pub apartment_name: String,
     pub name: String,
     description: String,
-    temperature: f32,
+    pub(crate) temperature: f32,
     ip: String,
     updating: bool,
     #[serde(skip)]
@@ -17,7 +18,7 @@ pub struct ThermometerView {
 
 #[derive(Debug, Clone)]
 pub enum ThermometerViewMessage {
-    ViewDetails,
+    Sync,
 }
 
 #[derive(Debug, Clone)]
@@ -61,7 +62,8 @@ impl ThermometerView {
             ThermometerViewState::Idle { show_thermometer } => {
                 let label = Text::new(&self.name);
                 let description_label = Text::new(&self.description);
-                let temperature_label = Text::new("Update temperature");
+                let temperature_label = Row::new().push(Text::new("Temperature: ")).push(Text::new(self.temperature.to_string()));
+                let sync_label = Row::new().push(Text::new("Sync ")).push(sync_icon());
                 let title = Row::new().push(Text::new("Name: ")).push(label);
                 let description = Row::new()
                     .push(Text::new("Description: "))
@@ -69,8 +71,8 @@ impl ThermometerView {
                 let ip_label = Text::new(&self.ip);
                 let ip = Row::new().push(Text::new("Ip: ")).push(ip_label);
                 let row = Row::new().spacing(20).align_items(Align::Center).push(
-                    Button::new(show_thermometer, temperature_label)
-                        .on_press(ThermometerViewMessage::ViewDetails)
+                    Button::new(show_thermometer, sync_label)
+                        .on_press(ThermometerViewMessage::Sync)
                         .padding(10)
                         .style(style::Button::Device),
                 );
@@ -79,6 +81,7 @@ impl ThermometerView {
                     .push(title)
                     .push(description)
                     .push(ip)
+                    .push(temperature_label)
                     .push(row)
                     .into()
             }
@@ -99,11 +102,13 @@ pub fn create_thermometer_elements(thermometers: &mut Vec<ThermometerView>) -> E
                 )
                 .spacing(20),
             |column, thermometer| {
-                let id = thermometer.house_id.clone();
+                let house_id = thermometer.house_id.clone();
+                let apartment_name = thermometer.apartment_name.clone();
+                let thermometer_name = thermometer.name.clone();
                 column.push(
                     thermometer
                         .view()
-                        .map(move |message| Message::ThermometerMessages(id.clone(), message)),
+                        .map(move |message| Message::ThermometerMessages(house_id.clone(), apartment_name.clone(), thermometer_name.clone(),  message)),
                 )
             },
         )
