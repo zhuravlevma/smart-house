@@ -2,8 +2,8 @@ use crate::apartment::{
     create_apartment_elements, empty_apartments, ApartmentView, ApartmentViewMessage,
 };
 use crate::api::{
-    get_apartments, get_devices, get_houses, rosette_off, rosette_on, rosette_sync,
-    thermometer_sync,
+    delete_apartment, delete_house, delete_rosette, delete_thermometer, get_apartments,
+    get_devices, get_houses, rosette_off, rosette_on, rosette_sync, thermometer_sync,
 };
 use crate::house::{create_house_elements, HouseView, HouseViewMessage};
 use crate::rosette::{create_rosette_elements, RosetteView, RosetteViewMessage};
@@ -34,15 +34,19 @@ struct State {
 pub enum Message {
     ViewResultApartments((String, Vec<Apartment>)),
     Loaded(Vec<House>),
-    HomeMessages(String, HouseViewMessage),
+    HouseMessages(String, HouseViewMessage),
+    HouseDelete(String),
     ApartmentMessages(String, String, ApartmentViewMessage),
+    ApartmentDelete((String, String)),
     ViewDetailsApartments((String, String, Vec<Device>)),
     ThermometerMessages(String, String, String, ThermometerViewMessage),
     RosetteMessages(String, String, String, RosetteViewMessage),
     RosetteOff((String, String, String, bool)),
     RosetteOn((String, String, String, bool)),
     RosetteSync((String, String, String, u32)),
+    RosetteDelete((String, String, String)),
     ThermometerSync((String, String, String, f32)),
+    ThermometerDelete((String, String, String)),
 }
 
 impl Application for Home {
@@ -71,6 +75,19 @@ impl Application for Home {
     ) -> Command<Self::Message> {
         match self {
             Home::Loaded(state) => match message {
+                Message::HouseMessages(house_id, message) => match message {
+                    HouseViewMessage::ViewDetails => {
+                        Command::perform(get_apartments(house_id), Message::ViewResultApartments)
+                    }
+                    HouseViewMessage::Delete => {
+                        Command::perform(delete_house(house_id), Message::HouseDelete)
+                    }
+                },
+                Message::HouseDelete(house_id) => {
+                    let index = state.houses.iter().position(|x| x.id == house_id).unwrap();
+                    state.houses.remove(index);
+                    Command::none()
+                }
                 Message::ViewResultApartments((id, apartments)) => {
                     let apartments_domain: Vec<ApartmentView> = apartments
                         .iter()
@@ -81,17 +98,25 @@ impl Application for Home {
                     state.apartments = apartments_domain;
                     Command::none()
                 }
-                Message::HomeMessages(house_id, HouseViewMessage::ViewDetails) => {
-                    Command::perform(get_apartments(house_id), Message::ViewResultApartments)
+                Message::ApartmentMessages(house_id, apartment_name, message) => match message {
+                    ApartmentViewMessage::ViewDetails => Command::perform(
+                        get_devices(house_id, apartment_name),
+                        Message::ViewDetailsApartments,
+                    ),
+                    ApartmentViewMessage::Delete => Command::perform(
+                        delete_apartment(house_id, apartment_name),
+                        Message::ApartmentDelete,
+                    ),
+                },
+                Message::ApartmentDelete((house_id, apartment_name)) => {
+                    let index = state
+                        .apartments
+                        .iter()
+                        .position(|x| x.name == apartment_name && x.house_id == house_id)
+                        .unwrap();
+                    state.apartments.remove(index);
+                    Command::none()
                 }
-                Message::ApartmentMessages(
-                    house_id,
-                    apartment_name,
-                    ApartmentViewMessage::ViewDetails,
-                ) => Command::perform(
-                    get_devices(house_id, apartment_name),
-                    Message::ViewDetailsApartments,
-                ),
                 Message::ViewDetailsApartments((house_id, apartment_name, devices)) => {
                     let mut thermometers = vec![];
                     let mut rosettes = vec![];
@@ -120,31 +145,63 @@ impl Application for Home {
                     state.rosettes = rosettes;
                     Command::none()
                 }
-                Message::ThermometerMessages(id, apartment_name, rosette_name, message) => {
+                Message::ThermometerMessages(id, apartment_name, thermometer_name, message) => {
                     match message {
                         ThermometerViewMessage::Sync => Command::perform(
-                            thermometer_sync(id, apartment_name, rosette_name),
+                            thermometer_sync(id, apartment_name, thermometer_name),
                             Message::ThermometerSync,
                         ),
-                        ThermometerViewMessage::Delete => Command::none(),
+                        ThermometerViewMessage::Delete => Command::perform(
+                            delete_thermometer(id, apartment_name, thermometer_name),
+                            Message::ThermometerDelete,
+                        ),
                     }
                 }
-                Message::RosetteMessages(id, apartment_name, rosette_name, message) => {
+                Message::ThermometerDelete((house_id, apartment_name, thermometer_name)) => {
+                    let index = state
+                        .thermometers
+                        .iter()
+                        .position(|x| {
+                            x.name == thermometer_name
+                                && x.house_id == house_id
+                                && x.apartment_name == apartment_name
+                        })
+                        .unwrap();
+                    state.thermometers.remove(index);
+                    Command::none()
+                }
+                Message::RosetteMessages(house_id, apartment_name, rosette_name, message) => {
                     match message {
                         RosetteViewMessage::On => Command::perform(
-                            rosette_on(id, apartment_name, rosette_name),
+                            rosette_on(house_id, apartment_name, rosette_name),
                             Message::RosetteOn,
                         ),
                         RosetteViewMessage::Off => Command::perform(
-                            rosette_off(id, apartment_name, rosette_name),
+                            rosette_off(house_id, apartment_name, rosette_name),
                             Message::RosetteOff,
                         ),
                         RosetteViewMessage::Sync => Command::perform(
-                            rosette_sync(id, apartment_name, rosette_name),
+                            rosette_sync(house_id, apartment_name, rosette_name),
                             Message::RosetteSync,
                         ),
-                        RosetteViewMessage::Delete => Command::none(),
+                        RosetteViewMessage::Delete => Command::perform(
+                            delete_rosette(house_id, apartment_name, rosette_name),
+                            Message::RosetteDelete,
+                        ),
                     }
+                }
+                Message::RosetteDelete((house_id, apartment_name, rosette_name)) => {
+                    let index = state
+                        .rosettes
+                        .iter()
+                        .position(|x| {
+                            x.name == rosette_name
+                                && x.house_id == house_id
+                                && x.apartment_name == apartment_name
+                        })
+                        .unwrap();
+                    state.rosettes.remove(index);
+                    Command::none()
                 }
                 Message::RosetteOff((id, apartment_name, rosette_name, _res)) => {
                     state.rosettes.iter_mut().for_each(|el| {

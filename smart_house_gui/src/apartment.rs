@@ -60,7 +60,7 @@ impl ApartmentView {
                     .spacing(10)
                     .push(label);
                 Column::new()
-                    .spacing(5)
+                    .spacing(10)
                     .push(title)
                     .push(
                         Row::new()

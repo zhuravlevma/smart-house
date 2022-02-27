@@ -7,12 +7,25 @@ pub async fn get_houses() -> Vec<House> {
     tmp
 }
 
+pub async fn delete_house(house_id: String) -> String {
+    let url = format!("http://127.0.0.1:8080/{}", &house_id);
+    let _res = reqwest::Client::new().delete(&url).send().await.unwrap();
+    // let tmp = res.json().await.unwrap();
+    house_id
+}
+
 pub async fn get_apartments(id: String) -> (String, Vec<Apartment>) {
     let house_id = id.clone();
     let url = format!("http://127.0.0.1:8080/{}/apartment", { id });
     let res = reqwest::get(&url).await.unwrap();
     let tmp: Vec<Apartment> = res.json().await.unwrap();
     (house_id, tmp)
+}
+
+pub async fn delete_apartment(house_id: String, apartment_name: String) -> (String, String) {
+    let url = format!("http://127.0.0.1:8080/{}/{}", &house_id, &apartment_name);
+    let _res = reqwest::Client::new().delete(&url).send().await.unwrap();
+    (house_id, apartment_name)
 }
 
 pub async fn get_devices(id: String, apartment_name: String) -> (String, String, Vec<Device>) {
@@ -25,6 +38,32 @@ pub async fn get_devices(id: String, apartment_name: String) -> (String, String,
     let res = reqwest::get(&url).await.unwrap();
     let tmp: Vec<Device> = res.json().await.unwrap();
     (house_id, apartment, tmp)
+}
+
+pub async fn delete_rosette(
+    house_id: String,
+    apartment_name: String,
+    rosette_name: String,
+) -> (String, String, String) {
+    let url = format!(
+        "http://127.0.0.1:8080/{}/{}/rosette/{}",
+        &house_id, &apartment_name, &rosette_name
+    );
+    let _res = reqwest::Client::new().delete(&url).send().await.unwrap();
+    (house_id, apartment_name, rosette_name)
+}
+
+pub async fn delete_thermometer(
+    house_id: String,
+    apartment_name: String,
+    thermometer_name: String,
+) -> (String, String, String) {
+    let url = format!(
+        "http://127.0.0.1:8080/{}/{}/thermometer/{}",
+        &house_id, &apartment_name, &thermometer_name
+    );
+    let _res = reqwest::Client::new().delete(&url).send().await.unwrap();
+    (house_id, apartment_name, thermometer_name)
 }
 
 pub async fn rosette_off(

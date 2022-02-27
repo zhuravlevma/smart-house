@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct HouseView {
     pub(crate) id: String,
-    name: String,
+    pub(crate) name: String,
     #[serde(skip)]
     state: HouseViewState,
 }
@@ -102,7 +102,7 @@ pub fn create_house_elements(houses: &mut Vec<HouseView>) -> Element<Message> {
             column.push(
                 house
                     .view()
-                    .map(move |message| Message::HomeMessages(id.clone(), message)),
+                    .map(move |message| Message::HouseMessages(id.clone(), message)),
             )
         })
         .into()

@@ -45,7 +45,7 @@ pub async fn create_rosette(
     Ok(HttpResponse::Ok().json(rosette))
 }
 
-#[actix_web::delete("/{home_id}/apartment/rosette/{apartment_name}/{rosette_name}")]
+#[actix_web::delete("/{home_id}/{apartment_name}/rosette/{rosette_name}")]
 pub async fn delete_rosette(
     path: Path<(String, String, String)>,
     device: web::Data<Arc<DeviceService>>,
