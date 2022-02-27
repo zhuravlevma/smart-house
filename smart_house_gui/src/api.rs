@@ -92,5 +92,5 @@ pub async fn thermometer_sync(
     );
     let res = reqwest::get(&url).await.unwrap();
     let tmp = res.json::<f32>().await.unwrap();
-    (house_id, apartment, thermometer,  tmp)
+    (house_id, apartment, thermometer, tmp)
 }

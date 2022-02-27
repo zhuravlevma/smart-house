@@ -1,4 +1,4 @@
-use crate::style::{power_icon, sync_icon};
+use crate::style::{delete_icon, power_icon, sync_icon};
 use crate::{style, Message};
 use iced::{button, Align, Button, Column, Element, Length, Row, Text};
 use serde::{Deserialize, Serialize};
@@ -20,6 +20,7 @@ pub enum RosetteViewMessage {
     On,
     Off,
     Sync,
+    Delete,
 }
 
 #[derive(Debug, Clone)]
@@ -28,6 +29,7 @@ pub enum RosetteViewState {
         rosette_on: button::State,
         rosette_off: button::State,
         rosette_sync: button::State,
+        delete_button: button::State,
     },
 }
 
@@ -37,6 +39,7 @@ impl Default for RosetteViewState {
             rosette_on: button::State::new(),
             rosette_off: button::State::new(),
             rosette_sync: button::State::new(),
+            delete_button: button::State::new(),
         }
     }
 }
@@ -60,6 +63,7 @@ impl RosetteView {
                 rosette_on: Default::default(),
                 rosette_off: Default::default(),
                 rosette_sync: Default::default(),
+                delete_button: Default::default(),
             },
             power,
         }
@@ -70,6 +74,7 @@ impl RosetteView {
                 rosette_on,
                 rosette_off,
                 rosette_sync,
+                delete_button,
             } => {
                 let label = Text::new(&self.name);
                 let description_label = Text::new(&self.description);
@@ -85,7 +90,7 @@ impl RosetteView {
                 let ip = Row::new().push(Text::new("Ip: ")).push(ip_label);
                 let power = Row::new().push(Text::new("Power: ")).push(power_label);
                 let row = Row::new()
-                    .spacing(20)
+                    .spacing(10)
                     .align_items(Align::Center)
                     .push(
                         Button::new(rosette_on, label_on)
@@ -104,6 +109,12 @@ impl RosetteView {
                             .on_press(RosetteViewMessage::Sync)
                             .padding(10)
                             .style(style::Button::Device),
+                    )
+                    .push(
+                        Button::new(delete_button, Row::new().spacing(10).push(delete_icon()))
+                            .on_press(RosetteViewMessage::Delete)
+                            .padding(10)
+                            .style(style::Button::Destructive),
                     );
                 Column::new()
                     .spacing(10)

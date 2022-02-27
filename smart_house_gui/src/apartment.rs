@@ -58,29 +58,36 @@ impl ApartmentView {
                     .push(Text::new("Name: "))
                     .align_items(Align::Center)
                     .spacing(10)
-                    .push(label)
-                    .push(
-                        Button::new(delete_button, Row::new().spacing(5).push(delete_icon()))
-                            .on_press(ApartmentViewMessage::Delete)
-                            .padding(10)
-                            .style(style::Button::Destructive),
-                    );
+                    .push(label);
                 Column::new()
                     .spacing(5)
                     .push(title)
                     .push(
-                        Row::new().spacing(5).align_items(Align::Center).push(
-                            Button::new(
-                                show_devices,
-                                Row::new()
-                                    .spacing(5)
-                                    .push(label_device)
-                                    .push(details_icons()),
+                        Row::new()
+                            .spacing(10)
+                            .push(
+                                Row::new().spacing(5).align_items(Align::Center).push(
+                                    Button::new(
+                                        show_devices,
+                                        Row::new()
+                                            .spacing(5)
+                                            .push(label_device)
+                                            .push(details_icons()),
+                                    )
+                                    .on_press(ApartmentViewMessage::ViewDetails)
+                                    .padding(10)
+                                    .style(style::Button::Apartment),
+                                ),
                             )
-                            .on_press(ApartmentViewMessage::ViewDetails)
-                            .padding(10)
-                            .style(style::Button::Apartment),
-                        ),
+                            .push(
+                                Button::new(
+                                    delete_button,
+                                    Row::new().spacing(5).push(delete_icon()),
+                                )
+                                .on_press(ApartmentViewMessage::Delete)
+                                .padding(10)
+                                .style(style::Button::Destructive),
+                            ),
                     )
                     .into()
             }

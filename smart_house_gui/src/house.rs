@@ -58,29 +58,35 @@ impl HouseView {
                     .align_items(Align::Center)
                     .spacing(10)
                     .push(Text::new("Name: "))
-                    .push(label)
-                    .push(
-                        Button::new(delete_button, Row::new().spacing(10).push(delete_icon()))
-                            .on_press(HouseViewMessage::Delete)
-                            .padding(10)
-                            .style(style::Button::Destructive),
-                    );
+                    .push(label);
                 column
                     .push(title)
                     .spacing(10)
                     .push(
-                        Row::new().spacing(20).align_items(Align::Center).push(
-                            Button::new(
-                                show_apartments,
-                                Row::new()
-                                    .spacing(5)
-                                    .push(label_detail)
-                                    .push(details_icons()),
+                        Row::new()
+                            .spacing(10)
+                            .align_items(Align::Center)
+                            .push(
+                                Button::new(
+                                    show_apartments,
+                                    Row::new()
+                                        .spacing(5)
+                                        .push(label_detail)
+                                        .push(details_icons()),
+                                )
+                                .on_press(HouseViewMessage::ViewDetails)
+                                .padding(10)
+                                .style(style::Button::House),
                             )
-                            .on_press(HouseViewMessage::ViewDetails)
-                            .padding(10)
-                            .style(style::Button::House),
-                        ),
+                            .push(
+                                Button::new(
+                                    delete_button,
+                                    Row::new().spacing(10).push(delete_icon()),
+                                )
+                                .on_press(HouseViewMessage::Delete)
+                                .padding(10)
+                                .style(style::Button::Destructive),
+                            ),
                     )
                     .into()
             }

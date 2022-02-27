@@ -1,7 +1,7 @@
+use crate::style::{delete_icon, sync_icon};
 use crate::{style, Message};
 use iced::{button, Align, Button, Column, Element, Length, Row, Text};
 use serde::{Deserialize, Serialize};
-use crate::style::sync_icon;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ThermometerView {
@@ -19,17 +19,22 @@ pub struct ThermometerView {
 #[derive(Debug, Clone)]
 pub enum ThermometerViewMessage {
     Sync,
+    Delete,
 }
 
 #[derive(Debug, Clone)]
 pub enum ThermometerViewState {
-    Idle { show_thermometer: button::State },
+    Idle {
+        show_thermometer: button::State,
+        delete_button: button::State,
+    },
 }
 
 impl Default for ThermometerViewState {
     fn default() -> Self {
         ThermometerViewState::Idle {
             show_thermometer: button::State::new(),
+            delete_button: button::State::new(),
         }
     }
 }
@@ -54,15 +59,21 @@ impl ThermometerView {
             updating,
             state: ThermometerViewState::Idle {
                 show_thermometer: Default::default(),
+                delete_button: Default::default(),
             },
         }
     }
     pub fn view(&mut self) -> Element<ThermometerViewMessage> {
         match &mut self.state {
-            ThermometerViewState::Idle { show_thermometer } => {
+            ThermometerViewState::Idle {
+                show_thermometer,
+                delete_button,
+            } => {
                 let label = Text::new(&self.name);
                 let description_label = Text::new(&self.description);
-                let temperature_label = Row::new().push(Text::new("Temperature: ")).push(Text::new(self.temperature.to_string()));
+                let temperature_label = Row::new()
+                    .push(Text::new("Temperature: "))
+                    .push(Text::new(self.temperature.to_string()));
                 let sync_label = Row::new().push(Text::new("Sync ")).push(sync_icon());
                 let title = Row::new().push(Text::new("Name: ")).push(label);
                 let description = Row::new()
@@ -70,12 +81,21 @@ impl ThermometerView {
                     .push(description_label);
                 let ip_label = Text::new(&self.ip);
                 let ip = Row::new().push(Text::new("Ip: ")).push(ip_label);
-                let row = Row::new().spacing(20).align_items(Align::Center).push(
-                    Button::new(show_thermometer, sync_label)
-                        .on_press(ThermometerViewMessage::Sync)
-                        .padding(10)
-                        .style(style::Button::Device),
-                );
+                let row = Row::new()
+                    .spacing(10)
+                    .align_items(Align::Center)
+                    .push(
+                        Button::new(show_thermometer, sync_label)
+                            .on_press(ThermometerViewMessage::Sync)
+                            .padding(10)
+                            .style(style::Button::Device),
+                    )
+                    .push(
+                        Button::new(delete_button, Row::new().spacing(10).push(delete_icon()))
+                            .on_press(ThermometerViewMessage::Delete)
+                            .padding(10)
+                            .style(style::Button::Destructive),
+                    );
                 Column::new()
                     .spacing(10)
                     .push(title)
@@ -105,11 +125,14 @@ pub fn create_thermometer_elements(thermometers: &mut Vec<ThermometerView>) -> E
                 let house_id = thermometer.house_id.clone();
                 let apartment_name = thermometer.apartment_name.clone();
                 let thermometer_name = thermometer.name.clone();
-                column.push(
-                    thermometer
-                        .view()
-                        .map(move |message| Message::ThermometerMessages(house_id.clone(), apartment_name.clone(), thermometer_name.clone(),  message)),
-                )
+                column.push(thermometer.view().map(move |message| {
+                    Message::ThermometerMessages(
+                        house_id.clone(),
+                        apartment_name.clone(),
+                        thermometer_name.clone(),
+                        message,
+                    )
+                }))
             },
         )
         .into()

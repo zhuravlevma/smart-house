@@ -1,7 +1,10 @@
 use crate::apartment::{
     create_apartment_elements, empty_apartments, ApartmentView, ApartmentViewMessage,
 };
-use crate::api::{get_apartments, get_devices, get_houses, rosette_off, rosette_on, rosette_sync, thermometer_sync};
+use crate::api::{
+    get_apartments, get_devices, get_houses, rosette_off, rosette_on, rosette_sync,
+    thermometer_sync,
+};
 use crate::house::{create_house_elements, HouseView, HouseViewMessage};
 use crate::rosette::{create_rosette_elements, RosetteView, RosetteViewMessage};
 use crate::thermometer::{create_thermometer_elements, ThermometerView, ThermometerViewMessage};
@@ -39,7 +42,7 @@ pub enum Message {
     RosetteOff((String, String, String, bool)),
     RosetteOn((String, String, String, bool)),
     RosetteSync((String, String, String, u32)),
-    ThermometerSync((String, String, String, f32))
+    ThermometerSync((String, String, String, f32)),
 }
 
 impl Application for Home {
@@ -118,9 +121,13 @@ impl Application for Home {
                     Command::none()
                 }
                 Message::ThermometerMessages(id, apartment_name, rosette_name, message) => {
-                    match message { ThermometerViewMessage::Sync => {
-                        Command::perform(thermometer_sync(id, apartment_name, rosette_name), Message::ThermometerSync)
-                    } }
+                    match message {
+                        ThermometerViewMessage::Sync => Command::perform(
+                            thermometer_sync(id, apartment_name, rosette_name),
+                            Message::ThermometerSync,
+                        ),
+                        ThermometerViewMessage::Delete => Command::none(),
+                    }
                 }
                 Message::RosetteMessages(id, apartment_name, rosette_name, message) => {
                     match message {
@@ -136,6 +143,7 @@ impl Application for Home {
                             rosette_sync(id, apartment_name, rosette_name),
                             Message::RosetteSync,
                         ),
+                        RosetteViewMessage::Delete => Command::none(),
                     }
                 }
                 Message::RosetteOff((id, apartment_name, rosette_name, _res)) => {
@@ -170,7 +178,7 @@ impl Application for Home {
                         }
                     });
                     Command::none()
-                },
+                }
                 Message::ThermometerSync((id, apartment_name, thermometer_name, res)) => {
                     state.thermometers.iter_mut().for_each(|el| {
                         if el.house_id == id
