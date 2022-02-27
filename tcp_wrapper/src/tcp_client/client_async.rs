@@ -8,6 +8,7 @@ pub struct TcpClient {
 }
 
 /// Tcp async client and server
+/// # Example
 /// ```
 /// use tcp_wrapper::client_async::TcpClient;
 /// use tcp_wrapper::server_async::TcpServer;

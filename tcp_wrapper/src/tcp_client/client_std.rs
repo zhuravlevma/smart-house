@@ -8,8 +8,8 @@ pub struct Client {
     stream: TcpStream,
 }
 
-
 /// Tcp client and server
+/// # Example
 /// ```
 /// use tcp_wrapper::client_std::Client;
 /// use tcp_wrapper::server_std::TcpServer;
@@ -30,9 +30,6 @@ pub struct Client {
 ///     assert_eq!(resp, "test");
 ///     Ok(())
 /// }
-///
-///
-/// fn client() {}
 /// ```
 impl Client {
     pub fn connect<IpAddrs>(addrs: IpAddrs) -> ConnectResult<Self>
