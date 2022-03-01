@@ -4,6 +4,8 @@ use apartment::Apartment;
 use log::info;
 use serde::{Deserialize, Serialize};
 
+#[allow(unused)]
+#[repr(C)]
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct House {
     id: String,
