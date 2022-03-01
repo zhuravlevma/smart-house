@@ -1,6 +1,6 @@
 [package]
 name = "udp_wrapper"
-version = "0.1.2"
+version = "0.2.0"
 edition = "2021"
 authors = ["Zhuravlev Maksim <monge.gaspard.1746@gmail.com>"]
 description = "It's a simple library to smart_house"
