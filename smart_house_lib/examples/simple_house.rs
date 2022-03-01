@@ -1,4 +1,4 @@
-use smart_house::{Apartment, Device, Rosette, Thermometer};
+use smart_house_lib::{Apartment, Device, Rosette, Thermometer};
 
 fn main() {
     let mut apartment_parents = Apartment::new("Parents".to_string());

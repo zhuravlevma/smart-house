@@ -1,6 +1,6 @@
 [package]
-name = "smart_house"
-version = "0.2.2"
+name = "smart_house_lib"
+version = "0.3.0"
 edition = "2021"
 authors = ["Zhuravlev Maksim <monge.gaspard.1746@gmail.com>"]
 description = "It's a simple library to course OTUS Rust developer"
@@ -17,8 +17,8 @@ homepage = "https://github.com/zhuravlevma"
 log = "0.4.14"
 tokio = { version = "1", features = ["full"] }
 thiserror = "1.0.30"
-udp_wrapper = {path = "../udp_wrapper"}
-tcp_wrapper =  {path = "../tcp_wrapper"}
+udp_wrapper = "0.2.1"
+tcp_wrapper =  "0.2.2"
 serde = { version = "1.0.136", features = ["derive"] }
 
 [dev-dependencies]

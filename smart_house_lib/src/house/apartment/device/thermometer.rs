@@ -40,7 +40,7 @@ pub struct Thermometer {
 
 /// Create thermometer
 /// ```
-/// use smart_house::Thermometer;
+/// use smart_house_lib::Thermometer;
 /// let thermometer = Thermometer::new("name".to_string(), 23.0, "127.0.0.1:9091".to_string());
 /// ```
 impl Thermometer {

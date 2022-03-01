@@ -2,7 +2,7 @@ use crate::error::DomainError;
 use crate::mongo::rosette::RosetteData;
 use crate::mongo::thermometer::ThermometerData;
 use crate::{MongoClient, MongoRosette, MongoThermometer};
-use smart_house::{Device, Rosette, Thermometer};
+use smart_house_lib::{Device, Rosette, Thermometer};
 
 pub struct DeviceService {
     db_thermometer: MongoThermometer,

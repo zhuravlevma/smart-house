@@ -5,10 +5,10 @@
       <sourceFolder url="file://$MODULE_DIR$/config_simple/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/http_server/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/logger/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/smart_house/examples" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/smart_house/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/smart_house/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/smart_house_gui/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/smart_house_lib/examples" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/smart_house_lib/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/smart_house_lib/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/smart_rosette/examples" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/smart_rosette/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/smart_rosette_async/src" isTestSource="false" />

@@ -4,7 +4,7 @@ members = [
     "udp_wrapper",
     "http_server",
     "config_simple",
-    "smart_house",
+    "smart_house_lib",
     "smart_rosette",
     "smart_thermometer",
     "smart_house_gui",

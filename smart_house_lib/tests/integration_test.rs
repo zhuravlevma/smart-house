@@ -1,4 +1,4 @@
-use smart_house::{Apartment, Device, Rosette, Thermometer};
+use smart_house_lib::{Apartment, Device, Rosette, Thermometer};
 use std::error::Error;
 
 #[test]

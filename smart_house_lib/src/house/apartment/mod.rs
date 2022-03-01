@@ -22,19 +22,19 @@ impl Apartment {
 
 /// Create Apartment
 /// ```
-/// use smart_house::Apartment;
+/// use smart_house_lib::Apartment;
 /// let apartment = Apartment::new("name".to_string());
 /// ```
 /// Add devices to apartment
 /// ```
-/// use smart_house::{Apartment, Device, Rosette};
+/// use smart_house_lib::{Apartment, Device, Rosette};
 /// let mut apartment = Apartment::new("name".to_string());
 /// let device = Device::Rosette(Rosette::new("test".to_string(), "127.0.0.1:8080".to_string()));
 /// apartment.add_device(device);
 /// ```
 /// Remove device from apartment
 /// ```
-/// use smart_house::{Apartment, Device, Rosette};
+/// use smart_house_lib::{Apartment, Device, Rosette};
 /// let mut apartment = Apartment::new("name".to_string());
 /// let device = Device::Rosette(Rosette::new("test".to_string(), "127.0.0.1:8080".to_string()));
 /// apartment.add_device(device);

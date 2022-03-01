@@ -1,6 +1,6 @@
 use crate::error::DomainError;
 use crate::{MongoClient, MongoThermometer};
-use smart_house::Thermometer;
+use smart_house_lib::Thermometer;
 
 pub struct ThermometerService {
     db_service: MongoThermometer,

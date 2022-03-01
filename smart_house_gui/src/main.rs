@@ -10,7 +10,7 @@ use crate::rosette::{create_rosette_elements, RosetteView, RosetteViewMessage};
 use crate::thermometer::{create_thermometer_elements, ThermometerView, ThermometerViewMessage};
 use iced::scrollable::{self, Scrollable};
 use iced::{Application, Clipboard, Column, Command, Container, Element, Length, Settings, Text};
-use smart_house::{Apartment, Device, House};
+use smart_house_lib::{Apartment, Device, House};
 
 fn main() -> iced::Result {
     Home::run(Settings::default())

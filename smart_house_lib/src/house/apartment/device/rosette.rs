@@ -23,9 +23,9 @@ impl Rosette {
     }
 }
 
-/// Create thermometer
+/// Create rosette
 /// ```
-/// use smart_house::Rosette;
+/// use smart_house_lib::Rosette;
 /// let rosette = Rosette::new("name".to_string(), "127.0.0.1:9091".to_string());
 /// ```
 impl Rosette {

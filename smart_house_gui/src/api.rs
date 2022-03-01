@@ -1,4 +1,4 @@
-use smart_house::{Apartment, Device, House};
+use smart_house_lib::{Apartment, Device, House};
 
 pub async fn get_houses() -> Vec<House> {
     let url = String::from("http://127.0.0.1:8080/");

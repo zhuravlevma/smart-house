@@ -1,7 +1,7 @@
 use crate::error::DomainError;
 use crate::mongo::MongoClient;
 use crate::MongoRosette;
-use smart_house::Rosette;
+use smart_house_lib::Rosette;
 
 pub struct RosetteService {
     db_service: MongoRosette,

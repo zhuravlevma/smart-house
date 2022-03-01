@@ -1,4 +1,4 @@
-use smart_house::Rosette;
+use smart_house_lib::Rosette;
 
 fn main() {
     let mut rosette_parents =

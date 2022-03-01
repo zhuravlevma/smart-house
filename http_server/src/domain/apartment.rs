@@ -1,6 +1,6 @@
 use crate::error::DomainError;
 use crate::{ApartmentData, MongoApartment, MongoClient};
-use smart_house::{Apartment, Device, Rosette, Thermometer};
+use smart_house_lib::{Apartment, Device, Rosette, Thermometer};
 
 pub struct ApartmentService {
     db_service: MongoApartment,

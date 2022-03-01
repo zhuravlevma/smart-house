@@ -1,4 +1,4 @@
-use smart_house::Thermometer;
+use smart_house_lib::Thermometer;
 use std::error::Error;
 
 #[tokio::main]
