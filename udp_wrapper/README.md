@@ -60,8 +60,8 @@ Then, on your main.rs:
 use udp_wrapper::UdpPusher;
 use std::error::Error;
 async fn main() -> Result<(), Box<dyn Error>> {
-    let server = UdpPusher::new("127.0.0.1:9001".to_string())?;
-    server.send("Hello, I'm pusher".to_string(), "127.0.0.1:8081".to_string())?;
+    let pusher = UdpPusher::new("127.0.0.1:9001".to_string())?;
+    pusher.send("Hello, I'm pusher".to_string(), "127.0.0.1:8081".to_string())?;
     Ok(())
 }
 ```
