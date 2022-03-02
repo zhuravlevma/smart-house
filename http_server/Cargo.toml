@@ -21,4 +21,4 @@ serde_json = "1.0.78"
 thiserror = "1.0.30"
 mongodb = "2.1.0"
 dotenv = "0.15.0"
-smart_house_lib = {path = "../smart_house_lib" }
+smart_house_lib = {path = "../smart_house_lib"}
