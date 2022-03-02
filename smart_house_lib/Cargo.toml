@@ -13,7 +13,6 @@ homepage = "https://github.com/zhuravlevma"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [lib]
-crate-type = ["cdylib"]
 
 [dependencies]
 log = "0.4.14"
@@ -22,7 +21,3 @@ thiserror = "1.0.30"
 udp_wrapper = "0.2.1"
 tcp_wrapper = "0.2.2"
 serde = { version = "1.0.136", features = ["derive"] }
-
-[dev-dependencies]
-libloading = "0.7.1"
-anyhow = "1.0.44"
