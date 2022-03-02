@@ -19,8 +19,8 @@ crate-type = ["cdylib"]
 log = "0.4.14"
 tokio = { version = "1", features = ["full"] }
 thiserror = "1.0.30"
-udp_wrapper = {path = "../udp_wrapper"}
-tcp_wrapper = {path = "../tcp_wrapper"}
+udp_wrapper = "0.2.1"
+tcp_wrapper = "0.2.2"
 serde = { version = "1.0.136", features = ["derive"] }
 
 [dev-dependencies]
